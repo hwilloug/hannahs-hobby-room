@@ -1,0 +1,294 @@
+---
+interface Props {
+  upcomingArticles?: { title: string; date: string }[];
+  currentProjects?: { name: string; progress: number }[];
+  readingGoal?: { current: number; total: number };
+}
+
+const { 
+  upcomingArticles = [
+    { title: "Spring Garden Planning Guide", date: "March 2024" },
+    { title: "DIY Macramé Plant Hangers", date: "March 2024" },
+    { title: "Vintage Camera Restoration", date: "April 2024" }
+  ],
+  currentProjects = [
+    { name: "Victorian Dresser Restoration", progress: 65 },
+    { name: "Spring Vegetable Garden", progress: 30 },
+    { name: "Knitted Baby Blanket", progress: 45 }
+  ],
+  readingGoal = { current: 8, total: 52 }
+} = Astro.props;
+
+const readingProgress = (readingGoal.current / readingGoal.total) * 100;
+---
+
+<aside class="article-aside">
+  <div class="section-container">
+    <div class="author-card">
+      <img src="/blog-placeholder-about.jpg" alt="Author photo" class="author-image" />
+      <div class="author-info">
+        <h3>Hannah</h3>
+        <p>Hobbyist, creator, and lifelong learner sharing my journey through various creative pursuits.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-container">
+    <div class="section upcoming-articles">
+      <h4>Coming Soon</h4>
+      <ul>
+        {upcomingArticles.map(article => (
+          <li>
+            <span class="article-title">{article.title}</span>
+            <span class="article-date">{article.date}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-container">
+    <div class="section current-projects">
+      <h4>Current Projects</h4>
+      {currentProjects.map(project => (
+        <div class="project">
+          <div class="project-header">
+            <span class="project-name">{project.name}</span>
+            <span class="project-percentage">{project.progress}%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" style={`width: ${project.progress}%`}></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="section-container">
+    <div class="section reading-challenge">
+      <h4>2024 Reading Challenge</h4>
+      <div class="challenge-stats">
+        <div class="stats-numbers">
+          <span class="current">{readingGoal.current}</span>
+          <span class="separator">/</span>
+          <span class="total">{readingGoal.total}</span>
+          <span class="label">books</span>
+        </div>
+        <div class="progress-circle" style={`--progress: ${readingProgress}`}>
+          <svg viewBox="0 0 36 36">
+            <path d="M18 2.0845
+              a 15.9155 15.9155 0 0 1 0 31.831
+              a 15.9155 15.9155 0 0 1 0 -31.831"
+              fill="none"
+              stroke="var(--secondary-light)"
+              stroke-width="2"
+              stroke-dasharray={`${readingProgress}, 100`}
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .article-aside {
+    position: sticky;
+    top: 2em;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+  }
+
+  .section-container {
+    padding: 1.5em;
+    background: rgba(var(--primary-main-rgb), 0.1);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(var(--primary-main-rgb), 0.2);
+  }
+
+  .author-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1em;
+  }
+
+  .author-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--secondary-light);
+  }
+
+  .author-info h3 {
+    color: var(--primary-dark);
+    margin: 0;
+    font-size: 1.5em;
+    text-shadow: none;
+  }
+
+  .author-info p {
+    color: rgb(var(--gray-dark));
+    font-size: 0.9em;
+    margin: 0.5em 0 0 0;
+  }
+
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  .section h4 {
+    color: var(--primary-dark);
+    margin: 0;
+    font-size: 1.2em;
+    text-shadow: none;
+  }
+
+  .upcoming-articles ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  .upcoming-articles li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+  }
+
+  .article-title {
+    color: var(--primary-dark);
+    font-weight: 500;
+  }
+
+  .article-date {
+    color: rgb(var(--gray));
+    font-size: 0.9em;
+  }
+
+  .project {
+    margin-bottom: 1em;
+  }
+
+  .project:last-child {
+    margin-bottom: 0;
+  }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5em;
+  }
+
+  .project-name {
+    color: var(--primary-dark);
+    font-size: 0.9em;
+  }
+
+  .project-percentage {
+    color: rgb(var(--gray));
+    font-size: 0.9em;
+  }
+
+  .progress-bar {
+    height: 6px;
+    background: rgba(var(--gray-light), 0.3);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress {
+    height: 100%;
+    background: var(--secondary-main);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+
+  .challenge-stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .stats-numbers {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3em;
+  }
+
+  .current {
+    color: var(--primary-dark);
+    font-size: 2em;
+    font-weight: bold;
+  }
+
+  .separator {
+    color: rgb(var(--gray));
+  }
+
+  .total {
+    color: rgb(var(--gray));
+    font-size: 1.2em;
+  }
+
+  .label {
+    color: rgb(var(--gray));
+    font-size: 0.9em;
+    margin-left: 0.3em;
+  }
+
+  .progress-circle {
+    width: 60px;
+    height: 60px;
+    transform: rotate(-90deg);
+  }
+
+  .progress-circle svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .progress-circle path {
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.3s ease;
+  }
+
+  /* Dark mode styles */
+  :global(.dark) .section-container {
+    background: rgba(var(--primary-main-rgb), 0.2);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  :global(.dark) .author-info h3,
+  :global(.dark) .section h4,
+  :global(.dark) .article-title,
+  :global(.dark) .project-name,
+  :global(.dark) .current {
+    color: white;
+  }
+
+  :global(.dark) .author-info p {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  :global(.dark) .progress-bar {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 1200px) {
+    .article-aside {
+      position: static;
+      margin-top: 2em;
+    }
+  }
+</style>

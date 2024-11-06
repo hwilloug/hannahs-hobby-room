@@ -1,0 +1,142 @@
+---
+---
+
+<div class="carousel-container">
+  <button class="nav-button prev" aria-label="Previous">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+  </button>
+  
+  <div class="carousel">
+    <div class="carousel-content">
+      <slot />
+    </div>
+  </div>
+
+  <button class="nav-button next" aria-label="Next">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+  </button>
+</div>
+
+<script>
+  class CarouselController {
+    carousel: HTMLElement;
+    content: HTMLElement;
+    prevBtn: HTMLElement;
+    nextBtn: HTMLElement;
+    scrollAmount = 300;
+    
+    constructor() {
+      this.carousel = document.querySelector('.carousel')!;
+      this.content = document.querySelector('.carousel-content')!;
+      this.prevBtn = document.querySelector('.nav-button.prev')!;
+      this.nextBtn = document.querySelector('.nav-button.next')!;
+      
+      this.setupEventListeners();
+      this.updateButtonVisibility();
+    }
+    
+    setupEventListeners() {
+      this.prevBtn.addEventListener('click', () => this.scroll('left'));
+      this.nextBtn.addEventListener('click', () => this.scroll('right'));
+      this.carousel.addEventListener('scroll', () => this.updateButtonVisibility());
+    }
+    
+    scroll(direction: 'left' | 'right') {
+      const scrollLeft = this.carousel.scrollLeft;
+      const newPosition = direction === 'left' 
+        ? scrollLeft - this.scrollAmount 
+        : scrollLeft + this.scrollAmount;
+        
+      this.carousel.scrollTo({
+        left: newPosition,
+        behavior: 'smooth'
+      });
+    }
+    
+    updateButtonVisibility() {
+      const { scrollLeft, scrollWidth, clientWidth } = this.carousel;
+      
+      this.prevBtn.style.opacity = scrollLeft > 0 ? '1' : '0';
+      this.nextBtn.style.opacity = 
+        scrollLeft < scrollWidth - clientWidth - 10 ? '1' : '0';
+    }
+  }
+
+  // Initialize the carousel
+  new CarouselController();
+</script>
+
+<style>
+  .carousel-container {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .carousel {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding: 1em 0;
+    scroll-behavior: smooth;
+    width: 100%;
+  }
+
+  .carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel-content {
+    display: flex;
+    gap: 1.5em;
+    padding: 0 1em;
+    box-sizing: border-box;
+  }
+
+  .nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    border: none;
+    box-shadow: 0 2px 8px rgba(var(--black), 20%);
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s, transform 0.2s;
+    opacity: 0;
+  }
+
+  .nav-button:hover {
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .nav-button svg {
+    width: 20px;
+    height: 20px;
+    color: rgb(var(--black));
+  }
+
+  .nav-button.prev {
+    left: 0;
+  }
+
+  .nav-button.next {
+    right: 0;
+  }
+
+  @media (max-width: 720px) {
+    .nav-button {
+      display: none;
+    }
+
+    .carousel-content {
+      padding: 0 0.5em;
+    }
+  }
+</style>

@@ -1,0 +1,140 @@
+---
+---
+
+<button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+  <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1" x2="12" y2="3"/>
+    <line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/>
+    <line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+  <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+</button>
+
+<script>
+  const STORAGE_KEY = 'theme';
+  const toggle = document.getElementById('dark-mode-toggle');
+  const html = document.documentElement;
+
+  function setDarkMode(isDark: boolean) {
+    if (isDark) {
+      html.classList.add('dark');
+      toggle?.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+      toggle?.classList.remove('dark');
+    }
+    // Save to both localStorage and cookie
+    localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light');
+    document.cookie = `theme=${isDark ? 'dark' : 'light'}; path=/; max-age=31536000`; // 1 year
+  }
+
+  // Initialize theme on page load
+  function initializeTheme() {
+    // Check localStorage first for immediate access
+    const storedTheme = localStorage.getItem(STORAGE_KEY);
+    
+    if (storedTheme) {
+      // Use stored preference
+      setDarkMode(storedTheme === 'dark');
+    } else {
+      // Check system preference if no stored preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setDarkMode(prefersDark);
+    }
+  }
+
+  // Run initialization as soon as possible
+  initializeTheme();
+
+  // Add toggle event listener
+  toggle?.addEventListener('click', () => {
+    const isDark = html.classList.contains('dark');
+    setDarkMode(!isDark);
+  });
+
+  // Listen for system preference changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem(STORAGE_KEY)) {
+      setDarkMode(e.matches);
+    }
+  });
+
+  // Handle theme synchronization across tabs
+  window.addEventListener('storage', (e) => {
+    if (e.key === STORAGE_KEY) {
+      setDarkMode(e.newValue === 'dark');
+    }
+  });
+
+  // Make theme available globally
+  declare global {
+    interface Window {
+      theme: {
+        set: (theme: 'light' | 'dark') => void;
+        get: () => 'light' | 'dark';
+      };
+    }
+  }
+
+  window.theme = {
+    set: (theme) => setDarkMode(theme === 'dark'),
+    get: () => html.classList.contains('dark') ? 'dark' : 'light'
+  };
+</script>
+
+<style>
+  .dark-mode-toggle {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .dark-mode-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .dark-mode-toggle svg {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+  }
+
+  .sun-icon {
+    display: block;
+  }
+
+  .moon-icon {
+    display: none;
+  }
+
+  .dark-mode-toggle.dark .sun-icon {
+    display: none;
+  }
+
+  .dark-mode-toggle.dark .moon-icon {
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    .dark-mode-toggle {
+      margin-right: 1em;
+    }
+  }
+</style>

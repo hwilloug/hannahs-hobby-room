@@ -1,0 +1,181 @@
+---
+---
+
+<div id="image-viewer" class="image-viewer">
+  <button class="close-button" aria-label="Close image viewer">×</button>
+  <img src="" alt="" />
+</div>
+
+<script>
+  class ImageViewer {
+    viewer: HTMLElement;
+    img: HTMLImageElement;
+    closeButton: HTMLButtonElement;
+    isAnimating: boolean = false;
+
+    constructor() {
+      this.viewer = document.getElementById('image-viewer') as HTMLElement;
+      this.img = this.viewer.querySelector('img') as HTMLImageElement;
+      this.closeButton = this.viewer.querySelector('.close-button') as HTMLButtonElement;
+      this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+      // Make article images clickable
+      document.querySelectorAll('article img').forEach(img => {
+        img.style.cursor = 'zoom-in';
+        img.addEventListener('click', (e) => this.open(e.target as HTMLImageElement));
+      });
+
+      // Close button
+      this.closeButton.addEventListener('click', () => this.close());
+
+      // Close on background click
+      this.viewer.addEventListener('click', (e) => {
+        if (e.target === this.viewer) this.close();
+      });
+
+      // Close on escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') this.close();
+      });
+    }
+
+    open(clickedImg: HTMLImageElement) {
+      if (this.isAnimating) return;
+      this.isAnimating = true;
+
+      // Get the clicked image's position and size
+      const rect = clickedImg.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+      // Set the viewer image source
+      this.img.src = clickedImg.src;
+      this.img.alt = clickedImg.alt;
+
+      // Position the viewer image exactly over the clicked image
+      this.img.style.position = 'absolute';
+      this.img.style.top = `${rect.top + scrollTop}px`;
+      this.img.style.left = `${rect.left}px`;
+      this.img.style.width = `${rect.width}px`;
+      this.img.style.height = `${rect.height}px`;
+
+      // Show the viewer
+      this.viewer.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+
+      // Trigger animation
+      requestAnimationFrame(() => {
+        this.viewer.classList.add('active');
+        this.img.classList.add('active');
+        
+        setTimeout(() => {
+          this.isAnimating = false;
+        }, 300);
+      });
+    }
+
+    close() {
+      if (this.isAnimating) return;
+      
+      this.viewer.classList.remove('active');
+      this.img.classList.remove('active');
+      
+      setTimeout(() => {
+        this.viewer.style.display = 'none';
+        this.img.src = '';
+        this.img.style.position = '';
+        this.img.style.top = '';
+        this.img.style.left = '';
+        this.img.style.width = '';
+        this.img.style.height = '';
+        document.body.style.overflow = '';
+      }, 300);
+    }
+  }
+
+  // Initialize the image viewer
+  new ImageViewer();
+</script>
+
+<style>
+  .image-viewer {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0);
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+  }
+
+  .image-viewer.active {
+    background: rgba(0, 0, 0, 0.9);
+  }
+
+  .image-viewer img {
+    max-width: 90%;
+    max-height: 90vh;
+    object-fit: contain;
+    transition: all 0.3s ease;
+  }
+
+  .image-viewer img.active {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  .close-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 1001;
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  .image-viewer.active .close-button {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .close-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+  }
+
+  /* Dark mode support */
+  :global(.dark) .image-viewer.active {
+    background: rgba(0, 0, 0, 0.95);
+  }
+
+  @media (max-width: 768px) {
+    .close-button {
+      top: 10px;
+      right: 10px;
+    }
+
+    .image-viewer img.active {
+      max-width: 95%;
+      max-height: 95vh;
+    }
+  }
+</style>

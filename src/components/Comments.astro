@@ -1,0 +1,418 @@
+---
+import { getComments, addComment, type Comment } from '../lib/api';
+
+interface Props {
+  postSlug: string;
+}
+
+const { postSlug } = Astro.props;
+const { userId } = Astro.locals;
+const comments = await getComments(postSlug);
+
+function formatDate(dateString: string): string {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+function buildCommentTree(comments: Comment[]): Comment[] {
+  const commentMap = new Map<string, Comment>();
+  const roots: Comment[] = [];
+
+  // First pass: Create a map of all comments
+  comments.forEach(comment => {
+    commentMap.set(comment.id, { ...comment, children: [] });
+  });
+
+  // Second pass: Build the tree structure
+  comments.forEach(comment => {
+    const node = commentMap.get(comment.id)!;
+    if (comment.parentId) {
+      const parent = commentMap.get(comment.parentId);
+      if (parent) {
+        parent.children = parent.children || [];
+        parent.children.push(node);
+      }
+    } else {
+      roots.push(node);
+    }
+  });
+
+  return roots;
+}
+
+const commentTree = buildCommentTree(comments);
+---
+
+<section class="comments-section">
+  <h2>Comments</h2>
+  
+  {userId ? (
+    <form class="comment-form" id="comment-form">
+      <div class="form-group">
+        <label for="comment">Comment</label>
+        <textarea 
+          id="comment" 
+          name="comment" 
+          required 
+          rows="4" 
+          placeholder="Share your thoughts..."
+        ></textarea>
+      </div>
+      
+      <button type="submit">Post Comment</button>
+    </form>
+  ) : (
+    <div class="login-prompt">
+      <p>Please <button class="sign-in-button">sign in</button> to comment.</p>
+    </div>
+  )}
+
+  <div class="comments-list" id="comments-list">
+    {commentTree.map(comment => (
+      <div class="comment-thread">
+        <div class="comment">
+          <div class="comment-header">
+            <span class="comment-author">{comment.username}</span>
+            <span class="comment-date">{formatDate(comment.timestamp)}</span>
+          </div>
+          <div class="comment-content">{comment.body}</div>
+          {userId && (
+            <button class="reply-button" data-comment-id={comment.id}>Reply</button>
+          )}
+          
+          {comment.children && comment.children.length > 0 && (
+            <div class="nested-comments">
+              {comment.children.map(reply => (
+                <div class="comment">
+                  <div class="comment-header">
+                    <span class="comment-author">{reply.username}</span>
+                    <span class="comment-date">{formatDate(reply.timestamp)}</span>
+                  </div>
+                  <div class="comment-content">{reply.body}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script define:vars={{ postSlug, userId }}>
+async function handleSubmit(e, parentId = null) {
+  e.preventDefault();
+  
+  const form = e.target;
+  const body = form.comment.value;
+  
+  try {
+    const response = await fetch('/api/comments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        postSlug,
+        body,
+        parentId
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to post comment');
+    }
+    
+    // Refresh the page to show the new comment
+    window.location.reload();
+  } catch (error) {
+    console.error('Error posting comment:', error);
+    alert('Failed to post comment. Please try again.');
+  }
+}
+
+function createReplyForm(commentId) {
+  const form = document.createElement('form');
+  form.className = 'reply-form';
+  form.innerHTML = `
+    <div class="form-group">
+      <label for="comment-${commentId}">Reply</label>
+      <textarea 
+        id="comment-${commentId}" 
+        name="comment" 
+        required 
+        rows="3" 
+        placeholder="Write your reply..."
+      ></textarea>
+    </div>
+    
+    <div class="form-actions">
+      <button type="submit">Post Reply</button>
+      <button type="button" class="cancel-reply">Cancel</button>
+    </div>
+  `;
+  
+  form.addEventListener('submit', (e) => handleSubmit(e, commentId));
+  return form;
+}
+
+// Initialize event listeners
+document.addEventListener('DOMContentLoaded', () => {
+  // Main comment form
+  document.getElementById('comment-form')?.addEventListener('submit', handleSubmit);
+  
+  // Reply buttons
+  document.querySelectorAll('.reply-button').forEach(button => {
+    button.addEventListener('click', () => {
+      const commentId = button.dataset.commentId;
+      const comment = button.closest('.comment');
+      
+      // Remove any existing reply forms
+      document.querySelectorAll('.reply-form').forEach(form => form.remove());
+      
+      // Add new reply form
+      const replyForm = createReplyForm(commentId);
+      comment.appendChild(replyForm);
+      
+      // Handle cancel button
+      replyForm.querySelector('.cancel-reply')?.addEventListener('click', () => {
+        replyForm.remove();
+      });
+    });
+  });
+
+  // Sign in button
+  document.querySelector('.sign-in-button')?.addEventListener('click', () => {
+    window.Clerk?.openSignIn();
+  });
+});
+</script>
+
+<style>
+.comments-section {
+  margin-top: 4em;
+  padding-top: 2em;
+  border-top: 1px solid rgba(var(--gray-light), 0.5);
+}
+
+.comments-section h2 {
+  color: var(--primary-dark);
+  text-shadow: none;
+  margin-bottom: 1em;
+}
+
+.login-prompt {
+  background: rgba(var(--primary-main-rgb), 0.1);
+  padding: 2em;
+  border-radius: 12px;
+  margin-bottom: 2em;
+  text-align: center;
+}
+
+.sign-in-button {
+  background: var(--primary-main);
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: all 0.2s;
+}
+
+.sign-in-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.comment-form,
+.reply-form {
+  background: rgba(var(--primary-main-rgb), 0.1);
+  padding: 2em;
+  border-radius: 12px;
+  margin-bottom: 2em;
+}
+
+.reply-form {
+  margin-top: 1em;
+  padding: 1.5em;
+}
+
+.form-group {
+  margin-bottom: 1em;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5em;
+  color: var(--primary-dark);
+  font-weight: 500;
+}
+
+.form-group textarea {
+  width: 100%;
+  padding: 0.8em;
+  border: 2px solid rgba(var(--primary-main-rgb), 0.2);
+  border-radius: 8px;
+  background: white;
+  font-size: 1em;
+  transition: border-color 0.3s;
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-main);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1em;
+}
+
+button[type="submit"],
+.reply-button {
+  background: var(--primary-main);
+  color: white;
+  border: none;
+  padding: 0.8em 1.5em;
+  border-radius: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+button[type="submit"]:hover,
+.reply-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.cancel-reply {
+  background: transparent;
+  border: 2px solid var(--primary-main);
+  color: var(--primary-main);
+  padding: 0.8em 1.5em;
+  border-radius: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-reply:hover {
+  background: var(--primary-main);
+  color: white;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.comment-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.comment {
+  background: rgba(var(--primary-main-rgb), 0.05);
+  padding: 1.5em;
+  border-radius: 12px;
+  border: 1px solid rgba(var(--primary-main-rgb), 0.1);
+}
+
+.nested-comments {
+  margin-top: 1em;
+  margin-left: 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.comment-date {
+  color: rgb(var(--gray));
+  font-size: 0.9em;
+}
+
+.comment-content {
+  color: rgb(var(--gray-dark));
+  line-height: 1.5;
+  margin-bottom: 1em;
+}
+
+.reply-button {
+  font-size: 0.9em;
+  padding: 0.5em 1em;
+}
+
+/* Dark mode styles */
+:global(.dark) .comments-section h2,
+:global(.dark) .form-group label,
+:global(.dark) .comment-author {
+  color: white;
+}
+
+:global(.dark) .comment-content {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+:global(.dark) .comment,
+:global(.dark) .comment-form,
+:global(.dark) .reply-form,
+:global(.dark) .login-prompt {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+:global(.dark) .form-group textarea {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--primary-dark);
+}
+
+:global(.dark) .cancel-reply {
+  border-color: var(--secondary-light);
+  color: var(--secondary-light);
+}
+
+:global(.dark) .cancel-reply:hover {
+  background: var(--secondary-light);
+  color: var(--primary-dark);
+}
+
+@media (max-width: 640px) {
+  .comment-form,
+  .reply-form {
+    padding: 1.5em;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+
+  .nested-comments {
+    margin-left: 1em;
+  }
+}
+</style>

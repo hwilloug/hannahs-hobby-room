@@ -1,0 +1,269 @@
+---
+interface Props {
+	title: string;
+	description: string;
+	posts: any[];
+	category: string;
+}
+
+const { title, description, posts, category } = Astro.props;
+const categoryPosts = posts.slice(0, 3);
+
+const icons = {
+	gardening: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+		<path d="M12 2L3 9h18l-9-7z"/>
+		<path d="M9 22V12h6v10"/>
+		<path d="M3 9v13h18V9"/>
+		<path d="M12 12v3"/>
+	</svg>`,
+	crafts: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+		<circle cx="12" cy="12" r="10"/>
+		<path d="M12 2v20"/>
+		<path d="M2 12h20"/>
+		<path d="M12 2c4 4 8 8 8 10-2 4-6 8-8 8-2 0-6-4-8-8 0-2 4-6 8-10z"/>
+	</svg>`,
+	coding: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+		<polyline points="16 18 22 12 16 6"/>
+		<polyline points="8 6 2 12 8 18"/>
+	</svg>`,
+	books: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+		<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+		<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+	</svg>`,
+	antiquing: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+		<path d="M12 2L8 6h8l-4-4z"/>
+		<path d="M6 6h12v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V6z"/>
+		<path d="M9 10h6"/>
+		<path d="M9 14h6"/>
+	</svg>`
+};
+---
+
+<section class="category-section">
+	<div class="category-header">
+		<div>
+			<h2>
+				<span class="icon" set:html={icons[category]} />
+				{title.split(' ')[1]}
+			</h2>
+			<p>{description}</p>
+		</div>
+		<a href={`/categories/${category}`} class="view-all">
+			View All
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+				<line x1="5" y1="12" x2="19" y2="12"></line>
+				<polyline points="12 5 19 12 12 19"></polyline>
+			</svg>
+		</a>
+	</div>
+
+	<div class="posts-grid">
+		{categoryPosts.map((post) => (
+			<a href={`/blog/${post.slug}/`} class="browser-window">
+				<div class="browser-header">
+					<div class="browser-actions">
+						<span class="browser-action"></span>
+						<span class="browser-action"></span>
+						<span class="browser-action"></span>
+					</div>
+					<div class="browser-address">{post.data.title}</div>
+				</div>
+				<div class="browser-content">
+					<img src={post.data.heroImage} alt="" />
+					<h3>{post.data.title}</h3>
+					<p>{post.data.description}</p>
+				</div>
+			</a>
+		))}
+	</div>
+</section>
+
+<style>
+	.category-section {
+		padding: 2em;
+		background: rgba(var(--primary-main-rgb), 0.5);
+		backdrop-filter: blur(12px);
+		border-radius: 12px;
+		margin-bottom: 2em;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+	}
+
+	:global(.dark) .category-section {
+		background: rgba(var(--primary-main-rgb), 0.5);
+	}
+
+	.category-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		margin-bottom: 2em;
+	}
+
+	.category-header h2 {
+		font-family: 'Gluten', cursive;
+		color: var(--primary-dark);
+		margin-bottom: 0.5em;
+		text-shadow: none;
+		font-size: 1.8em;
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+	}
+
+	.icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		background: var(--primary-main);
+		border-radius: 8px;
+		padding: 8px;
+	}
+
+	.icon :global(svg) {
+		width: 100%;
+		height: 100%;
+		stroke: white;
+	}
+
+	.category-header p {
+		color: var(--primary-dark);
+		margin: 0;
+		font-size: 1.1em;
+	}
+
+	.view-all {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		color: var(--primary-dark);
+		text-decoration: none;
+		font-weight: 500;
+		transition: transform 0.2s;
+	}
+
+	.view-all:hover {
+		transform: translateX(4px);
+		color: var(--primary-main);
+	}
+
+	.posts-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 1.5em;
+	}
+
+	.browser-window {
+		background: var(--primary-main);
+		border-radius: 8px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		overflow: hidden;
+		text-decoration: none;
+		color: white;
+		transition: transform 0.2s, box-shadow 0.2s;
+		backdrop-filter: blur(8px);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+	}
+
+	.browser-window:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	}
+
+	.browser-header {
+		background: var(--primary-dark);
+		padding: 8px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.browser-actions {
+		display: flex;
+		gap: 6px;
+	}
+
+	.browser-action {
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: #ddd;
+	}
+
+	.browser-action:nth-child(1) { background: #ff5f57; }
+	.browser-action:nth-child(2) { background: #ffbd2e; }
+	.browser-action:nth-child(3) { background: #28c940; }
+
+	.browser-address {
+		background: var(--primary-light);
+		border-radius: 4px;
+		padding: 4px 8px;
+		font-size: 0.8em;
+		color: var(--primary-dark);
+		flex: 1;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.browser-content {
+		padding: 1em;
+		background: var(--primary-main);
+	}
+
+	.browser-content img {
+		width: 100%;
+		height: 150px;
+		object-fit: cover;
+		border-radius: 8px;
+		margin-bottom: 1em;
+	}
+
+	.browser-content h3 {
+		font-family: 'Gluten', cursive;
+		font-size: 1.2em;
+		margin: 0 0 0.5em 0;
+		color: var(--primary-dark);
+		text-shadow: none;
+	}
+
+	.browser-content p {
+		color: var(--primary-dark);
+		font-size: 0.9em;
+		margin: 0;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	/* Dark mode styles */
+	:global(.dark) .category-header h2,
+	:global(.dark) .category-header p,
+	:global(.dark) .view-all,
+	:global(.dark) .browser-content h3,
+	:global(.dark) .browser-content p {
+		color: white;
+	}
+
+	:global(.dark) .view-all:hover {
+		color: var(--accent);
+	}
+
+	:global(.dark) .browser-address {
+		color: var(--primary-dark);
+	}
+
+	@media (max-width: 768px) {
+		.category-header {
+			flex-direction: column;
+			gap: 1em;
+		}
+
+		.view-all {
+			align-self: flex-start;
+		}
+	}
+</style>

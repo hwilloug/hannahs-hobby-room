@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// This page is protected by middleware
+const user = Astro.locals.user;
+
+if (!user) {
+  return Astro.redirect('/');
+}
+---
+
+<Layout title="Dashboard">
+  <div class="dashboard">
+    <h1>Welcome to your Dashboard</h1>
+    <p>This is a protected page only visible to authenticated users.</p>
+  </div>
+</Layout>
+
+<style>
+  .dashboard {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2em;
+  }
+</style>

@@ -1,0 +1,285 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import Carousel from '../components/Carousel.astro';
+import BrowserCard from '../components/BrowserCard.astro';
+import CategorySection from '../components/CategorySection.astro';
+import NewsletterPopup from '../components/NewsletterPopup.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const featuredPosts = sortedPosts.slice(0, 3);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="content-wrapper">
+				<section class="featured-articles">
+					<h2>Featured Articles</h2>
+					<Carousel>
+						{
+							featuredPosts.map((post) => (
+								<BrowserCard
+									title={post.data.title}
+									image={post.data.heroImage}
+									url={`/blog/${post.slug}/`}
+								/>
+							))
+						}
+					</Carousel>
+				</section>
+
+				<div class="welcome-section">
+					<h1 class="welcome-header">
+						<span class="word word-1">🌸</span>
+						<span class="word word-2">Welcome</span>
+						<span class="word word-3">to</span>
+						<span class="word word-4">Hannah's</span>
+						<span class="word word-5">Hobby</span>
+						<span class="word word-6">Room</span>
+						<span class="word word-7">🌸</span>
+					</h1>
+					<div class="welcome-text">
+						<p>
+							Hi! I'm Hannah, and I'm thrilled to welcome you to my hobby blog. Here, I share what I've been working on and how I did it! There are six categories to choose from: <span class="hobby">gardening</span>, <span class="hobby">crafts</span>, <span class="hobby">coding</span>, <span class="hobby">books</span>, and <span class="hobby">antiquing</span>.
+						</p>
+						<p>
+							I hope you learn something new or find a new hobby to explore.
+						</p>
+						<p>
+							Thank you for stepping into my world, and I can't wait to share this room with you!
+						</p>
+						<p>
+							Warm regards,
+						</p>
+					</div>
+				</div>
+
+				<div class="email-signup">
+					<h3>Stay Updated! 🌟</h3>
+					<p class="signup-text">Subscribe to receive notifications about new hobby projects and tutorials!</p>
+					<form class="signup-form">
+						<input 
+							type="email" 
+							placeholder="Enter your email address" 
+							required
+							aria-label="Email address"
+						/>
+						<button type="submit">Subscribe</button>
+					</form>
+				</div>
+
+				<div class="categories">
+					<CategorySection
+						title="🌱 Gardening"
+						description="Tips, tricks, and stories from my garden adventures"
+						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'gardening')}
+						category="gardening"
+					/>
+
+					<CategorySection
+						title="🎨 Crafts"
+						description="DIY projects and creative inspirations"
+						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'crafts')}
+						category="crafts"
+					/>
+
+					<CategorySection
+						title="💻 Coding"
+						description="Programming projects and web development tutorials"
+						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'coding')}
+						category="coding"
+					/>
+
+					<CategorySection
+						title="📚 Books"
+						description="Book reviews and reading recommendations"
+						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'books')}
+						category="books"
+					/>
+
+					<CategorySection
+						title="🏺 Antiquing"
+						description="Vintage finds and restoration projects"
+						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'antiquing')}
+						category="antiquing"
+					/>
+				</div>
+			</div>
+		</main>
+		<Footer />
+		<NewsletterPopup />
+
+		<style>
+			.content-wrapper {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 0 1rem;
+			}
+
+			.featured-articles {
+				margin: 1em 0 3em;
+				text-align: center;
+			}
+
+			.featured-articles h2 {
+				margin-bottom: 0.25em;
+				text-align: center;
+				margin-left: 0;
+			}
+
+			.welcome-section {
+				text-align: center;
+				max-width: 800px;
+				margin: 0 auto;
+				background: var(--primary-main);
+				padding: 2em;
+				border-radius: 12px;
+				color: white;
+			}
+
+			.welcome-header {
+				color: white;
+				display: flex;
+				justify-content: center;
+				gap: 0.5rem;
+				flex-wrap: wrap;
+				font-weight: bold;
+				line-height: 1.1;
+				margin: 0 0 1em 0;
+			}
+
+			.welcome-text {
+				text-align: left;
+				margin-top: 2em;
+			}
+
+			.word {
+				display: inline-block;
+				animation: colorRotate 6s linear infinite;
+			}
+
+			.word-1 { color: salmon; }
+			.word-2 { color: #D0F0C0; }
+			.word-3 { color: sandybrown; }
+			.word-4 { color: khaki; }
+			.word-5 { color: lightblue; }
+			.word-6 { color: thistle; }
+			.word-7 { color: salmon; }
+
+			.word:nth-child(1) { animation-delay: 0s; }
+			.word:nth-child(2) { animation-delay: 1s; }
+			.word:nth-child(3) { animation-delay: 2s; }
+			.word:nth-child(4) { animation-delay: 3s; }
+			.word:nth-child(5) { animation-delay: 4s; }
+			.word:nth-child(6) { animation-delay: 5s; }
+			.word:nth-child(7) { animation-delay: 0s; }
+
+			@keyframes colorRotate {
+				0% { color: salmon; }
+				16.66% { color: #D0F0C0; }
+				33.33% { color: sandybrown; }
+				50% { color: khaki; }
+				66.66% { color: lightblue; }
+				83.33% { color: thistle; }
+				100% { color: salmon; }
+			}
+
+			.hobby {
+				color: var(--secondary-light);
+				text-decoration: underline wavy var(--secondary-light);
+				text-decoration-thickness: 1px;
+				text-underline-offset: 4px;
+			}
+
+			.email-signup {
+				margin: 4em 0;
+				padding: 2em;
+				background: var(--warning-main);
+				border-radius: 12px;
+				text-align: center;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+			}
+
+			.email-signup h3 {
+				color: white;
+				margin-bottom: 0.5em;
+				text-align: center;
+				margin-left: 0;
+			}
+
+			.signup-text {
+				color: black;
+				margin-bottom: 1.5em;
+			}
+
+			.signup-form {
+				display: flex;
+				gap: 1em;
+				max-width: 500px;
+				margin: 1.5em auto 0;
+			}
+
+			.signup-form input {
+				flex: 1;
+				padding: 0.8em 1.2em;
+				border: 2px solid rgba(255, 255, 255, 0.3);
+				border-radius: 25px;
+				font-size: 1em;
+				transition: border-color 0.3s;
+				background: rgba(255, 255, 255, 0.9);
+				color: black;
+			}
+
+			.signup-form input:focus {
+				outline: none;
+				border-color: white;
+				background: white;
+			}
+
+			.signup-form button {
+				background: var(--primary-main);
+				color: white;
+				border: none;
+				padding: 0.8em 1.5em;
+				border-radius: 25px;
+				font-size: 1em;
+				cursor: pointer;
+				transition: transform 0.2s, background-color 0.2s;
+			}
+
+			.signup-form button:hover {
+				transform: translateY(-2px);
+				background: var(--primary-dark);
+			}
+
+			.categories {
+				margin-top: 4em;
+				display: grid;
+				gap: 3em;
+			}
+
+			@media (max-width: 600px) {
+				.signup-form {
+					flex-direction: column;
+				}
+
+				.signup-form button {
+					width: 100%;
+				}
+			}
+		</style>
+	</body>
+</html>

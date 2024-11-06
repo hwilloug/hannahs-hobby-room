@@ -1,0 +1,228 @@
+/* Add RGB values for primary-light for translucency */
+:root {
+	--accent: #7F9679;
+	--accent-dark: #4B5646;
+	--black: 15, 18, 25;
+	--gray: 96, 115, 159;
+	--gray-light: 229, 233, 240;
+	--gray-dark: 34, 41, 57;
+	--text-shadow: -1px -1px 0 #000,
+		1px -1px 0 #000,
+		-1px 1px 0 #000,
+		1px 1px 0 #000;
+	--text-shadow-header: black -1px 0px, black 0px 1px, black 3px 3px, black 0px -1px;
+	
+	/* Light mode colors */
+	--primary-light: #D3DECF;
+	--primary-light-rgb: 211, 222, 207;
+	--primary-main: #7F9679;
+	--primary-main-rgb: 127, 150, 121;
+	--primary-dark: #4B5646;
+	--secondary-light: #DECFD3;
+	--secondary-main: #BD9FA8;
+	--secondary-dark: #706677;
+	--warning-main: #FFBF00;
+	--dot-color: #FFB6C1;
+
+  /* Dark mode colors */
+  --dark-primary-light: #8a664e;
+  --dark-primary-main: #492E1C;
+  --dark-primary-dark: #29190E;
+  --dark-primary-light-rgb: 138, 102, 78;
+  --dark-primary-main-rgb: 73, 46, 28;
+
+	color-scheme: light;
+}
+
+/* Dark mode variables */
+html.dark {
+	--primary-light: var(--dark-primary-light);
+	--primary-main: var(--dark-primary-main);
+	--primary-dark: var(--dark-primary-dark);
+	--primary-light-rgb: var(--dark-primary-light-rgb);
+	--primary-main-rgb: var(--dark-primary-main-rgb);
+	--secondary-light: #D3DECF;
+	--secondary-main: #7F9679;
+	--secondary-dark: #BD9FA8;
+	--accent: #DECFD3;
+	--gray: 200, 200, 200;
+	--gray-light: 50, 50, 50;
+	--gray-dark: 230, 230, 230;
+	color-scheme: dark;
+}
+
+@property --pixel-size {
+	syntax: '<length>';
+	initial-value: 2px;
+	inherits: false;
+}
+
+@font-face {
+	font-family: 'Atkinson';
+	src: url('/fonts/atkinson-regular.woff') format('woff');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Atkinson';
+	src: url('/fonts/atkinson-bold.woff') format('woff');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+body {
+	font-family: 'Atkinson', sans-serif;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	background-color: var(--primary-light);
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	color: rgb(var(--gray-dark));
+	font-size: 20px;
+	line-height: 1.7;
+	width: 100%;
+	min-height: 100vh;
+	overflow-x: hidden;
+	box-sizing: border-box;
+	transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Gluten', cursive;
+	margin: 0;
+	margin-left: 28px;
+	padding: 0;
+	font-size: 0.75em;
+	font-weight: bold;
+	text-align: left;
+	color: white;
+	text-shadow: var(--text-shadow);
+}
+
+main {
+	width: 100%;
+	max-width: 100%;
+	margin: 0;
+	padding: 3em 0;
+	background: var(--primary-light);
+	box-sizing: border-box;
+	transition: background-color 0.3s ease;
+}
+
+h1 {
+	font-size: 3.052em;
+	text-shadow: var(--text-shadow-header);
+	font-weight: bold;
+}
+h2 {
+	font-size: 2.441em;
+	font-weight: bold;
+}
+h3 {
+	font-size: 1.953em;
+	font-weight: bold;
+}
+h4 {
+	font-size: 1.563em;
+	font-weight: bold;
+}
+h5 {
+	font-size: 1.25em;
+}
+
+strong,
+b {
+	font-weight: 700;
+}
+a {
+	color: var(--accent-dark);
+	transition: color 0.3s ease;
+}
+a:hover {
+	color: var(--accent);
+}
+
+html.dark a {
+	color: var(--secondary-light);
+}
+
+html.dark a:hover {
+	color: var(--secondary-main);
+}
+
+p {
+	margin-bottom: 1em;
+}
+.prose p {
+	margin-bottom: 2em;
+}
+textarea {
+	width: 100%;
+	font-size: 16px;
+}
+input {
+	font-size: 16px;
+}
+table {
+	width: 100%;
+}
+img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+}
+code {
+	padding: 2px 5px;
+	background-color: rgb(var(--gray-light));
+	border-radius: 2px;
+}
+pre {
+	padding: 1.5em;
+	border-radius: 8px;
+}
+pre > code {
+	all: unset;
+}
+blockquote {
+	border-left: 4px solid var(--accent);
+	padding: 0 0 0 20px;
+	margin: 0px;
+	font-size: 1.333em;
+}
+hr {
+	border: none;
+	border-top: 1px solid var(--primary-dark);
+}
+
+#app-title {
+	text-shadow: var(--text-shadow-header);
+	font-weight: bold;
+}
+
+@media (max-width: 720px) {
+	body {
+		font-size: 18px;
+	}
+	main {
+		padding: 1em 0;
+	}
+}
+
+.sr-only {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	position: absolute !important;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	white-space: nowrap;
+}

@@ -1,0 +1,157 @@
+---
+import { likeArticle } from '../lib/api';
+
+interface Props {
+  postSlug: string;
+  initialLikes?: number;
+}
+
+const { postSlug, initialLikes = 0 } = Astro.props;
+---
+
+<div class="like-container">
+  <button class="like-button" data-slug={postSlug} aria-label="Like this article">
+    <div class="like-icon">
+      <svg class="heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    </div>
+    <span class="like-count">{initialLikes}</span>
+  </button>
+</div>
+
+<script define:vars={{ postSlug }}>
+const STORAGE_KEY = 'blog_likes';
+
+// Get liked articles from localStorage
+function getLikedArticles() {
+  const liked = localStorage.getItem(STORAGE_KEY);
+  return liked ? JSON.parse(liked) : [];
+}
+
+// Save liked articles to localStorage
+function saveLikedArticles(liked) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(liked));
+}
+
+// Initialize like button
+function initLikeButton() {
+  const button = document.querySelector(`.like-button[data-slug="${postSlug}"]`);
+  const countElement = button?.querySelector('.like-count');
+  
+  if (!button || !countElement) return;
+
+  const likedArticles = getLikedArticles();
+  
+  if (likedArticles.includes(postSlug)) {
+    button.classList.add('liked');
+  }
+
+  button.addEventListener('click', async () => {
+    if (likedArticles.includes(postSlug)) return;
+
+    try {
+      const newLikes = await likeArticle(postSlug);
+      countElement.textContent = newLikes;
+      button.classList.add('liked');
+      
+      // Save to localStorage
+      likedArticles.push(postSlug);
+      saveLikedArticles(likedArticles);
+      
+      // Trigger like animation
+      button.classList.add('animate');
+      setTimeout(() => button.classList.remove('animate'), 700);
+    } catch (error) {
+      console.error('Error liking article:', error);
+    }
+  });
+}
+
+// Initialize when the DOM is ready
+document.addEventListener('DOMContentLoaded', initLikeButton);
+</script>
+
+<style>
+.like-container {
+  display: flex;
+  justify-content: center;
+  margin: 1em 0;
+}
+
+.like-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.6em 1.2em;
+  border: 2px solid var(--primary-main);
+  background: transparent;
+  color: var(--primary-main);
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9em;
+}
+
+.like-button:hover {
+  background: var(--primary-main);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.like-button.liked {
+  cursor: default;
+}
+
+.like-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heart {
+  width: 20px;
+  height: 20px;
+  transition: all 0.3s ease;
+}
+
+.like-count {
+  font-weight: 600;
+  min-width: 1em;
+  text-align: center;
+}
+
+/* Liked state */
+.like-button.liked {
+  background: var(--primary-main);
+  color: white;
+}
+
+.like-button.liked .heart {
+  fill: currentColor;
+}
+
+/* Animation */
+@keyframes likeAnimation {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.2); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.like-button.animate .heart {
+  animation: likeAnimation 0.7s ease;
+}
+
+/* Dark mode styles */
+:global(.dark) .like-button {
+  border-color: var(--secondary-light);
+  color: var(--secondary-light);
+}
+
+:global(.dark) .like-button:hover,
+:global(.dark) .like-button.liked {
+  background: var(--secondary-light);
+  color: var(--primary-dark);
+}
+</style>

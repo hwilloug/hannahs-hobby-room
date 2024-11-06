@@ -1,0 +1,181 @@
+---
+---
+
+<div class="newsletter-popup" id="newsletter-popup">
+  <div class="popup-content">
+    <button class="close-button" aria-label="Close popup">×</button>
+    <h3>📬 Stay in the Loop!</h3>
+    <p class="signup-text">Subscribe to get the latest hobby updates and tutorials delivered straight to your inbox!</p>
+    <form class="signup-form">
+      <input 
+        type="email" 
+        placeholder="Enter your email address" 
+        required
+        aria-label="Email address"
+      />
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  let popupShown = false;
+  const popup = document.getElementById('newsletter-popup');
+  const closeButton = popup?.querySelector('.close-button');
+
+  function showPopup() {
+    if (!popupShown && popup) {
+      popup.classList.add('show');
+      popupShown = true;
+    }
+  }
+
+  function hidePopup() {
+    if (popup) {
+      popup.classList.remove('show');
+    }
+  }
+
+  function handleScroll() {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+      showPopup();
+    }
+  }
+
+  window.addEventListener('scroll', handleScroll);
+  closeButton?.addEventListener('click', hidePopup);
+</script>
+
+<style>
+  .newsletter-popup {
+    position: fixed;
+    bottom: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--warning-main);
+    padding: 2.5em;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    width: 90%;
+    max-width: 600px;
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .newsletter-popup.show {
+    bottom: 20px;
+    opacity: 1;
+  }
+
+  .popup-content {
+    position: relative;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .close-button {
+    position: absolute;
+    top: -1.5em;
+    right: -1.5em;
+    background: var(--primary-main);
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4em;
+    line-height: 0;
+    padding: 0 0 3px 0;
+    margin: 5px;
+    transition: background-color 0.2s, transform 0.2s;
+  }
+
+  .close-button:hover {
+    background: var(--primary-dark);
+    transform: scale(1.1);
+  }
+
+  h3 {
+    color: white;
+    margin: 0 0 0.5em 0;
+    font-size: 1.8em;
+    text-shadow: none;
+    text-align: center;
+  }
+
+  .signup-text {
+    color: black;
+    margin: 0 0 1.5em 0;
+    font-size: 1em;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .signup-form {
+    display: flex;
+    gap: 1em;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .signup-form input {
+    flex: 1;
+    padding: 1em 1.5em;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+    background: rgba(255, 255, 255, 0.9);
+    color: black;
+  }
+
+  .signup-form input:focus {
+    outline: none;
+    border-color: white;
+    background: white;
+  }
+
+  .signup-form button {
+    background: var(--primary-main);
+    color: white;
+    border: none;
+    padding: 1em 2em;
+    border-radius: 25px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    white-space: nowrap;
+  }
+
+  .signup-form button:hover {
+    transform: translateY(-2px);
+    background: var(--primary-dark);
+  }
+
+  @media (max-width: 640px) {
+    .newsletter-popup {
+      padding: 2em;
+    }
+
+    .signup-form {
+      flex-direction: column;
+    }
+
+    .signup-form button {
+      width: 100%;
+    }
+
+    h3 {
+      font-size: 1.5em;
+    }
+
+    p {
+      font-size: 0.9em;
+    }
+  }
+</style>

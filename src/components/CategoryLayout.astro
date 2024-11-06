@@ -1,0 +1,238 @@
+---
+import BaseHead from './BaseHead.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import { SITE_TITLE } from '../consts';
+import { getCollection } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+
+const { category, emoji, description } = Astro.props;
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const icons = {
+	gardening: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+		<path d="M12 2L3 9h18l-9-7z"/>
+		<path d="M9 22V12h6v10"/>
+		<path d="M3 9v13h18V9"/>
+		<path d="M12 12v3"/>
+	</svg>`,
+	crafts: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+		<circle cx="12" cy="12" r="10"/>
+		<path d="M12 2v20"/>
+		<path d="M2 12h20"/>
+		<path d="M12 2c4 4 8 8 8 10-2 4-6 8-8 8-2 0-6-4-8-8 0-2 4-6 8-10z"/>
+	</svg>`,
+	coding: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+		<polyline points="16 18 22 12 16 6"/>
+		<polyline points="8 6 2 12 8 18"/>
+	</svg>`,
+	books: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+		<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+		<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+	</svg>`,
+	antiquing: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+		<path d="M12 2L8 6h8l-4-4z"/>
+		<path d="M6 6h12v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V6z"/>
+		<path d="M9 10h6"/>
+		<path d="M9 14h6"/>
+	</svg>`
+};
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`${category} - ${SITE_TITLE}`} description={description} />
+		<style>
+			main {
+				width: 100%;
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 3em 1em;
+			}
+			.category-header {
+				text-align: center;
+				margin-bottom: 3em;
+				padding: 3em 2em;
+				background: var(--primary-main);
+				border-radius: 12px;
+				color: white;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			}
+			.category-header h1 {
+				margin: 0;
+				color: white;
+				font-size: 3em;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0.5em;
+			}
+			.icon {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 60px;
+				height: 60px;
+				background: rgba(255, 255, 255, 0.2);
+				border-radius: 12px;
+				padding: 12px;
+			}
+			.icon :global(svg) {
+				width: 100%;
+				height: 100%;
+				stroke: white;
+			}
+			.category-header p {
+				margin-top: 1em;
+				color: rgba(255, 255, 255, 0.9);
+				font-size: 1.2em;
+				max-width: 600px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			.posts-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+				gap: 2rem;
+				padding: 0;
+				list-style: none;
+			}
+			.browser-window {
+				background: var(--secondary-light);
+				border-radius: 12px;
+				overflow: hidden;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+				transition: transform 0.2s, box-shadow 0.2s;
+				text-decoration: none;
+				color: inherit;
+				display: block;
+				height: 100%;
+			}
+			.browser-window:hover {
+				transform: translateY(-4px);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+			}
+			.browser-header {
+				background: var(--secondary-main);
+				padding: 8px;
+				border-bottom: 1px solid var(--secondary-dark);
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+			.browser-actions {
+				display: flex;
+				gap: 6px;
+			}
+			.browser-action {
+				width: 12px;
+				height: 12px;
+				border-radius: 50%;
+			}
+			.browser-action:nth-child(1) { background: #ff5f57; }
+			.browser-action:nth-child(2) { background: #ffbd2e; }
+			.browser-action:nth-child(3) { background: #28c940; }
+			.browser-address {
+				background: var(--primary-light);
+				border-radius: 4px;
+				padding: 4px 8px;
+				font-size: 0.8em;
+				color: var(--primary-dark);
+				flex: 1;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.browser-content {
+				padding: 1em;
+			}
+			.browser-content img {
+				width: 100%;
+				height: 200px;
+				object-fit: cover;
+				border-radius: 8px;
+				margin-bottom: 1em;
+			}
+			.title {
+				margin: 0;
+				color: var(--primary-dark);
+				line-height: 1.2;
+				font-size: 1.4em;
+				font-family: 'Gluten', cursive;
+			}
+			.date {
+				margin: 0.5em 0;
+				color: rgb(var(--gray));
+				font-size: 0.9em;
+			}
+			.description {
+				margin: 0.5em 0 0;
+				color: rgb(var(--gray-dark));
+				line-height: 1.5;
+			}
+
+			@media (max-width: 768px) {
+				.category-header {
+					padding: 2em 1em;
+					margin-bottom: 2em;
+				}
+				.category-header h1 {
+					font-size: 2em;
+				}
+				.icon {
+					width: 40px;
+					height: 40px;
+					padding: 8px;
+				}
+				.posts-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="category-header">
+				<h1>
+					<span class="icon" set:html={icons[category.toLowerCase()]} />
+					{category}
+				</h1>
+				<p>{description}</p>
+			</div>
+			<section>
+				<ul class="posts-grid">
+					{
+						posts.map((post) => (
+							<li>
+								<a href={`/blog/${post.slug}/`} class="browser-window">
+									<div class="browser-header">
+										<div class="browser-actions">
+											<span class="browser-action"></span>
+											<span class="browser-action"></span>
+											<span class="browser-action"></span>
+										</div>
+										<div class="browser-address">{post.data.title}</div>
+									</div>
+									<div class="browser-content">
+										<img width={720} height={360} src={post.data.heroImage} alt="" />
+										<h2 class="title">{post.data.title}</h2>
+										<p class="date">
+											<FormattedDate date={post.data.pubDate} />
+										</p>
+										<p class="description">{post.data.description}</p>
+									</div>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
