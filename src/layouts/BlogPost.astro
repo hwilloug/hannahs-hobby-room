@@ -4,8 +4,12 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import ImageViewer from '../components/ImageViewer.astro';
+import Comments from '../components/Comments.astro';
+import LikeButton from '../components/LikeButton.astro';
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, subtitle, description, pubDate, updatedDate, heroImage, category, subcategories, slug } = Astro.props;
+
+export const prerender = true;
 ---
 
 <html lang="en">
@@ -25,6 +29,15 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				margin: 0;
 			}
 
+			article {
+				max-width: 800px;
+				margin: 0 auto 2em auto;
+				background-color: rgba(var(--primary-main-rgb), 0.6);
+				border: 1px solid var(--primary-dark);
+				padding: 1em;
+				border-radius: 12px;
+			}
+
 			.hero-image {
 				width: 100%;
 			}
@@ -32,16 +45,19 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			.hero-image img {
 				display: block;
 				margin: 0 auto;
-				border-radius: 12px;
+				border-radius: 12px 12px 0 0;
 				box-shadow: var(--box-shadow);
+				object-fit: cover;
+				width: 100%;
+				height: 500px;
 			}
 
 			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
+				max-width: 100%;
+				margin: 0 0 1em 0;
 				padding: 1em;
-				color: rgb(var(--gray-dark));
+				background-color: var(--primary-light);
+				border-radius: 0 0 12px 12px;
 			}
 
 			.title {
@@ -56,12 +72,46 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			}
 
 			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
+				margin-bottom: 1em;
+				color: rgb(var(--primary-dark-rgb));
+				text-align: left;
 			}
 
 			.last-updated-on {
 				font-style: italic;
+			}
+
+			.category-pills {
+				display: flex;
+				gap: 0.5em;
+				flex-wrap: wrap;
+				margin: 1em 0;
+			}
+
+			.pill {
+				padding: 0.3em 0.8em;
+				border-radius: 999px;
+				font-size: 0.9em;
+				font-weight: 500;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.pill.category {
+				background: var(--primary-dark);
+				color: white;
+			}
+
+			.pill.subcategory {
+				background: var(--secondary-main);
+				color: white;
+				border: 1px solid var(--secondary-dark);
+			}
+
+			.content {
+				padding: 0 1em;
+				text-align: justify;
 			}
 		</style>
 	</head>
@@ -71,10 +121,12 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<main>
 			<article>
 				<div class="hero-image">
-					{heroImage && <img width={1020} height={510} src={heroImage} alt={title} />}
+					{heroImage && <img src={heroImage} alt={title} />}
 				</div>
 				<div class="prose">
 					<div class="title">
+						<h1>{title}</h1>
+						<p>{subtitle}</p>
 						<div class="date">
 							<FormattedDate date={pubDate} />
 							{
@@ -84,13 +136,24 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 									</div>
 								)
 							}
+							<p>Written by Hannah Willoughby</p>
+							<div class="category-pills">
+								<span class="pill category">{category}</span>
+								{subcategories.map(sub => (
+									<span class="pill subcategory">{sub}</span>
+								))}
+							</div>
+							<LikeButton postSlug={slug} />
 						</div>
-						<h1>{title}</h1>
 						<hr />
 					</div>
-					<slot />
+					<div class="content">
+						<slot />
+					</div>
+					<LikeButton postSlug={slug} />
 				</div>
 			</article>
+			<Comments postSlug={slug} />
 		</main>
 		<Footer />
 		<ImageViewer />

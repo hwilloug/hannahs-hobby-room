@@ -25,10 +25,10 @@
 	--dot-color: #FFB6C1;
 
   /* Dark mode colors */
-  --dark-primary-light: #8a664e;
+  --dark-primary-light: #6d5749;
   --dark-primary-main: #492E1C;
   --dark-primary-dark: #29190E;
-  --dark-primary-light-rgb: 138, 102, 78;
+  --dark-primary-light-rgb: 109, 87, 73;
   --dark-primary-main-rgb: 73, 46, 28;
 
 	color-scheme: light;
@@ -49,6 +49,12 @@ html.dark {
 	--gray-light: 50, 50, 50;
 	--gray-dark: 230, 230, 230;
 	color-scheme: dark;
+}
+
+html.dark main {
+	background-image: url('/bg.png');
+	background-repeat: repeat;
+	background-attachment: fixed;
 }
 
 @property --pixel-size {
@@ -96,13 +102,11 @@ body {
 h1, h2, h3, h4, h5, h6 {
 	font-family: 'Gluten', cursive;
 	margin: 0;
-	margin-left: 28px;
 	padding: 0;
 	font-size: 0.75em;
 	font-weight: bold;
 	text-align: left;
-	color: white;
-	text-shadow: var(--text-shadow);
+	color: black;
 }
 
 main {
@@ -110,15 +114,18 @@ main {
 	max-width: 100%;
 	margin: 0;
 	padding: 3em 0;
-	background: var(--primary-light);
+	background-color: var(--primary-light);
+	background-image: url('/bg_light.png');
+	background-repeat: repeat;
 	box-sizing: border-box;
-	transition: background-color 0.3s ease;
+	background-attachment: fixed;
 }
 
 h1 {
 	font-size: 3.052em;
 	text-shadow: var(--text-shadow-header);
 	font-weight: bold;
+	color: white;
 }
 h2 {
 	font-size: 2.441em;

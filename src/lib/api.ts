@@ -39,6 +39,19 @@ export async function getArticles(): Promise<Article[]> {
   }
 }
 
+export async function getArticle(slug: string): Promise<Article | null> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/articles/${slug}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch article');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching article:', error);
+    return null;
+  }
+}
+
 export async function likeArticle(slug: string): Promise<number> {
   try {
     const response = await fetch(`${API_BASE_URL}/articles/${slug}/like`, {

@@ -3,10 +3,11 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import node from '@astrojs/node';
 import clerk from '@clerk/astro';
+import react from '@astrojs/react';
 
 export default defineConfig({
-  site: 'https://example.com',
-  output: 'server',
+  site: 'https://hannahshobbyroom.com',
+  output: 'hybrid',
   adapter: node({
     mode: 'standalone'
   }),
@@ -23,7 +24,8 @@ export default defineConfig({
         },
       },
     }),
-    clerk()
+    clerk(),
+    react()
   ],
   markdown: {
     shikiConfig: {

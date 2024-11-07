@@ -5,9 +5,9 @@ const isProtectedRoute = createRouteMatcher([
   '/dashboard(.*)'
 ]);
 
-export const onRequest = clerkMiddleware(async (auth, context) => {
-  const { userId, sessionClaims, redirectToSignIn } = auth();
-
+export const onRequest = clerkMiddleware((auth, context) => {
+  const { userId, redirectToSignIn, sessionClaims } = auth();
+  
   // Check if route needs protection
   if (isProtectedRoute(context.request)) {
     // Not signed in - redirect to sign in
@@ -18,8 +18,8 @@ export const onRequest = clerkMiddleware(async (auth, context) => {
     }
 
     // Check for admin role in public metadata
-    const userRoles = sessionClaims?.metadata?.roles as string[] || [];
-    const isAdmin = userRoles.includes('admin');
+    // @ts-ignore
+    const isAdmin = sessionClaims?.metadata?.roles?.includes('admin') || false;
 
     if (!isAdmin) {
       // User is signed in but not an admin - redirect to home
@@ -34,5 +34,8 @@ export const onRequest = clerkMiddleware(async (auth, context) => {
     // Add userId to context for admin routes
     context.locals.userId = userId;
     context.locals.isAdmin = true;
+  } else {
+    context.locals.isAdmin = false;
+    context.locals.userId = userId || '';
   }
 });

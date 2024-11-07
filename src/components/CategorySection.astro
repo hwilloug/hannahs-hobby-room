@@ -85,7 +85,7 @@ const icons = {
 		backdrop-filter: blur(12px);
 		border-radius: 12px;
 		margin-bottom: 2em;
-		border: 1px solid rgba(255, 255, 255, 0.2);
+		border: 1px solid var(--primary-dark);
 	}
 
 	:global(.dark) .category-section {
@@ -168,13 +168,14 @@ const icons = {
 
 	.browser-window:hover {
 		transform: translateY(-4px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		box-shadow: 8px 8px black;
 	}
 
 	.browser-header {
 		background: var(--primary-dark);
 		padding: 8px;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		border: 1px solid black;
+		border-radius: 8px 8px 0 0;
 		display: flex;
 		align-items: center;
 		gap: 8px;
@@ -211,6 +212,8 @@ const icons = {
 	.browser-content {
 		padding: 1em;
 		background: var(--primary-main);
+		border-radius: 0 0 8px 8px;
+		border: 1px solid black;
 	}
 
 	.browser-content img {

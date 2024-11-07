@@ -1,13 +1,13 @@
 ---
-import { getComments, addComment, type Comment } from '../lib/api';
+import { SignedIn, SignedOut, SignInButton } from '@clerk/astro/components';
+import { type Comment } from '../lib/api';
+import { getArticle } from '../lib/api';
 
 interface Props {
   postSlug: string;
 }
 
 const { postSlug } = Astro.props;
-const { userId } = Astro.locals;
-const comments = await getComments(postSlug);
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -45,46 +45,26 @@ function buildCommentTree(comments: Comment[]): Comment[] {
   return roots;
 }
 
-const commentTree = buildCommentTree(comments);
+const article = await getArticle(postSlug);
+const commentTree = buildCommentTree(article?.comments || []);
 ---
 
 <section class="comments-section">
   <h2>Comments</h2>
-  
-  {userId ? (
-    <form class="comment-form" id="comment-form">
-      <div class="form-group">
-        <label for="comment">Comment</label>
-        <textarea 
-          id="comment" 
-          name="comment" 
-          required 
-          rows="4" 
-          placeholder="Share your thoughts..."
-        ></textarea>
-      </div>
-      
-      <button type="submit">Post Comment</button>
-    </form>
-  ) : (
-    <div class="login-prompt">
-      <p>Please <button class="sign-in-button">sign in</button> to comment.</p>
-    </div>
-  )}
 
   <div class="comments-list" id="comments-list">
-    {commentTree.map(comment => (
-      <div class="comment-thread">
+    {commentTree.length > 0 ? (
+      commentTree.map(comment => (
+        <div class="comment-thread">
         <div class="comment">
           <div class="comment-header">
             <span class="comment-author">{comment.username}</span>
             <span class="comment-date">{formatDate(comment.timestamp)}</span>
           </div>
           <div class="comment-content">{comment.body}</div>
-          {userId && (
+          <SignedIn>
             <button class="reply-button" data-comment-id={comment.id}>Reply</button>
-          )}
-          
+          </SignedIn>
           {comment.children && comment.children.length > 0 && (
             <div class="nested-comments">
               {comment.children.map(reply => (
@@ -99,12 +79,36 @@ const commentTree = buildCommentTree(comments);
             </div>
           )}
         </div>
-      </div>
-    ))}
+        </div>
+      ))
+    ) : (
+      <p>No comments yet.</p>
+    )}
   </div>
+  <SignedIn>
+    <form class="comment-form" id="comment-form">
+      <div class="form-group">
+        <label for="comment">Comment</label>
+        <textarea 
+          id="comment" 
+          name="comment" 
+          required 
+          rows="4" 
+          placeholder="Share your thoughts..."
+        ></textarea>
+      </div>
+      
+      <button type="submit">Post Comment</button>
+    </form>
+  </SignedIn>
+  <SignedOut>
+    <div class="login-prompt">
+      <p>Please <SignInButton /> to comment.</p>
+    </div>
+  </SignedOut>
 </section>
 
-<script define:vars={{ postSlug, userId }}>
+<script define:vars={{ postSlug }}>
 async function handleSubmit(e, parentId = null) {
   e.preventDefault();
   
@@ -197,17 +201,18 @@ document.addEventListener('DOMContentLoaded', () => {
 .comments-section {
   margin-top: 4em;
   padding-top: 2em;
-  border-top: 1px solid rgba(var(--gray-light), 0.5);
+  border-top: 1px solid var(--primary-dark);
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .comments-section h2 {
   color: var(--primary-dark);
   text-shadow: none;
-  margin-bottom: 1em;
 }
 
 .login-prompt {
-  background: rgba(var(--primary-main-rgb), 0.1);
+  background: rgba(var(--primary-main-rgb), 0.6);
   padding: 2em;
   border-radius: 12px;
   margin-bottom: 2em;
@@ -215,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 .sign-in-button {
-  background: var(--primary-main);
+  background: var(--primary-dark);
   color: white;
   border: none;
   padding: 0.5em 1em;
@@ -226,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 .sign-in-button:hover {
-  background: var(--primary-dark);
+  background: var(--primary-main);
   transform: translateY(-2px);
 }
 

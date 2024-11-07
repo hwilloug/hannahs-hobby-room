@@ -13,10 +13,14 @@ declare global {
   interface Window {
     Clerk?: any;
   }
+  interface CustomJwtSessionClaims {
+    roles: string[];
+  }
 }
 
 declare namespace App {
   interface Locals {
     userId: string;
+    isAdmin: boolean;
   }
 }

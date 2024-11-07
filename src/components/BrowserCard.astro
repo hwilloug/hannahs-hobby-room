@@ -33,18 +33,19 @@ const { title, image, url } = Astro.props;
     text-decoration: none;
     color: inherit;
     scroll-snap-align: start;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
 
   .browser-window:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 8px 8px var(--secondary-dark);
   }
 
   .browser-header {
     background: var(--secondary-main);
     padding: 8px;
-    border-bottom: 1px solid var(--secondary-dark);
+    border: 1px solid var(--secondary-dark);
+    border-radius: 8px 8px 0 0;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -80,6 +81,8 @@ const { title, image, url } = Astro.props;
 
   .browser-content {
     padding: 1em;
+    border: 1px solid var(--secondary-dark);
+    border-radius: 0 0 8px 8px;
   }
 
   .browser-content img {
@@ -87,6 +90,7 @@ const { title, image, url } = Astro.props;
     height: 150px;
     object-fit: cover;
     margin-bottom: 1em;
+    border: 1px solid var(--secondary-dark);
     border-radius: 8px;
   }
 

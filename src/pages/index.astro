@@ -27,7 +27,7 @@ const featuredPosts = sortedPosts.slice(0, 3);
 		<main>
 			<div class="content-wrapper">
 				<section class="featured-articles">
-					<h2>Featured Articles</h2>
+					<h2 class="featured-articles-header home-page-header">Featured Articles</h2>
 					<Carousel>
 						{
 							featuredPosts.map((post) => (
@@ -43,13 +43,11 @@ const featuredPosts = sortedPosts.slice(0, 3);
 
 				<div class="welcome-section">
 					<h1 class="welcome-header">
-						<span class="word word-1">🌸</span>
-						<span class="word word-2">Welcome</span>
+						<span class="word word-2">🌸Welcome</span>
 						<span class="word word-3">to</span>
 						<span class="word word-4">Hannah's</span>
 						<span class="word word-5">Hobby</span>
-						<span class="word word-6">Room</span>
-						<span class="word word-7">🌸</span>
+						<span class="word word-6">Room🌸</span>
 					</h1>
 					<div class="welcome-text">
 						<p>
@@ -68,7 +66,7 @@ const featuredPosts = sortedPosts.slice(0, 3);
 				</div>
 
 				<div class="email-signup">
-					<h3>Stay Updated! 🌟</h3>
+					<h3 class="home-page-header">Stay Updated! 🌟</h3>
 					<p class="signup-text">Subscribe to receive notifications about new hobby projects and tutorials!</p>
 					<form class="signup-form">
 						<input 
@@ -123,14 +121,23 @@ const featuredPosts = sortedPosts.slice(0, 3);
 		<NewsletterPopup />
 
 		<style>
+			.home-page-header {
+				text-shadow: var(--text-shadow);
+				color: white;
+			}
+
 			.content-wrapper {
 				max-width: 1200px;
 				margin: 0 auto;
 				padding: 0 1rem;
 			}
 
+			.featured-articles-header {
+				text-shadow: 1px 1px 1px 1px black;
+			}
+
 			.featured-articles {
-				margin: 1em 0 3em;
+				margin: 0 0 3em;
 				text-align: center;
 			}
 
@@ -146,7 +153,9 @@ const featuredPosts = sortedPosts.slice(0, 3);
 				margin: 0 auto;
 				background: var(--primary-main);
 				padding: 2em;
+				border: 1px solid var(--primary-dark);
 				border-radius: 12px;
+				box-shadow: 8px 8px var(--primary-dark);
 				color: white;
 			}
 
@@ -211,6 +220,7 @@ const featuredPosts = sortedPosts.slice(0, 3);
 				border-radius: 12px;
 				text-align: center;
 				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+				border: 1px solid var(--primary-dark);
 			}
 
 			.email-signup h3 {
