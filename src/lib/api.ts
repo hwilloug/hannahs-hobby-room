@@ -30,11 +30,12 @@ export interface Comment {
 
 export async function getArticles(): Promise<Article[]> {
   try {
-    const response = await fetch(`${API_URL}/articles`);
+    const response = await fetch(`${API_URL}/articles?limit=1000`);
     if (!response.ok) {
       throw new Error('Failed to fetch articles');
     }
-    return await response.json();
+    const resp = await response.json();
+    return resp.articles;
   } catch (error) {
     console.error('Error fetching articles:', error);
     return [];

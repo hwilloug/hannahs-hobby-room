@@ -18,10 +18,13 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
     <BaseHead title={title} description={description} />
   </head>
   <body>
-    <Header />
+    <div id="clerk-root"></div>
+    <Header server:defer />
     <main>
       <slot />
     </main>
-    <Footer />
+    <Footer server:defer />
+
+    <script is:inline src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
   </body>
 </html>

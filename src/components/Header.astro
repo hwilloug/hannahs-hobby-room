@@ -8,10 +8,7 @@ import CraftsIcon from './icons/CraftsIcon.astro';
 import CodingIcon from './icons/CodingIcon.astro';
 import BooksIcon from './icons/BooksIcon.astro';
 import AntiquingIcon from './icons/AntiquingIcon.astro';
-
-const { isAdmin } = Astro.locals;
 ---
-
 <header>
 	<nav>
 		<div class="nav-top">
@@ -33,7 +30,7 @@ const { isAdmin } = Astro.locals;
 						<span class="text">About</span>
 					</div>
 				</HeaderLink>
-				<div class="hide-mobile">
+				<div>
 					<SignedIn>
 						<UserButton />
 					</SignedIn>
@@ -92,12 +89,6 @@ const { isAdmin } = Astro.locals;
 						<span class="text">Antiquing</span>
 					</div>
 				</HeaderLink>
-				{isAdmin && (
-					<>
-						<HeaderLink href="/dashboard">Dashboard</HeaderLink>
-						<HeaderLink href="/manage-articles">Manage Articles</HeaderLink>
-					</>
-				)}
 			</div>
 		</div>
 	</nav>
@@ -247,6 +238,6 @@ const { isAdmin } = Astro.locals;
 	const navContainer = document.getElementById('nav-container');
 
 	menuToggle?.addEventListener('click', () => {
-		navContainer?.classList.toggle('active');
+			navContainer?.classList.toggle('active');
 	});
 </script>

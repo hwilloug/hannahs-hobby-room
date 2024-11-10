@@ -21,6 +21,20 @@ import Layout from '../layouts/AboutMe.astro';
 		<a href="https://www.goodreads.com/hannah218" target="_blank"><button class="social-link">Goodreads</button></a>
 		<a href="https://hannahwilloughby.dev" target="_blank"><button class="social-link">HannahWilloughby.dev</button></a>
 	</div>
+
+	<h1 class="centered flower-divider">🌸</h1>
+
+	<div class="about-images">
+		<img src="https://blog-images.poppyland.dev/me_and_danny.jpeg" alt="Hannah and her partner Danny" class="about-image" />
+		<img src="https://blog-images.poppyland.dev/family_photo_2.jpeg" alt="Their four cats" class="about-image" />
+	</div>
+
+	<h1 class="centered flower-divider">🌸</h1>
+
+	<h3 class="centered">Contact me</h3>
+	<p class="centered">
+		Have a question or comment? I'd love to hear from you! You can reach me via email at <a href="mailto:support@hannahshobbyroom.com">support@hannahshobbyroom.com</a>.
+	</p>
 </Layout>
 
 <style>
@@ -43,5 +57,22 @@ import Layout from '../layouts/AboutMe.astro';
 
 	.social-link:hover {
 		background-color: var(--secondary-dark);
+	}
+
+	.about-images {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1em;
+		align-items: center;
+		margin: 2em;
+	}
+
+	.about-images img {
+		border-radius: 8px;
+		border: 10px solid var(--secondary-dark);
+	}
+
+	.flower-divider {
+		margin: 0.75em 0;
 	}
 </style>

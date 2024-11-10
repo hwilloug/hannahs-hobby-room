@@ -2,13 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
-// This page is protected by middleware
-const user = Astro.locals.user;
-
-if (!user) {
-  return Astro.redirect('/');
-}
-
 const articles = await getCollection('blog');
 const sortedArticles = articles.sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -92,6 +85,8 @@ const sortedArticles = articles.sort(
 
   .article-item {
     background: var(--primary-light);
+    border: 1px solid var(--primary-dark);
+    box-shadow: 2px 2px var(--primary-dark);
     padding: 1.5em;
     border-radius: 8px;
     display: flex;
@@ -184,24 +179,38 @@ const sortedArticles = articles.sort(
     const deleteBtns = document.querySelectorAll('.delete-btn');
 
     newArticleBtn?.addEventListener('click', () => {
-      // TODO: Implement new article creation
-      console.log('Create new article');
+      window.location.href = '/manage-articles/new-article';
     });
 
     editBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const slug = btn.getAttribute('data-slug');
-        // TODO: Implement article editing
-        console.log('Edit article:', slug);
+        if (slug) {
+          window.location.href = `/manage-articles/${slug}`;
+        }
       });
     });
 
     deleteBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         const slug = btn.getAttribute('data-slug');
-        if (confirm('Are you sure you want to delete this article?')) {
-          // TODO: Implement article deletion
-          console.log('Delete article:', slug);
+        if (slug && confirm('Are you sure you want to delete this article?')) {
+          try {
+            const response = await fetch(`/api/articles/${slug}`, {
+              method: 'DELETE',
+            });
+            
+            if (response.ok) {
+              // Remove the article from the DOM or refresh the page
+              const articleItem = btn.closest('.article-item');
+              articleItem?.remove();
+            } else {
+              alert('Failed to delete article');
+            }
+          } catch (error) {
+            console.error('Error deleting article:', error);
+            alert('Failed to delete article');
+          }
         }
       });
     });

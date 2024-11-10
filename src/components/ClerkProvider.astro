@@ -1,0 +1,29 @@
+---
+// Import necessary Clerk components if you're using them
+import { clerkClient } from '@clerk/clerk-sdk-node';
+
+// You can pass any props you need
+const { } = Astro.props;
+
+// Get your Clerk publishable key from environment variables
+const publishableKey = import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY;
+---
+
+<script define:vars={{ publishableKey }}>
+  // Initialize Clerk with your publishable key
+  if (!window.Clerk) {
+    const script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js";
+    script.async = true;
+    script.addEventListener("load", () => {
+      window.Clerk.load({
+        publishableKey,
+      });
+    });
+    document.head.appendChild(script);
+  }
+</script>
+
+<div id="clerk-root">
+  <slot />
+</div>

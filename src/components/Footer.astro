@@ -1,4 +1,6 @@
 ---
+import { SignedIn } from "@clerk/astro/components";
+
 const today = new Date();
 
 const sitemap = [
@@ -14,6 +16,8 @@ const sitemap = [
 		]
 	}
 ];
+
+const { isAdmin } = Astro.locals;
 ---
 
 <footer>
@@ -63,6 +67,17 @@ const sitemap = [
 					</a>
 				</div>
 			</div>
+			<SignedIn>
+				{isAdmin &&
+				<div class="footer-section">
+					<h3>Admin</h3>
+					<ul>
+						<li><a href="/dashboard">Dashboard</a></li>
+						<li><a href="/manage-articles">Manage Articles</a></li>
+					</ul>
+				</div>
+				}
+			</SignedIn>
 		</div>
 		<div class="footer-bottom">
 			<p>&copy; {today.getFullYear()} Hannah's Hobby Room. All rights reserved.</p>

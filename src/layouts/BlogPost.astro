@@ -1,180 +1,158 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import Layout from './Layout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import ImageViewer from '../components/ImageViewer.astro';
 import Comments from '../components/Comments.astro';
 import LikeButton from '../components/LikeButton.astro';
 
 const { title, subtitle, description, pubDate, updatedDate, heroImage, category, subcategories, slug } = Astro.props;
-
-export const prerender = true
 ---
 
-<html lang="en">
-	<head>
-		<BaseHead 
-			title={title} 
-			description={description} 
-			image={heroImage}
-			type="article"
-			publishDate={pubDate}
-			updatedDate={updatedDate}
-		/>
-		<style>
-			main {
-				width: 100%;
-				max-width: 100%;
-				margin: 0;
-			}
+<Layout title={title} description={description}>
+    <article>
+        <div class="hero-image">
+            {heroImage && <img src={heroImage} alt={title} />}
+        </div>
+        <div class="prose">
+            <div class="title">
+                <h1>{title}</h1>
+                <p>{subtitle}</p>
+                <div class="date">
+                    <FormattedDate date={pubDate} />
+                    {
+                        updatedDate && (
+                            <div class="last-updated-on">
+                                Last updated on <FormattedDate date={updatedDate} />
+                            </div>
+                        )
+                    }
+                    <p>Written by Hannah Willoughby</p>
+                    <div class="category-pills">
+                        <span class="pill category">{category}</span>
+                        {subcategories.map(sub => (
+                            <span class="pill subcategory">{sub}</span>
+                        ))}
+                    </div>
+                    <LikeButton postSlug={slug} server:defer />
+                </div>
+                <hr />
+            </div>
+            <div class="content">
+                <slot />
+            </div>
+            <div class="author-info">
+                <p>Written by Hannah Willoughby</p>
+                <p>Published on <FormattedDate date={pubDate} /></p>
+                {
+                    updatedDate && (
+                        <p>Last updated on <FormattedDate date={updatedDate} /></p>
+                    )
+                }
+            </div>
+            <LikeButton postSlug={slug} server:defer />
+        </div>
+    </article>
+    <Comments postSlug={slug} server:defer />
+</Layout>
 
-			article {
-				max-width: 800px;
-				margin: 0 auto 2em auto;
-				background-color: rgba(var(--primary-main-rgb), 0.6);
-				border: 1px solid var(--primary-dark);
-				padding: 1em;
-				border-radius: 12px;
-			}
+<style>
+    main {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+    }
 
-			.hero-image {
-				width: 100%;
-			}
+    article {
+        max-width: 800px;
+        margin: 0 auto 2em auto;
+        background-color: rgba(var(--primary-main-rgb), 0.6);
+        border: 1px solid var(--primary-dark);
+        padding: 1em;
+        border-radius: 12px;
+    }
 
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px 12px 0 0;
-				box-shadow: var(--box-shadow);
-				object-fit: cover;
-				width: 100%;
-				height: 500px;
-			}
+    .hero-image {
+        width: 100%;
+    }
 
-			.prose {
-				max-width: 100%;
-				margin: 0 0 1em 0;
-				padding: 1em;
-				background-color: var(--primary-light);
-				border-radius: 0 0 12px 12px;
-			}
+    .hero-image img {
+        display: block;
+        margin: 0 auto;
+        border-radius: 12px 12px 0 0;
+        box-shadow: var(--box-shadow);
+        object-fit: cover;
+        width: 100%;
+        height: 500px;
+    }
 
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
+    .prose {
+        max-width: 100%;
+        margin: 0 0 1em 0;
+        padding: 1em;
+        background-color: var(--primary-light);
+        border-radius: 0 0 12px 12px;
+    }
 
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
+    .title {
+        margin-bottom: 1em;
+        padding: 1em 0;
+        text-align: center;
+        line-height: 1;
+    }
 
-			.date {
-				margin-bottom: 1em;
-				color: rgb(var(--primary-dark-rgb));
-				text-align: left;
-			}
+    .title h1 {
+        margin: 0 0 0.5em 0;
+    }
 
-			.last-updated-on {
-				font-style: italic;
-			}
+    .date {
+        margin-bottom: 1em;
+        color: rgb(var(--primary-dark-rgb));
+        text-align: left;
+    }
 
-			.category-pills {
-				display: flex;
-				gap: 0.5em;
-				flex-wrap: wrap;
-				margin: 1em 0;
-			}
+    .last-updated-on {
+        font-style: italic;
+    }
 
-			.pill {
-				padding: 0.3em 0.8em;
-				border-radius: 999px;
-				font-size: 0.9em;
-				font-weight: 500;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
+    .category-pills {
+        display: flex;
+        gap: 0.5em;
+        flex-wrap: wrap;
+        margin: 1em 0;
+    }
 
-			.pill.category {
-				background: var(--primary-dark);
-				color: white;
-			}
+    .pill {
+        padding: 0.3em 0.8em;
+        border-radius: 999px;
+        font-size: 0.9em;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-			.pill.subcategory {
-				background: var(--secondary-main);
-				color: white;
-				border: 1px solid var(--secondary-dark);
-			}
+    .pill.category {
+        background: var(--primary-dark);
+        color: white;
+    }
 
-			.content {
-				padding: 0 1em;
-			}
+    .pill.subcategory {
+        background: var(--secondary-main);
+        color: white;
+        border: 1px solid var(--secondary-dark);
+    }
 
-			.author-info {
-				text-align: right;
-				font-size: 0.8em;
-				margin: 1em 0;
-				color: rgb(var(--primary-main-rgb));
-			}
+    .content {
+        padding: 0 1em;
+    }
 
-			.author-info p {
-				margin: 0;
-			}
-		</style>
-	</head>
+    .author-info {
+        text-align: right;
+        font-size: 0.8em;
+        margin: 1em 0;
+        color: rgb(var(--primary-main-rgb));
+    }
 
-	<body>
-		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <img src={heroImage} alt={title} />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<h1>{title}</h1>
-						<p>{subtitle}</p>
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-							<p>Written by Hannah Willoughby</p>
-							<div class="category-pills">
-								<span class="pill category">{category}</span>
-								{subcategories.map(sub => (
-									<span class="pill subcategory">{sub}</span>
-								))}
-							</div>
-							<LikeButton postSlug={slug} server:defer />
-						</div>
-						<hr />
-					</div>
-					<div class="content">
-						<slot />
-					</div>
-					<div class="author-info">
-						<p>Written by Hannah Willoughby</p>
-						<p>Published on <FormattedDate date={pubDate} /></p>
-						{
-							updatedDate && (
-								<p>Last updated on <FormattedDate date={updatedDate} /></p>
-							)
-						}
-					</div>
-					<LikeButton postSlug={slug} server:defer />
-				</div>
-			</article>
-			<Comments postSlug={slug} server:defer />
-		</main>
-		<Footer />
-		<ImageViewer />
-	</body>
-</html>
+    .author-info p {
+        margin: 0;
+    }
+</style>

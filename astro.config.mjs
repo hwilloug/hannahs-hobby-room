@@ -9,9 +9,15 @@ import vercel from '@astrojs/vercel/serverless';
 
 export default defineConfig({
   site: 'https://hannahshobbyroom.com',
-  output: 'hybrid',
+  output: 'server',
   adapter: vercel(),
   integrations: [
+    react(),
+    clerk({
+      publishableKey: process.env.PUBLIC_CLERK_PUBLISHABLE_KEY,
+      secretKey: process.env.CLERK_SECRET_KEY,
+      debug: true // Add this to get more detailed logs
+    }),
     mdx(), 
     sitemap({
       changefreq: 'weekly',
@@ -23,10 +29,14 @@ export default defineConfig({
           en: 'en-US',
         },
       },
-    }),
-    clerk(),
-    react()
+    })
   ],
+  vite: {
+    define: {
+      'process.env.CLERK_PUBLISHABLE_KEY': 
+        JSON.stringify(process.env.PUBLIC_CLERK_PUBLISHABLE_KEY),
+    },
+  },
   markdown: {
     shikiConfig: {
       theme: 'github-dark',

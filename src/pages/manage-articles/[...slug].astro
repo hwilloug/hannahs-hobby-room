@@ -13,10 +13,11 @@ if (!userId || !isAdmin) {
 const { slug } = Astro.params;
 const isNew = slug === 'new';
 
-let article: Article | undefined;
+import type { CollectionEntry } from 'astro:content';
+let article: CollectionEntry<'blog'> | undefined;
 if (!isNew) {
   const articles = await getCollection('blog');
-  article = articles.find(a => a.slug === slug) as Article | undefined;  if (!article) {
+  article = articles.find(a => a.slug === slug);  if (!article) {
     return;
   }
 }
@@ -47,7 +48,7 @@ export const prerender = false;
             id="title" 
             name="title" 
             required
-            value={article?.article.title || ''}
+            value={article?.data.title || ''}
           />
         </div>
 
@@ -58,7 +59,7 @@ export const prerender = false;
             id="description" 
             name="description" 
             required
-            value={article?.article.description || ''}
+            value={article?.data.subtitle || ''}
           />
         </div>
 
@@ -69,7 +70,7 @@ export const prerender = false;
             {categories.map(cat => (
               <option 
                 value={cat}
-                selected={cat === article?.article.category}
+                selected={cat == article?.data.category}
               >
                 {cat}
               </option>
@@ -84,7 +85,7 @@ export const prerender = false;
             id="subcategories" 
             name="subcategories" 
             placeholder="Comma-separated values"
-            value={article?.article.subcategory?.join(', ') || ''}
+            value={article?.data.subcategories?.join(', ') || ''}
           />
         </div>
 
@@ -95,7 +96,7 @@ export const prerender = false;
             id="heroImage" 
             name="heroImage" 
             required
-            value={article?.article.img || '/blog-placeholder-1.jpg'}
+            value={article?.data.heroImage || '/blog-placeholder-1.jpg'}
           />
         </div>
 
@@ -106,7 +107,7 @@ export const prerender = false;
             id="pubDate" 
             name="pubDate" 
             required
-            value={article?.article.createdAt ? format(article.article.createdAt, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')}
+            value={article?.data.pubDate ? format(article.data.pubDate, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')}
           />
         </div>
       </div>
@@ -128,14 +129,12 @@ export const prerender = false;
             <div class="separator"></div>
             <button type="button" data-action="ul" title="Bullet List">•</button>
             <button type="button" data-action="ol" title="Numbered List">1.</button>
-            <button type="button" data-action="generate" title="Generate Content">✨</button>
           </div>
           <textarea 
             id="content" 
             name="content" 
             required
-            rows="20"
-          >{article?.article.content || ''}</textarea>
+          >{article?.body || ''}</textarea>
         </div>
         <div class="preview-panel">
           <div class="preview-header">
@@ -190,6 +189,7 @@ export const prerender = false;
   .preview-btn {
     background: var(--secondary-light);
     color: var(--primary-dark);
+    border: 2px solid var(--secondary-main);
   }
 
   .preview-btn:hover {
@@ -200,6 +200,7 @@ export const prerender = false;
   .save-btn {
     background: var(--primary-main);
     color: white;
+    border: 2px solid var(--primary-dark);
   }
 
   .save-btn:hover {
@@ -229,10 +230,10 @@ export const prerender = false;
   select,
   textarea {
     padding: 0.8em;
-    border: 2px solid rgba(var(--primary-main-rgb), 0.2);
+    border: 2px solid rgba(var(--primary-main-rgb));
     border-radius: 8px;
     font-size: 1em;
-    background: white;
+    background: var(--primary-light);
     color: var(--primary-dark);
     transition: border-color 0.2s;
   }
@@ -254,17 +255,16 @@ export const prerender = false;
   .editor-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 0.5em;
   }
 
   .editor-toolbar {
+    padding: 0.5em;
+    background: rgba(var(--primary-main-rgb), 0.5);
+    border-radius: 8px 8px 0 0;
+    border: 2px solid var(--primary-main);
+    border-bottom: none;
     display: flex;
     gap: 0.5em;
-    padding: 0.5em;
-    background: rgba(var(--primary-main-rgb), 0.1);
-    border-radius: 8px 8px 0 0;
-    border: 2px solid rgba(var(--primary-main-rgb), 0.2);
-    border-bottom: none;
     flex-wrap: wrap;
   }
 
@@ -272,7 +272,7 @@ export const prerender = false;
     padding: 0.5em 1em;
     border: none;
     border-radius: 4px;
-    background: white;
+    background: var(--primary-light);
     color: var(--primary-dark);
     cursor: pointer;
     transition: all 0.2s;
@@ -285,16 +285,18 @@ export const prerender = false;
 
   .separator {
     width: 1px;
-    background: rgba(var(--primary-main-rgb), 0.2);
+    background: rgba(var(--primary-main-rgb), 0.5);
     margin: 0 0.5em;
   }
 
   textarea {
     resize: vertical;
     min-height: 400px;
+    border: 2px solid var(--primary-main);
     border-radius: 0 0 8px 8px;
     font-family: monospace;
     line-height: 1.6;
+    background-color: var(--primary-light);
   }
 
   .preview-panel {
@@ -436,11 +438,7 @@ export const prerender = false;
         button.addEventListener('click', () => {
           const action = button.dataset.action;
           if (action) {
-            if (action === 'generate') {
-              this.generateContent();
-            } else {
               this.executeAction(action);
-            }
           }
         });
       });
@@ -453,43 +451,14 @@ export const prerender = false;
       this.previewPanel.classList.toggle('active');
       if (this.previewPanel.classList.contains('active')) {
         this.updatePreview();
+        console.log('Preview active');
       }
     }
 
-    updatePreview() {
+    async updatePreview() {
       const markdown = this.content.value;
-      const html = marked(markdown);
+      const html = await marked(markdown);
       this.previewContent.innerHTML = html;
-    }
-
-    async generateContent() {
-      const title = (document.getElementById('title') as HTMLInputElement).value;
-      const description = (document.getElementById('description') as HTMLInputElement).value;
-      const category = (document.getElementById('category') as HTMLSelectElement).value;
-
-      if (!title || !description || !category) {
-        alert('Please fill in the title, description, and category first.');
-        return;
-      }
-
-      try {
-        const response = await fetch('/api/generate-content', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ title, description, category }),
-        });
-
-        if (!response.ok) throw new Error('Failed to generate content');
-
-        const { content } = await response.json();
-        this.content.value = content;
-        this.updatePreview();
-      } catch (error) {
-        console.error('Error generating content:', error);
-        alert('Failed to generate content. Please try again.');
-      }
     }
 
     executeAction(action: string) {
