@@ -2,7 +2,7 @@
 title: Getting Back Into Ribbon Embroidery
 subtitle: 5 Original Works by Me
 description: 5 Original Works by Me
-pubDate: 2024-11-06
+pubDate: 2024-11-03
 category: Crafts
 heroImage: https://blog-images.poppyland.dev/ribbon_embroidery_1_1.jpeg
 subcategories:

@@ -14,7 +14,7 @@ const sortedPosts = posts.sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
-const featuredPosts = sortedPosts.slice(0, 3);
+const featuredPosts = sortedPosts.slice(0, 4);
 ---
 
 <!doctype html>
@@ -27,7 +27,7 @@ const featuredPosts = sortedPosts.slice(0, 3);
 		<main>
 			<div class="content-wrapper">
 				<section class="featured-articles">
-					<h2 class="featured-articles-header home-page-header">Featured Articles</h2>
+					<h2 class="home-page-header">Featured Articles</h2>
 					<Carousel>
 						{
 							featuredPosts.map((post) => (
@@ -62,6 +62,7 @@ const featuredPosts = sortedPosts.slice(0, 3);
 						<p>
 							Warm regards,
 						</p>
+						<img src="/signature.png" alt="Hannah's signature" class="signature" />
 					</div>
 				</div>
 
@@ -82,36 +83,36 @@ const featuredPosts = sortedPosts.slice(0, 3);
 				<div class="categories">
 					<CategorySection
 						title="🌱 Gardening"
-						description="Tips, tricks, and stories from my garden adventures"
-						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'gardening')}
+						description=""
+						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'gardening').slice(0, 4)}
 						category="gardening"
 					/>
 
 					<CategorySection
 						title="🎨 Crafts"
-						description="DIY projects and creative inspirations"
-						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'crafts')}
+						description=""
+						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'crafts').slice(0, 4)}
 						category="crafts"
 					/>
 
 					<CategorySection
 						title="💻 Coding"
-						description="Programming projects and web development tutorials"
-						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'coding')}
+						description=""
+						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'coding').slice(0, 4)}
 						category="coding"
 					/>
 
 					<CategorySection
 						title="📚 Books"
-						description="Book reviews and reading recommendations"
-						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'books')}
+						description=""
+						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'books').slice(0, 4)}
 						category="books"
 					/>
 
 					<CategorySection
 						title="🏺 Antiquing"
-						description="Vintage finds and restoration projects"
-						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'antiquing')}
+						description=""
+						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'antiquing').slice(0, 4)}
 						category="antiquing"
 					/>
 				</div>
@@ -132,10 +133,6 @@ const featuredPosts = sortedPosts.slice(0, 3);
 				padding: 0 1rem;
 			}
 
-			.featured-articles-header {
-				text-shadow: 1px 1px 1px 1px black;
-			}
-
 			.featured-articles {
 				margin: 0 0 3em;
 				text-align: center;
@@ -145,6 +142,7 @@ const featuredPosts = sortedPosts.slice(0, 3);
 				margin-bottom: 0.25em;
 				text-align: center;
 				margin-left: 0;
+				text-shadow: 1px 1px 1px 1px black;
 			}
 
 			.welcome-section {
@@ -204,6 +202,10 @@ const featuredPosts = sortedPosts.slice(0, 3);
 				66.66% { color: lightblue; }
 				83.33% { color: thistle; }
 				100% { color: salmon; }
+			}
+
+			.signature {
+				width: 100px;
 			}
 
 			.hobby {

@@ -1,12 +1,16 @@
 ---
-import { likeArticle } from '../lib/api';
+import { getArticle, likeArticle } from '../lib/api';
 
 interface Props {
   postSlug: string;
-  initialLikes?: number;
 }
 
-const { postSlug, initialLikes = 0 } = Astro.props;
+// Ensure postSlug is passed as a prop from parent component
+const { postSlug } = Astro.props;
+
+const article = await getArticle(postSlug);
+let likes = article?.article.likes;
+export const name = 'LikeButton';
 ---
 
 <div class="like-container">
@@ -16,7 +20,7 @@ const { postSlug, initialLikes = 0 } = Astro.props;
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
       </svg>
     </div>
-    <span class="like-count">{initialLikes}</span>
+    <span class="like-count">{likes}</span>
   </button>
 </div>
 

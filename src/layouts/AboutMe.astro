@@ -1,0 +1,85 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+
+---
+<html lang="en">
+	<head>
+		<BaseHead 
+			title="About Me" 
+			description="About Me" 
+			image="https://blog-images.poppyland.dev/me.jpeg"
+			type="article"
+		/>
+		<style>
+			main {
+				width: 100%;
+				max-width: 100%;
+				margin: 0;
+			}
+
+			article {
+				max-width: 800px;
+				margin: 0 auto 2em auto;
+				background-color: rgba(var(--primary-main-rgb), 0.6);
+				border: 1px solid var(--primary-dark);
+				padding: 1em;
+				border-radius: 12px;
+			}
+
+			.hero-image {
+				width: 100%;
+			}
+
+			.hero-image img {
+				display: block;
+				margin: 0 auto;
+				border-radius: 12px 12px 0 0;
+				box-shadow: var(--box-shadow);
+				object-fit: cover;
+				width: 500px;
+				height: 500px;
+			}
+
+			.prose {
+				max-width: 100%;
+				margin: 0 0 1em 0;
+				padding: 1em;
+				background-color: var(--primary-light);
+				border-radius: 0 0 12px 12px;
+			}
+
+			.title {
+				text-align: center;
+				line-height: 1;
+        margin-top: 1em;
+			}
+
+			.title h1 {
+				margin: 0 0 0.5em 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		<main>
+			<article>
+				<div class="hero-image">
+					<img src="https://blog-images.poppyland.dev/me.jpeg" alt={"Hannah Willoughby"} />
+				</div>
+				<div class="prose">
+					<div class="title">
+						<h1>About Me</h1>
+					</div>
+					<div class="content">
+						<slot />
+					</div>
+        </div>
+				</div>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>

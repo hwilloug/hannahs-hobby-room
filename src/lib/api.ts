@@ -1,18 +1,20 @@
-// Blog API client for fetching articles
-const API_BASE_URL = 'https://blog-api.poppyland.dev';
+import { API_URL } from "../consts";
 
+// Blog API client for fetching articles
 export interface Article {
-  slug: string;
-  title: string;
-  subtitle: string;
-  img: string;
-  imgAlt: string;
-  category: string;
-  subcategory: string[];
-  featured: boolean;
-  likes: number;
-  createdAt: string;
-  updatedAt: string;
+  article: {
+    slug: string;
+    title: string;
+    subtitle: string;
+    img: string;
+    imgAlt: string;
+    category: string;
+    subcategory: string[];
+    featured: boolean;
+    likes: number;
+    createdAt: string;
+    updatedAt: string;
+  },
   comments: Comment[];
 }
 
@@ -28,7 +30,7 @@ export interface Comment {
 
 export async function getArticles(): Promise<Article[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/articles`);
+    const response = await fetch(`${API_URL}/articles`);
     if (!response.ok) {
       throw new Error('Failed to fetch articles');
     }
@@ -41,9 +43,9 @@ export async function getArticles(): Promise<Article[]> {
 
 export async function getArticle(slug: string): Promise<Article | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/articles/${slug}`);
+    const response = await fetch(`${API_URL}/articles/${slug}`);
     if (!response.ok) {
-      throw new Error('Failed to fetch article');
+      throw new Error(`Failed to fetch article: ${response.statusText}`);
     }
     return await response.json();
   } catch (error) {
@@ -54,7 +56,7 @@ export async function getArticle(slug: string): Promise<Article | null> {
 
 export async function likeArticle(slug: string): Promise<number> {
   try {
-    const response = await fetch(`${API_BASE_URL}/articles/${slug}/like`, {
+    const response = await fetch(`${API_URL}/articles/${slug}/like`, {
       method: 'POST',
     });
     if (!response.ok) {
@@ -75,7 +77,7 @@ export async function addComment(
   parentId?: string
 ): Promise<Comment> {
   try {
-    const response = await fetch(`${API_BASE_URL}/comments`, {
+    const response = await fetch(`${API_URL}/comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

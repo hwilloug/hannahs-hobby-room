@@ -3,9 +3,12 @@ interface Props {
   title: string;
   image: string;
   url: string;
+  subtitle?: string;
+  showSubtitle?: boolean;
+  subcategories?: string[];
 }
 
-const { title, image, url } = Astro.props;
+const { title, image, url, subtitle, showSubtitle = false, subcategories = [] } = Astro.props;
 ---
 
 <a href={url} class="browser-window">
@@ -20,6 +23,8 @@ const { title, image, url } = Astro.props;
   <div class="browser-content">
     <img src={image} alt="" />
     <h3>{title}</h3>
+    {showSubtitle && <p>{subtitle}</p>}
+    {subcategories.length > 0 && <p>Subcategories: {subcategories.join(', ')}</p>}
   </div>
 </a>
 
@@ -27,6 +32,7 @@ const { title, image, url } = Astro.props;
   .browser-window {
     flex: 0 0 300px;
     background: var(--secondary-light);
+    border: 1px solid var(--secondary-dark);
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -44,7 +50,7 @@ const { title, image, url } = Astro.props;
   .browser-header {
     background: var(--secondary-main);
     padding: 8px;
-    border: 1px solid var(--secondary-dark);
+    border-bottom: 1px solid var(--secondary-dark);
     border-radius: 8px 8px 0 0;
     display: flex;
     align-items: center;
@@ -81,8 +87,6 @@ const { title, image, url } = Astro.props;
 
   .browser-content {
     padding: 1em;
-    border: 1px solid var(--secondary-dark);
-    border-radius: 0 0 8px 8px;
   }
 
   .browser-content img {

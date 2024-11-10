@@ -17,6 +17,7 @@
     "@astrojs/react": "^3.6.2",
     "@astrojs/rss": "^4.0.7",
     "@astrojs/sitemap": "^3.2.0",
+    "@astrojs/vercel": "^7.8.2",
     "@clerk/astro": "^1.4.7",
     "@clerk/backend": "^1.15.7",
     "@clerk/clerk-js": "^5.31.2",

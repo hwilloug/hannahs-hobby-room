@@ -5,12 +5,12 @@ import node from '@astrojs/node';
 import clerk from '@clerk/astro';
 import react from '@astrojs/react';
 
+import vercel from '@astrojs/vercel/serverless';
+
 export default defineConfig({
   site: 'https://hannahshobbyroom.com',
   output: 'hybrid',
-  adapter: node({
-    mode: 'standalone'
-  }),
+  adapter: vercel(),
   integrations: [
     mdx(), 
     sitemap({
@@ -36,5 +36,8 @@ export default defineConfig({
   compressHTML: true,
   build: {
     inlineStylesheets: 'auto'
+  },
+  experimental: {
+    serverIslands: true
   }
 });

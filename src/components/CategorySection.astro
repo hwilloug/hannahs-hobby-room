@@ -1,4 +1,9 @@
 ---
+import BooksIcon from './icons/BooksIcon.astro';
+import CodingIcon from './icons/CodingIcon.astro';
+import CraftsIcon from './icons/CraftsIcon.astro';
+import GardeningIcon from './icons/GardeningIcon.astro';
+
 interface Props {
 	title: string;
 	description: string;
@@ -7,35 +12,14 @@ interface Props {
 }
 
 const { title, description, posts, category } = Astro.props;
-const categoryPosts = posts.slice(0, 3);
+const categoryPosts = posts.slice(0, 4);
 
 const icons = {
-	gardening: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-		<path d="M12 2L3 9h18l-9-7z"/>
-		<path d="M9 22V12h6v10"/>
-		<path d="M3 9v13h18V9"/>
-		<path d="M12 12v3"/>
-	</svg>`,
-	crafts: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-		<circle cx="12" cy="12" r="10"/>
-		<path d="M12 2v20"/>
-		<path d="M2 12h20"/>
-		<path d="M12 2c4 4 8 8 8 10-2 4-6 8-8 8-2 0-6-4-8-8 0-2 4-6 8-10z"/>
-	</svg>`,
-	coding: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-		<polyline points="16 18 22 12 16 6"/>
-		<polyline points="8 6 2 12 8 18"/>
-	</svg>`,
-	books: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-		<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-		<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-	</svg>`,
-	antiquing: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-		<path d="M12 2L8 6h8l-4-4z"/>
-		<path d="M6 6h12v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V6z"/>
-		<path d="M9 10h6"/>
-		<path d="M9 14h6"/>
-	</svg>`
+	gardening: GardeningIcon,
+	crafts: CraftsIcon,
+	coding: CodingIcon,
+	books: BooksIcon,
+	antiquing: GardeningIcon
 };
 ---
 
@@ -43,7 +27,14 @@ const icons = {
 	<div class="category-header">
 		<div>
 			<h2>
-				<span class="icon" set:html={icons[category]} />
+				<span class="icon">
+					{
+						(() => {
+							const Icon = icons[category.toLowerCase()];
+							return Icon && <Icon class="icon-svg size-16" />;
+						})()
+					}
+				</span>
 				{title.split(' ')[1]}
 			</h2>
 			<p>{description}</p>
@@ -163,7 +154,7 @@ const icons = {
 		color: white;
 		transition: transform 0.2s, box-shadow 0.2s;
 		backdrop-filter: blur(8px);
-		border: 1px solid rgba(255, 255, 255, 0.3);
+		border: 1px solid var(--primary-dark);
 	}
 
 	.browser-window:hover {
@@ -213,7 +204,6 @@ const icons = {
 		padding: 1em;
 		background: var(--primary-main);
 		border-radius: 0 0 8px 8px;
-		border: 1px solid black;
 	}
 
 	.browser-content img {

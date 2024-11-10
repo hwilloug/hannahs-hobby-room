@@ -9,7 +9,7 @@ import LikeButton from '../components/LikeButton.astro';
 
 const { title, subtitle, description, pubDate, updatedDate, heroImage, category, subcategories, slug } = Astro.props;
 
-export const prerender = true;
+export const prerender = true
 ---
 
 <html lang="en">
@@ -111,7 +111,17 @@ export const prerender = true;
 
 			.content {
 				padding: 0 1em;
-				text-align: justify;
+			}
+
+			.author-info {
+				text-align: right;
+				font-size: 0.8em;
+				margin: 1em 0;
+				color: rgb(var(--primary-main-rgb));
+			}
+
+			.author-info p {
+				margin: 0;
 			}
 		</style>
 	</head>
@@ -143,17 +153,26 @@ export const prerender = true;
 									<span class="pill subcategory">{sub}</span>
 								))}
 							</div>
-							<LikeButton postSlug={slug} />
+							<LikeButton postSlug={slug} server:defer />
 						</div>
 						<hr />
 					</div>
 					<div class="content">
 						<slot />
 					</div>
-					<LikeButton postSlug={slug} />
+					<div class="author-info">
+						<p>Written by Hannah Willoughby</p>
+						<p>Published on <FormattedDate date={pubDate} /></p>
+						{
+							updatedDate && (
+								<p>Last updated on <FormattedDate date={updatedDate} /></p>
+							)
+						}
+					</div>
+					<LikeButton postSlug={slug} server:defer />
 				</div>
 			</article>
-			<Comments postSlug={slug} />
+			<Comments postSlug={slug} server:defer />
 		</main>
 		<Footer />
 		<ImageViewer />

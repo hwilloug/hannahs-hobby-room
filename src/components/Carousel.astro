@@ -80,6 +80,8 @@
     padding: 1em 0;
     scroll-behavior: smooth;
     width: 100%;
+    border-left: 2px solid rgb(var(--primary-main-rgb));
+    border-right: 2px solid rgb(var(--primary-main-rgb));
   }
 
   .carousel::-webkit-scrollbar {
@@ -110,6 +112,7 @@
     justify-content: center;
     transition: opacity 0.3s, transform 0.2s;
     opacity: 0;
+    background-color: rgba(var(--primary-main-rgb), 0.8);
   }
 
   .nav-button:hover {

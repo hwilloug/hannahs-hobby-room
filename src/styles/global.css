@@ -63,22 +63,9 @@ html.dark main {
 	inherits: false;
 }
 
-@font-face {
-	font-family: 'Atkinson';
-	src: url('/fonts/atkinson-regular.woff') format('woff');
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face {
-	font-family: 'Atkinson';
-	src: url('/fonts/atkinson-bold.woff') format('woff');
-	font-weight: 700;
-	font-style: normal;
-	font-display: swap;
-}
 body {
-	font-family: 'Atkinson', sans-serif;
+	font-family: 'Ubuntu', sans-serif;
+	letter-spacing: 0.03em;
 	margin: 0;
 	padding: 0;
 	text-align: left;
@@ -86,7 +73,7 @@ body {
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 	color: rgb(var(--gray-dark));
-	font-size: 20px;
+	font-size: 16px;
 	line-height: 1.7;
 	width: 100%;
 	min-height: 100vh;
@@ -104,9 +91,13 @@ h1, h2, h3, h4, h5, h6 {
 	margin: 0;
 	padding: 0;
 	font-size: 0.75em;
-	font-weight: bold;
+	font-weight: bolder;
 	text-align: left;
 	color: black;
+}
+
+html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6 {
+	color: white;
 }
 
 main {
@@ -232,4 +223,24 @@ hr {
 	clip: rect(1px, 1px, 1px, 1px);
 	clip-path: inset(50%);
 	white-space: nowrap;
+}
+
+.icon-svg {
+	width: 20px;
+	height: 20px;
+	stroke: currentColor;
+	transition: all 0.2s ease-in-out;
+}
+
+.centered {
+	margin: auto;
+	text-align: center;
+}
+
+.right {
+	text-align: right;
+}
+
+.left {
+	text-align: left;
 }
