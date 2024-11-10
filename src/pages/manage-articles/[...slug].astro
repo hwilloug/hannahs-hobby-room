@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import { format } from 'date-fns';
+import type { Article } from '../../lib/api';
 
 // Protected by middleware - only admins can access
 const { userId, isAdmin } = Astro.locals;
@@ -12,16 +13,17 @@ if (!userId || !isAdmin) {
 const { slug } = Astro.params;
 const isNew = slug === 'new';
 
-let article = null;
+let article: Article | undefined;
 if (!isNew) {
   const articles = await getCollection('blog');
-  article = articles.find(a => a.slug === slug);
-  if (!article) {
-    return Astro.redirect('/manage-articles');
+  article = articles.find(a => a.slug === slug) as Article | undefined;  if (!article) {
+    return;
   }
 }
 
 const categories = ['Gardening', 'Crafts', 'Coding', 'Books', 'Antiquing'];
+
+export const prerender = false;
 ---
 
 <Layout title={isNew ? 'New Article' : 'Edit Article'}>
@@ -45,7 +47,7 @@ const categories = ['Gardening', 'Crafts', 'Coding', 'Books', 'Antiquing'];
             id="title" 
             name="title" 
             required
-            value={article?.data.title || ''}
+            value={article?.article.title || ''}
           />
         </div>
 
@@ -56,7 +58,7 @@ const categories = ['Gardening', 'Crafts', 'Coding', 'Books', 'Antiquing'];
             id="description" 
             name="description" 
             required
-            value={article?.data.description || ''}
+            value={article?.article.description || ''}
           />
         </div>
 
@@ -67,7 +69,7 @@ const categories = ['Gardening', 'Crafts', 'Coding', 'Books', 'Antiquing'];
             {categories.map(cat => (
               <option 
                 value={cat}
-                selected={cat === article?.data.category}
+                selected={cat === article?.article.category}
               >
                 {cat}
               </option>
@@ -82,7 +84,7 @@ const categories = ['Gardening', 'Crafts', 'Coding', 'Books', 'Antiquing'];
             id="subcategories" 
             name="subcategories" 
             placeholder="Comma-separated values"
-            value={article?.data.subcategories?.join(', ') || ''}
+            value={article?.article.subcategory?.join(', ') || ''}
           />
         </div>
 
@@ -93,7 +95,7 @@ const categories = ['Gardening', 'Crafts', 'Coding', 'Books', 'Antiquing'];
             id="heroImage" 
             name="heroImage" 
             required
-            value={article?.data.heroImage || '/blog-placeholder-1.jpg'}
+            value={article?.article.img || '/blog-placeholder-1.jpg'}
           />
         </div>
 
@@ -104,7 +106,7 @@ const categories = ['Gardening', 'Crafts', 'Coding', 'Books', 'Antiquing'];
             id="pubDate" 
             name="pubDate" 
             required
-            value={article?.data.pubDate ? format(article.data.pubDate, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')}
+            value={article?.article.createdAt ? format(article.article.createdAt, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')}
           />
         </div>
       </div>
@@ -133,7 +135,7 @@ const categories = ['Gardening', 'Crafts', 'Coding', 'Books', 'Antiquing'];
             name="content" 
             required
             rows="20"
-          >{article?.body || ''}</textarea>
+          >{article?.article.content || ''}</textarea>
         </div>
         <div class="preview-panel">
           <div class="preview-header">
