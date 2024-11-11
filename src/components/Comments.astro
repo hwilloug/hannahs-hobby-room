@@ -2,12 +2,14 @@
 import { SignedIn, SignedOut, SignInButton } from '@clerk/astro/components';
 import { type Comment } from '../lib/api';
 import { getArticle } from '../lib/api';
+import { API_URL } from '../consts';
 
 interface Props {
   postSlug: string;
 }
 
 const { postSlug } = Astro.props;
+const { username } = Astro.locals;
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -31,8 +33,8 @@ function buildCommentTree(comments: Comment[]): Comment[] {
   // Second pass: Build the tree structure
   comments.forEach(comment => {
     const node = commentMap.get(comment.id)!;
-    if (comment.parentId) {
-      const parent = commentMap.get(comment.parentId);
+    if (comment.parent_id) {
+      const parent = commentMap.get(comment.parent_id);
       if (parent) {
         parent.children = parent.children || [];
         parent.children.push(node);
@@ -47,6 +49,7 @@ function buildCommentTree(comments: Comment[]): Comment[] {
 
 const article = await getArticle(postSlug);
 const commentTree = buildCommentTree(article?.comments || []);
+
 ---
 
 <section class="comments-section">
@@ -58,7 +61,11 @@ const commentTree = buildCommentTree(article?.comments || []);
         <div class="comment-thread">
         <div class="comment">
           <div class="comment-header">
-            <span class="comment-author">{comment.username}</span>
+            <div>
+              <span class="comment-author">{comment.username}</span>
+              {comment.username === username && <span class="comment-author-you">You</span>}
+              {comment.username === "hannahwilloughby" && <span class="comment-author-author">Author</span>}
+            </div>
             <span class="comment-date">{formatDate(comment.timestamp)}</span>
           </div>
           <div class="comment-content">{comment.body}</div>
@@ -70,7 +77,11 @@ const commentTree = buildCommentTree(article?.comments || []);
               {comment.children.map(reply => (
                 <div class="comment">
                   <div class="comment-header">
-                    <span class="comment-author">{reply.username}</span>
+                    <div>
+                      <span class="comment-author">{reply.username}</span>
+                      {reply.username === username && <span class="comment-author-you">You</span>}
+                      {reply.username === "hannahwilloughby" && <span class="comment-author-author">Author</span>}
+                    </div>
                     <span class="comment-date">{formatDate(reply.timestamp)}</span>
                   </div>
                   <div class="comment-content">{reply.body}</div>
@@ -108,7 +119,7 @@ const commentTree = buildCommentTree(article?.comments || []);
   </SignedOut>
 </section>
 
-<script define:vars={{ postSlug }}>
+<script define:vars={{ postSlug, username, API_URL }}>
 async function handleSubmit(e, parentId = null) {
   e.preventDefault();
   
@@ -116,23 +127,23 @@ async function handleSubmit(e, parentId = null) {
   const body = form.comment.value;
   
   try {
-    const response = await fetch('/api/comments', {
+    const response = await fetch(`${API_URL}/comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        postSlug,
-        body,
-        parentId
+        article_slug: postSlug,
+        comment_body: body,
+        parent_comment_id: parentId,
+        username
       })
     });
 
     if (!response.ok) {
       throw new Error('Failed to post comment');
     }
-    
-    // Refresh the page to show the new comment
+
     window.location.reload();
   } catch (error) {
     console.error('Error posting comment:', error);
@@ -165,8 +176,7 @@ function createReplyForm(commentId) {
   return form;
 }
 
-// Initialize event listeners
-document.addEventListener('DOMContentLoaded', () => {
+function initializeEventListeners() {
   // Main comment form
   document.getElementById('comment-form')?.addEventListener('submit', handleSubmit);
   
@@ -194,7 +204,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelector('.sign-in-button')?.addEventListener('click', () => {
     window.Clerk?.openSignIn();
   });
-});
+}
+
+document.addEventListener('DOMContentLoaded', initializeEventListeners);
+initializeEventListeners();
+
 </script>
 
 <style>
@@ -350,6 +364,22 @@ button[type="submit"]:hover,
 .comment-author {
   font-weight: 600;
   color: var(--primary-dark);
+}
+
+.comment-author-you {
+  color: var(--secondary-dark);
+  border: 1px solid var(--secondary-dark);
+  padding: 0.2em 0.5em;
+  border-radius: 8px;
+  margin: 0 0.5em;
+}
+
+.comment-author-author {
+  color: var(--warning-main);
+  border: 1px solid var(--warning-main);
+  padding: 0.2em 0.5em;
+  border-radius: 8px;
+  margin: 0 0.5em;
 }
 
 .comment-date {

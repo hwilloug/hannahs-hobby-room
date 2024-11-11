@@ -22,5 +22,6 @@ declare namespace App {
   interface Locals {
     userId: string;
     isAdmin: boolean;
+    username: string;
   }
 }

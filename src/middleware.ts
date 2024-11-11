@@ -31,13 +31,9 @@ export const onRequest = clerkMiddleware((auth, context, next) => {
         }
       });
     }
-
-    // Add userId to context for admin routes
-    context.locals.userId = userId;
-    context.locals.isAdmin = isAdmin;
-  } else {
-    context.locals.isAdmin = isAdmin;
-    context.locals.userId = userId || '';
   }
+  context.locals.userId = userId || '';
+  context.locals.isAdmin = isAdmin;
+  context.locals.username = sessionClaims?.username as string || '';
   return next()
 });

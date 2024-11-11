@@ -23,8 +23,8 @@ export interface Comment {
   timestamp: string;
   body: string;
   username: string;
-  articleSlug: string;
-  parentId?: string;
+  article_slug: string;
+  parent_id?: string;
   children?: Comment[];
 }
 

@@ -1,18 +1,15 @@
 ---
+import { format, parseISO } from 'date-fns';
+
 interface Props {
 	date: Date;
 }
 
 const { date } = Astro.props;
+// Convert to local timezone to avoid date appearing a day behind
+const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
 ---
 
 {date && <time datetime={date.toISOString()}>
-	{
-		date.toLocaleDateString('en-us', {
-			year: 'numeric',
-			month: 'short',
-			day: 'numeric',
-		})
-	}
-</time>
-}
+	{format(localDate, 'MMM d, yyyy')}
+</time>}

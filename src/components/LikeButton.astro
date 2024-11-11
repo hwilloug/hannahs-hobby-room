@@ -13,7 +13,7 @@ let likes = article?.article.likes;
 
 <div class="like-container">
   <button 
-    id="like-button-{postSlug}" 
+    id={`like-button-${postSlug}`} 
     class="like-button" 
     data-slug={postSlug} 
     aria-label="Like this article"
