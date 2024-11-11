@@ -202,4 +202,4 @@ I'm really happy with how the refactor went and how the site turned out. I think
 
 Astro is a great framework for static sites, and I would recommend it to anyone looking to build a simple blog or website. Once you start using a database, though, you're probably better off using something like Next.js, but it is possible in Astro with the right setup.
 
-Please give this article a 💕, and comment below if you have any questions or feedback.
+Please give this article a 💕, and comment below if you have any questions or feedback. (Note that you might need to create a new account since I switched authentication providers - Nov 11, 2024)

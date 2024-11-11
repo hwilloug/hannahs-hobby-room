@@ -12,7 +12,7 @@ I was watching some videos on portfolio/personal websites, and came across a few
 
 I was interested in building a computer that was interactable, then I suddenly had the idea to model my hobby room and use it on the blog somehow. It's going to be the welcome page, but it is currently a work in progress.
 
-**Play with the beta model now on [this page](https://hannahshobbyroom.com/welcome).**
+~~Play with the beta model now on this page~~ (taken down for now)
 
 Warning -- It's a bit heavy for most phones, so use a computer if you can.
 
