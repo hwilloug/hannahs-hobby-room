@@ -8,6 +8,7 @@ import BrowserCard from '../components/BrowserCard.astro';
 import CategorySection from '../components/CategorySection.astro';
 import NewsletterPopup from '../components/NewsletterPopup.astro';
 import { getCollection } from 'astro:content';
+import { API_URL } from '../consts';
 
 const posts = await getCollection('blog');
 const sortedPosts = posts.sort(
@@ -69,12 +70,13 @@ const featuredPosts = sortedPosts.slice(0, 4);
 				<div class="email-signup">
 					<h3 class="home-page-header">Stay Updated! 🌟</h3>
 					<p class="signup-text">Subscribe to receive notifications about new hobby projects and tutorials!</p>
-					<form class="signup-form">
+					<form class="signup-form" id="newsletter-form">
 						<input 
 							type="email" 
 							placeholder="Enter your email address" 
 							required
 							aria-label="Email address"
+							id="email-input"
 						/>
 						<button type="submit">Subscribe</button>
 					</form>
@@ -120,6 +122,33 @@ const featuredPosts = sortedPosts.slice(0, 4);
 		</main>
 		<Footer />
 		<NewsletterPopup />
+
+		<script define:vars={{ API_URL }}>
+			document.getElementById('newsletter-form').addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const email = document.getElementById('email-input').value;
+				
+				try {
+					const response = await fetch(`${API_URL}/newsletter`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({ email })
+					});
+
+					if (!response.ok) {
+						throw new Error('Failed to subscribe');
+					}
+
+					alert('Thank you for subscribing!');
+					e.target.reset();
+				} catch (error) {
+					console.error('Error subscribing:', error);
+					alert('Failed to subscribe. Please try again.');
+				}
+			});
+		</script>
 
 		<style>
 			.home-page-header {
