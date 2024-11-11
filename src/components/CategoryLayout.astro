@@ -89,6 +89,10 @@ const icons = {
 				padding: 0;
 				list-style: none;
 			}
+			.posts-grid li {
+				width: 100%;
+				min-width: 0;
+			}
 			.browser-window {
 				background: var(--secondary-light);
 				border: 1px solid var(--secondary-dark);
@@ -168,6 +172,9 @@ const icons = {
 			}
 
 			@media (max-width: 768px) {
+				main {
+					padding: 1em 0.5em;
+				}
 				.category-header {
 					padding: 2em 1em;
 					margin: 2em 0;
@@ -182,6 +189,11 @@ const icons = {
 				}
 				.posts-grid {
 					grid-template-columns: 1fr;
+					gap: 1rem;
+					padding: 0;
+				}
+				.browser-window {
+					max-width: 100%;
 				}
 			}
 		</style>
@@ -218,7 +230,7 @@ const icons = {
 										<div class="browser-address">{post.data.title}</div>
 									</div>
 									<div class="browser-content">
-										<img width={720} height={360} src={post.data.heroImage} alt="" />
+										<img src={post.data.heroImage} alt="" />
 										<h2 class="title">{post.data.title}</h2>
 										<p class="date">
 											<FormattedDate date={post.data.pubDate} />
