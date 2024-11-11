@@ -1,4 +1,5 @@
 ---
+import { API_URL } from '../consts';
 ---
 
 <div class="newsletter-popup" id="newsletter-popup">
@@ -6,22 +7,24 @@
     <button class="close-button" aria-label="Close popup">×</button>
     <h3>📬 Stay in the Loop!</h3>
     <p class="signup-text">Subscribe to get the latest hobby updates and tutorials delivered straight to your inbox!</p>
-    <form class="signup-form">
+    <form class="signup-form" id="popup-newsletter-form">
       <input 
         type="email" 
         placeholder="Enter your email address" 
         required
         aria-label="Email address"
+        id="popup-email-input"
       />
       <button type="submit">Subscribe</button>
     </form>
   </div>
 </div>
 
-<script>
+<script define:vars={{ API_URL }}>
   let popupShown = false;
   const popup = document.getElementById('newsletter-popup');
   const closeButton = popup?.querySelector('.close-button');
+  const form = document.getElementById('popup-newsletter-form');
 
   function showPopup() {
     if (!popupShown && popup) {
@@ -41,6 +44,32 @@
       showPopup();
     }
   }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('popup-email-input').value;
+    
+    try {
+      const response = await fetch(`${API_URL}/newsletter`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to subscribe');
+      }
+
+      alert('Thank you for subscribing!');
+      e.target.reset();
+      hidePopup();
+    } catch (error) {
+      console.error('Error subscribing:', error);
+      alert('Failed to subscribe. Please try again.');
+    }
+  });
 
   window.addEventListener('scroll', handleScroll);
   closeButton?.addEventListener('click', hidePopup);
