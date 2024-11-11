@@ -55,10 +55,14 @@ export async function getArticle(slug: string): Promise<Article | null> {
   }
 }
 
-export async function likeArticle(slug: string): Promise<number> {
+export async function likeArticle(slug: string, decrement: boolean = false): Promise<number> {
   try {
     const response = await fetch(`${API_URL}/articles/${slug}/like`, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ decrease: decrement }),
     });
     if (!response.ok) {
       throw new Error('Failed to like article');

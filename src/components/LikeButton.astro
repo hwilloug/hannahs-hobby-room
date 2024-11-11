@@ -1,20 +1,23 @@
 ---
-import { getArticle, likeArticle } from '../lib/api';
+import { getArticle } from '../lib/api';
+import { API_URL } from '../consts';
 
 interface Props {
   postSlug: string;
 }
 
-// Ensure postSlug is passed as a prop from parent component
 const { postSlug } = Astro.props;
-
 const article = await getArticle(postSlug);
 let likes = article?.article.likes;
-export const name = 'LikeButton';
 ---
 
 <div class="like-container">
-  <button class="like-button" data-slug={postSlug} aria-label="Like this article">
+  <button 
+    id="like-button-{postSlug}" 
+    class="like-button" 
+    data-slug={postSlug} 
+    aria-label="Like this article"
+  >
     <div class="like-icon">
       <svg class="heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
@@ -24,56 +27,90 @@ export const name = 'LikeButton';
   </button>
 </div>
 
-<script define:vars={{ postSlug }}>
-const STORAGE_KEY = 'blog_likes';
+<script define:vars={{ postSlug, API_URL }}>
+// Try multiple ways to find the button
+const buttonById = document.getElementById(`like-button-${postSlug}`);
+const buttonByClass = document.querySelector('.like-button');
+const button = buttonById || buttonByClass;
 
-// Get liked articles from localStorage
-function getLikedArticles() {
-  const liked = localStorage.getItem(STORAGE_KEY);
-  return liked ? JSON.parse(liked) : [];
+// Check if article is already liked
+function isArticleLiked(slug) {
+  const likedArticles = document.cookie
+    .split('; ')
+    .find(row => row.startsWith('likedArticles='));
+  if (!likedArticles) return false;
+  
+  const likedSlugs = likedArticles.split('=')[1].split(',');
+  return likedSlugs.includes(slug);
 }
 
-// Save liked articles to localStorage
-function saveLikedArticles(liked) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(liked));
+// Add article to liked cookie
+function addToLikedArticles(slug) {
+  const likedArticles = document.cookie
+    .split('; ')
+    .find(row => row.startsWith('likedArticles='));
+    
+  let likedSlugs = likedArticles ? 
+    likedArticles.split('=')[1].split(',') : 
+    [];
+    
+  if (!likedSlugs.includes(slug)) {
+    likedSlugs.push(slug);
+    document.cookie = `likedArticles=${likedSlugs.join(',')}; path=/; max-age=31536000`; // 1 year
+  }
 }
 
-// Initialize like button
-function initLikeButton() {
-  const button = document.querySelector(`.like-button[data-slug="${postSlug}"]`);
-  const countElement = button?.querySelector('.like-count');
-  
-  if (!button || !countElement) return;
+async function likeArticle(slug) {
+  if (isArticleLiked(slug)) {
+    console.log('Article already liked');
+    return;
+  }
 
-  const likedArticles = getLikedArticles();
+  const response = await fetch(`${API_URL}/articles/${slug}/like`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ decrease: false })
+  });
   
-  if (likedArticles.includes(postSlug)) {
+  if (!response.ok) {
+    throw new Error('Failed to like article');
+  }
+  
+  const data = await response.json();
+  // Update the like count in the UI
+  const likeCount = button.querySelector('.like-count');
+  if (likeCount) {
+    likeCount.textContent = data.likes;
+  }
+  // Add liked class to button
+  button.classList.add('liked');
+  
+  // Add to liked articles cookie
+  addToLikedArticles(slug);
+  
+  return data.likes;
+}
+
+if (button) {
+  // Check if already liked and update UI
+  if (isArticleLiked(postSlug)) {
     button.classList.add('liked');
   }
 
   button.addEventListener('click', async () => {
-    if (likedArticles.includes(postSlug)) return;
-
+    console.log('Button clicked');
+    const slug = button.dataset.slug;
     try {
-      const newLikes = await likeArticle(postSlug);
-      countElement.textContent = newLikes;
-      button.classList.add('liked');
-      
-      // Save to localStorage
-      likedArticles.push(postSlug);
-      saveLikedArticles(likedArticles);
-      
-      // Trigger like animation
-      button.classList.add('animate');
-      setTimeout(() => button.classList.remove('animate'), 700);
+      likes = await likeArticle(slug);
     } catch (error) {
-      console.error('Error liking article:', error);
+      console.error('Error:', error);
     }
   });
+} else {
+  console.error('Could not find like button');
 }
-
-// Initialize when the DOM is ready
-document.addEventListener('DOMContentLoaded', initLikeButton);
 </script>
 
 <style>
