@@ -27,11 +27,27 @@ let likes = article?.article.likes;
   </button>
 </div>
 
-<script define:vars={{ postSlug, API_URL }}>
-// Try multiple ways to find the button
-const buttonById = document.getElementById(`like-button-${postSlug}`);
-const buttonByClass = document.querySelector('.like-button');
-const button = buttonById || buttonByClass;
+<script define:vars={{ postSlug, API_URL, likes }}>
+// Make sure we have a valid initial likes count
+let likeCount = likes || 0;
+
+const buttons = document.querySelectorAll(`[data-slug="${postSlug}"]`);
+
+function updateLikeUI(count, isLiked) {
+  likeCount = count; // Update the local count
+  buttons.forEach(button => {
+    const countElement = button.querySelector('.like-count');
+    if (countElement) {
+      countElement.textContent = count;
+    }
+    
+    if (isLiked) {
+      button.classList.add('liked');
+    } else {
+      button.classList.remove('liked');
+    }
+  });
+}
 
 // Check if article is already liked
 function isArticleLiked(slug) {
@@ -60,56 +76,70 @@ function addToLikedArticles(slug) {
   }
 }
 
-async function likeArticle(slug) {
-  if (isArticleLiked(slug)) {
-    console.log('Article already liked');
-    return;
+// Remove article from liked cookie
+function removeFromLikedArticles(slug) {
+  const likedArticles = document.cookie
+    .split('; ')
+    .find(row => row.startsWith('likedArticles='));
+    
+  if (likedArticles) {
+    let likedSlugs = likedArticles.split('=')[1].split(',');
+    likedSlugs = likedSlugs.filter(s => s !== slug);
+    document.cookie = `likedArticles=${likedSlugs.join(',')}; path=/; max-age=31536000`;
   }
+}
 
+async function toggleLike(slug) {
+  const isLiked = isArticleLiked(slug);
+  
   const response = await fetch(`${API_URL}/articles/${slug}/like`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ decrease: false })
+    body: JSON.stringify({ decrease: isLiked })
   });
   
   if (!response.ok) {
-    throw new Error('Failed to like article');
+    throw new Error('Failed to toggle like');
   }
   
   const data = await response.json();
-  // Update the like count in the UI
-  const likeCount = button.querySelector('.like-count');
-  if (likeCount) {
-    likeCount.textContent = data.likes;
-  }
-  // Add liked class to button
-  button.classList.add('liked');
   
-  // Add to liked articles cookie
-  addToLikedArticles(slug);
+  // Update all buttons with new state
+  updateLikeUI(data.likes, !isLiked);
+
+  if (isLiked) {
+    removeFromLikedArticles(slug);
+  } else {
+    addToLikedArticles(slug);
+  }
   
   return data.likes;
 }
 
-if (button) {
-  // Check if already liked and update UI
-  if (isArticleLiked(postSlug)) {
-    button.classList.add('liked');
-  }
+// Initialize buttons immediately when script loads
+if (buttons.length > 0) {
+  // Check initial state from cookies
+  const isLiked = isArticleLiked(postSlug);
+  console.log('Initial cookie state:', { postSlug, isLiked, likeCount }); // Debug log
+  
+  // Use updateLikeUI for initial state
+  updateLikeUI(likeCount, isLiked);
 
-  button.addEventListener('click', async () => {
-    console.log('Button clicked');
-    const slug = button.dataset.slug;
-    try {
-      likes = await likeArticle(slug);
-    } catch (error) {
-      console.error('Error:', error);
-    }
+  // Add click handlers
+  buttons.forEach(button => {
+    button.addEventListener('click', async () => {
+      try {
+        const newLikeCount = await toggleLike(postSlug);
+        likeCount = newLikeCount; // Update the local count
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
   });
 } else {
-  console.error('Could not find like button');
+  console.error('Could not find like buttons');
 }
 </script>
 
@@ -141,7 +171,7 @@ if (button) {
 }
 
 .like-button.liked {
-  cursor: default;
+  cursor: pointer;
 }
 
 .like-icon {

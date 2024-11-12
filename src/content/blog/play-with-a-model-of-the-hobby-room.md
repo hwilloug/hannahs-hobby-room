@@ -200,7 +200,7 @@ export default Computer;
   font-size: 0.75em;
   font-weight: 400;
   text-align: left;
-  font-family: "Gluten", cursive;
+  font-family: "Gluten", sans-serif;
   text-shadow:
     -1px -1px 0 #000,
     1px -1px 0 #000,
@@ -211,7 +211,7 @@ export default Computer;
 #screen .body {
   padding: 16px;
   font-size: 1em;
-  font-family: "Gluten", cursive;
+  font-family: "Gluten", sans-serif;
   text-align: center;
   color: rgb(145, 107, 162);
   text-shadow:
