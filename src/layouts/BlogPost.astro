@@ -7,6 +7,7 @@ import Comments from '../components/Comments.astro';
 import LikeButton from '../components/LikeButton.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
 import RelatedArticles from '../components/RelatedArticles.astro';
+import AboutMeFooter from '../components/AboutMeFooter.astro';
 
 const { title, subtitle, description, pubDate, updatedDate, heroImage, category, subcategories, slug } = Astro.props;
 ---
@@ -64,8 +65,11 @@ const { title, subtitle, description, pubDate, updatedDate, heroImage, category,
     </article>
     <Comments postSlug={slug} server:defer />
     <div class="newsletter-and-related">
+        <hr />
+        <RelatedArticles currentSlug={slug} category={category} subcategories={subcategories} />
+      <hr />
       <NewsletterSignup />
-      <RelatedArticles currentSlug={slug} category={category} subcategories={subcategories} />
+      <AboutMeFooter />
     </div>
 	</main>
 		<Footer server:defer />
@@ -176,6 +180,7 @@ const { title, subtitle, description, pubDate, updatedDate, heroImage, category,
     }
 
     .newsletter-and-related {
-        margin: 2em;
+        max-width: 800px;
+        margin: 4em auto;
     }
 </style>

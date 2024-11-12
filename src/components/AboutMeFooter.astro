@@ -1,0 +1,70 @@
+---
+---
+<div class="about-me-footer">
+  <h2>About Me</h2>
+  <img src="https://blog-images.poppyland.dev/me.jpeg" alt="Hannah Willoughby" class="about-me-footer-image" />
+  <p>Hello world! I'm Hannah, a software engineer by day and an enthusiastic hobbyist by night. From my home in Fort Mill, SC, I pursue a diverse array of creative interests.</p>
+  <a href="/about" class="about-me-footer-button">Read More</a>
+</div>
+
+<style>
+  .about-me-footer {
+    background: var(--primary-light);
+    border: 1px solid var(--primary-dark);
+    border-radius: 12px;
+    padding: 1.5em;
+    text-align: center;
+    box-shadow: 4px 4px var(--primary-dark);
+    margin-top: 2em;
+  }
+
+  h2 {
+    font-family: 'Gluten', sans-serif;
+    color: var(--primary-dark);
+    margin: 0;
+    text-align: center;
+  }
+
+  .about-me-footer-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto 1em auto;
+    display: block;
+    border: 3px solid var(--primary-dark);
+  }
+
+  p {
+    color: rgb(var(--gray-dark));
+    margin-bottom: 1.5em;
+    line-height: 1.5;
+  }
+
+  .about-me-footer-button {
+    display: inline-block;
+    padding: 0.8em 1.5em;
+    background-color: var(--secondary-main);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    border: 1px solid var(--secondary-dark);
+    transition: background-color 0.2s;
+  }
+
+  .about-me-footer-button:hover {
+    background-color: var(--secondary-dark);
+  }
+
+  /* Dark mode styles */
+  :global(.dark) .about-me-footer {
+    background: rgba(var(--primary-main-rgb), 0.2);
+  }
+
+  :global(.dark) h2 {
+    color: white;
+  }
+
+  :global(.dark) p {
+    color: rgba(255, 255, 255, 0.9);
+  }
+</style>
