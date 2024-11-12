@@ -11,6 +11,8 @@ subcategories:
 ---
 It takes a while to write articles using React, so when I learned about Astro, I decided to try it out. I created a new project using bolt.new and was able to get it running in no time.
 
+[Play around with v3 of the site here!](https://hannahshobbyroom.com) It should look pretty familiar if you've been following along.
+
 ## What is bolt.new?
 
 ![bolt.new screenshot](https://blog-images.poppyland.dev/boltnew_1.jpeg)
@@ -202,4 +204,8 @@ I'm really happy with how the refactor went and how the site turned out. I think
 
 Astro is a great framework for static sites, and I would recommend it to anyone looking to build a simple blog or website. Once you start using a database, though, you're probably better off using something like Next.js, but it is possible in Astro with the right setup. I think my v4 of this project will be written in Next.js. I'm already noticing the slowness of Astro+Lambdas while playing with the new site.
 
-Please give this article a 💕, and comment below if you have any questions or feedback. (Note that you might need to create a new account since I switched authentication providers - Nov 11, 2024)
+Functionality I'm planning on adding:
+- Search
+- Improved email experience
+
+Please give this article a 💕, and comment below if you have any questions, feedback, or suggestions. (Note that you might need to create a new account since I switched authentication providers - Nov 11, 2024)
