@@ -5,6 +5,8 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Comments from '../components/Comments.astro';
 import LikeButton from '../components/LikeButton.astro';
+import NewsletterSignup from '../components/NewsletterSignup.astro';
+import RelatedArticles from '../components/RelatedArticles.astro';
 
 const { title, subtitle, description, pubDate, updatedDate, heroImage, category, subcategories, slug } = Astro.props;
 ---
@@ -61,6 +63,10 @@ const { title, subtitle, description, pubDate, updatedDate, heroImage, category,
         </div>
     </article>
     <Comments postSlug={slug} server:defer />
+    <div class="newsletter-and-related">
+      <NewsletterSignup />
+      <RelatedArticles currentSlug={slug} category={category} subcategories={subcategories} />
+    </div>
 	</main>
 		<Footer server:defer />
 		<script is:inline src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
@@ -167,5 +173,9 @@ const { title, subtitle, description, pubDate, updatedDate, heroImage, category,
 
     .author-info p {
         margin: 0;
+    }
+
+    .newsletter-and-related {
+        margin: 2em;
     }
 </style>

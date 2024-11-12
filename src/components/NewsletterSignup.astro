@@ -1,0 +1,122 @@
+---
+import NewsletterDialog from "./NewsletterDialog.astro";
+
+
+---
+<div class="email-signup">
+  <h3 class="home-page-header">Stay Updated! 🌟</h3>
+  <p class="signup-text">Subscribe to receive notifications about new hobby projects and tutorials!</p>
+  <div class="signup-form">
+    <input 
+      type="email" 
+      placeholder="Enter your email" 
+      class="email-input"
+      id="pre-signup-email"
+    />
+    <button class="signup-button">Select Interests</button>
+  </div>
+  <NewsletterDialog />
+</div>
+
+<script>
+  // Add console logs to debug
+  const signupButton = document.querySelector('.signup-button');
+  const emailInput = document.getElementById('pre-signup-email');
+  
+  if (!signupButton) {
+    console.error('Signup button not found');
+  }
+  
+  signupButton?.addEventListener('click', () => {
+    console.log('Button clicked');
+    const dialog = document.getElementById('newsletter-dialog');
+    const dialogEmailInput = dialog?.querySelector('input[type="email"]') as HTMLInputElement;
+    
+    if (!dialog) {
+      console.error('Newsletter dialog not found');
+      return;
+    }
+
+    if (!dialogEmailInput) {
+      console.error('Dialog email input not found');
+      return;
+    }
+    
+    // Copy email value to dialog
+    if (emailInput instanceof HTMLInputElement) {
+      dialogEmailInput.value = emailInput.value;
+    }
+    
+    console.log('Dialog found:', dialog);
+    // Try direct showModal call first
+    if (dialog instanceof HTMLDialogElement) {
+      dialog.showModal();
+    } else {
+      console.error('Dialog is not a proper dialog element');
+    }
+  });
+</script>
+
+<style>
+			.email-signup {
+				margin: 4em 0;
+				padding: 2em;
+				background: var(--warning-main);
+				border-radius: 12px;
+				text-align: center;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+				border: 1px solid var(--primary-dark);
+        box-shadow: 4px 4px 1px var(--primary-dark);
+			}
+
+			.email-signup h3 {
+				color: white;
+				margin-bottom: 0.5em;
+				text-align: center;
+				margin-left: 0;
+        text-shadow: var(--text-shadow);
+			}
+
+			.signup-text {
+				color: black;
+				margin-bottom: 1.5em;
+			}
+
+			.signup-form {
+				display: flex;
+				gap: 1rem;
+				max-width: 500px;
+				margin: 0 auto;
+			}
+
+			.email-input {
+				flex: 1;
+				padding: 0.8em 1.5em;
+				border-radius: 25px;
+				border: 1px solid var(--primary-dark);
+				font-size: 1em;
+			}
+
+			.signup-button {
+				background: var(--primary-main);
+				color: white;
+				border: none;
+				padding: 0.8em 1.5em;
+				border-radius: 25px;
+				font-size: 1em;
+				cursor: pointer;
+				transition: transform 0.2s, background-color 0.2s;
+				white-space: nowrap;
+			}
+
+      @media (max-width: 600px) {
+				.signup-form {
+					flex-direction: column;
+				}
+				
+				.signup-button {
+					width: 100%;
+				}
+			}
+
+</style>

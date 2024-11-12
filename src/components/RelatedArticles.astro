@@ -37,12 +37,13 @@ const relatedPosts = allPosts
     <div class="articles-grid">
       {relatedPosts.map((post) => (
         <a href={`/blog/${post.slug}/`} class="article-card">
-          <div class="card-header">
-            <div class="browser-actions">
-              <span class="browser-action"></span>
-              <span class="browser-action"></span>
-              <span class="browser-action"></span>
+          <div class="browser-bar">
+            <div class="browser-controls">
+              <div class="control red"></div>
+              <div class="control yellow"></div>
+              <div class="control green"></div>
             </div>
+            <div class="browser-title">Related Post</div>
           </div>
           <div class="card-content">
             <img src={post.data.heroImage} alt="" />
@@ -50,7 +51,7 @@ const relatedPosts = allPosts
             <p class="date">
               <FormattedDate date={post.data.pubDate} />
             </p>
-            <p class="description">{post.data.description}</p>
+            <p class="description">{post.data.subtitle}</p>
           </div>
         </a>
       ))}
@@ -80,7 +81,7 @@ const relatedPosts = allPosts
 
   .article-card {
     background: var(--primary-light);
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
     text-decoration: none;
     color: inherit;
@@ -88,33 +89,45 @@ const relatedPosts = allPosts
     height: 100%;
     display: flex;
     flex-direction: column;
+    border: 1px solid var(--primary-dark);
+    box-shadow: 4px 4px var(--primary-dark);
   }
 
   .article-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
-  .card-header {
+  .browser-bar {
     background: var(--primary-main);
-    padding: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .browser-actions {
+    padding: 12px;
     display: flex;
-    gap: 6px;
+    align-items: center;
+    border-bottom: 1px solid var(--primary-dark);
   }
 
-  .browser-action {
+  .browser-controls {
+    display: flex;
+    gap: 8px;
+  }
+
+  .control {
     width: 12px;
     height: 12px;
     border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
   }
 
-  .browser-action:nth-child(1) { background: #ff5f57; }
-  .browser-action:nth-child(2) { background: #ffbd2e; }
-  .browser-action:nth-child(3) { background: #28c940; }
+  .control.red { background: #ff5f57; }
+  .control.yellow { background: #ffbd2e; }
+  .control.green { background: #28c940; }
+
+  .browser-title {
+    flex: 1;
+    text-align: center;
+    color: var(--primary-dark);
+    font-size: 0.9em;
+    margin-right: 48px;
+  }
 
   .card-content {
     padding: 1em;
@@ -129,6 +142,7 @@ const relatedPosts = allPosts
     object-fit: cover;
     border-radius: 8px;
     margin-bottom: 1em;
+    border: 1px solid var(--primary-dark);
   }
 
   .card-content h3 {
@@ -164,8 +178,12 @@ const relatedPosts = allPosts
     background: rgba(var(--primary-main-rgb), 0.2);
   }
 
-  :global(.dark) .card-header {
+  :global(.dark) .browser-bar {
     background: rgba(var(--primary-main-rgb), 0.3);
+  }
+
+  :global(.dark) .browser-title {
+    color: white;
   }
 
   :global(.dark) .card-content h3 {
