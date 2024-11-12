@@ -34,6 +34,48 @@
 	color-scheme: light;
 }
 
+/* Font faces */
+@font-face {
+	font-family: 'Gluten';
+	src: url('/fonts/Gluten/static/Gluten-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Gluten';
+	src: url('/fonts/Gluten/static/Gluten-Bold.ttf') format('truetype');
+	font-weight: bold;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Gluten';
+	src: url('/fonts/Gluten/static/Gluten-ExtraBold.ttf') format('truetype');
+	font-weight: bolder;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ubuntu';
+	src: url('/fonts/Ubuntu/Ubuntu-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ubuntu';
+	src: url('/fonts/Ubuntu/Ubuntu-Bold.ttf') format('truetype');
+	font-weight: bold;
+	font-style: normal;
+	font-display: swap;
+}
+
+
 /* Dark mode variables */
 html.dark {
 	--primary-light: var(--dark-primary-light);
@@ -115,7 +157,7 @@ main {
 h1 {
 	font-size: 3.052em;
 	text-shadow: var(--text-shadow-header);
-	font-weight: bold;
+	font-weight: bolder;
 	color: white;
 }
 h2 {

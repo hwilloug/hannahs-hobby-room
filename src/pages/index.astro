@@ -84,17 +84,17 @@ const featuredPosts = sortedPosts.slice(0, 4);
 
 				<div class="categories">
 					<CategorySection
-						title="🌱 Gardening"
-						description=""
-						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'gardening').slice(0, 4)}
-						category="gardening"
-					/>
-
-					<CategorySection
 						title="🎨 Crafts"
 						description=""
 						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'crafts').slice(0, 4)}
 						category="crafts"
+					/>
+
+					<CategorySection
+						title="🌱 Gardening"
+						description=""
+						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'gardening').slice(0, 4)}
+						category="gardening"
 					/>
 
 					<CategorySection

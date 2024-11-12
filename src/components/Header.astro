@@ -2,12 +2,12 @@
 import HeaderLink from './HeaderLink.astro';
 import { SITE_TITLE } from '../consts';
 import DarkModeToggle from './DarkModeToggle.astro';
-import { SignedIn, SignedOut, UserButton, SignInButton } from '@clerk/astro/components';
 import GardeningIcon from './icons/GardeningIcon.astro';
 import CraftsIcon from './icons/CraftsIcon.astro';
 import CodingIcon from './icons/CodingIcon.astro';
 import BooksIcon from './icons/BooksIcon.astro';
 import AntiquingIcon from './icons/AntiquingIcon.astro';
+import SignInOrUserButton from './SignInOrUserButton.astro';
 ---
 <header>
 	<nav>
@@ -30,14 +30,7 @@ import AntiquingIcon from './icons/AntiquingIcon.astro';
 						<span class="text">About</span>
 					</div>
 				</HeaderLink>
-				<div>
-					<SignedIn>
-						<UserButton />
-					</SignedIn>
-					<SignedOut>
-						<SignInButton />
-					</SignedOut>
-				</div>
+				<SignInOrUserButton server:defer />
 				<button class="menu-toggle" aria-label="Toggle menu" id="menu-toggle">
 					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 						<line x1="3" y1="12" x2="21" y2="12"></line>
@@ -49,20 +42,20 @@ import AntiquingIcon from './icons/AntiquingIcon.astro';
 		</div>
 		<div class="nav-bottom" id="nav-container">
 			<div class="internal-links">
-				<HeaderLink href="/categories/gardening">
-					<div class="nav-content">
-						<span class="icon">
-							<GardeningIcon class="size-6 icon-svg" />
-						</span>
-						<span class="text">Gardening</span>
-					</div>
-				</HeaderLink>
 				<HeaderLink href="/categories/crafts">
 					<div class="nav-content">
 						<span class="icon">
 							<CraftsIcon class="size-6 icon-svg" />
 						</span>
 						<span class="text">Crafts</span>
+					</div>
+				</HeaderLink>
+				<HeaderLink href="/categories/gardening">
+					<div class="nav-content">
+						<span class="icon">
+							<GardeningIcon class="size-6 icon-svg" />
+						</span>
+						<span class="text">Gardening</span>
 					</div>
 				</HeaderLink>
 				<HeaderLink href="/categories/coding">
@@ -135,6 +128,7 @@ import AntiquingIcon from './icons/AntiquingIcon.astro';
 	#app-title {
 		margin: 0;
 		font-size: 2em;
+		font-weight: bolder;
 	}
 
 	#app-title a {

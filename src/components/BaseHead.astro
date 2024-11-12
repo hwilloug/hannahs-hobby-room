@@ -40,14 +40,12 @@ const socialImageURL = new URL(image, Astro.site);
 <meta property="og:locale" content="en_US">
 <link rel="alternate" href={canonicalURL} hreflang="en-us" />
 
-<!-- Google Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Gluten:wght@400;600&display=swap" rel="stylesheet">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+<!-- Preload Fonts -->
+<link rel="preload" href="/fonts/Gluten/Gluten-Regular.ttf" as="font" type="font/ttf" crossorigin />
+<link rel="preload" href="/fonts/Gluten/Gluten-Bold.ttf" as="font" type="font/ttf" crossorigin />
+<link rel="preload" href="/fonts/Gluten/Gluten-ExtraBold.ttf" as="font" type="font/ttf" crossorigin />
+<link rel="preload" href="/fonts/Ubuntu/Ubuntu-Regular.ttf" as="font" type="font/ttf" crossorigin />
+<link rel="preload" href="/fonts/Ubuntu/Ubuntu-Bold.ttf" as="font" type="font/ttf" crossorigin />
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
