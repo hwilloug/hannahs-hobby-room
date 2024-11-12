@@ -200,6 +200,6 @@ import { SignedIn, SignedOut, UserButton, SignInButton } from '@clerk/astro/comp
 
 I'm really happy with how the refactor went and how the site turned out. I think it looks a lot cleaner and more modern, and I'm sure it will be a lot easier to maintain. I learned a lot about Astro and Clerk, and I'm looking forward to getting even more into the nitty gritty.
 
-Astro is a great framework for static sites, and I would recommend it to anyone looking to build a simple blog or website. Once you start using a database, though, you're probably better off using something like Next.js, but it is possible in Astro with the right setup.
+Astro is a great framework for static sites, and I would recommend it to anyone looking to build a simple blog or website. Once you start using a database, though, you're probably better off using something like Next.js, but it is possible in Astro with the right setup. I think my v4 of this project will be written in Next.js. I'm already noticing the slowness of Astro+Lambdas while playing with the new site.
 
 Please give this article a 💕, and comment below if you have any questions or feedback. (Note that you might need to create a new account since I switched authentication providers - Nov 11, 2024)
