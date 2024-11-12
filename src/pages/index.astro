@@ -7,6 +7,7 @@ import Carousel from '../components/Carousel.astro';
 import BrowserCard from '../components/BrowserCard.astro';
 import CategorySection from '../components/CategorySection.astro';
 import NewsletterPopup from '../components/NewsletterPopup.astro';
+import NewsletterDialog from '../components/NewsletterDialog.astro';
 import { getCollection } from 'astro:content';
 import { API_URL } from '../consts';
 
@@ -70,16 +71,15 @@ const featuredPosts = sortedPosts.slice(0, 4);
 				<div class="email-signup">
 					<h3 class="home-page-header">Stay Updated! 🌟</h3>
 					<p class="signup-text">Subscribe to receive notifications about new hobby projects and tutorials!</p>
-					<form class="signup-form" id="newsletter-form">
+					<div class="signup-form">
 						<input 
 							type="email" 
-							placeholder="Enter your email address" 
-							required
-							aria-label="Email address"
-							id="email-input"
+							placeholder="Enter your email" 
+							class="email-input"
+							id="pre-signup-email"
 						/>
-						<button type="submit">Subscribe</button>
-					</form>
+						<button class="signup-button">Select Interests</button>
+					</div>
 				</div>
 
 				<div class="categories">
@@ -88,7 +88,7 @@ const featuredPosts = sortedPosts.slice(0, 4);
 						description=""
 						posts={sortedPosts.filter(post => post.data.category?.toLowerCase() === 'crafts').slice(0, 4)}
 						category="crafts"
-					/>
+						/>
 
 					<CategorySection
 						title="🌱 Gardening"
@@ -122,30 +122,43 @@ const featuredPosts = sortedPosts.slice(0, 4);
 		</main>
 		<Footer />
 		<NewsletterPopup />
+		<NewsletterDialog />
 
-		<script define:vars={{ API_URL }}>
-			document.getElementById('newsletter-form').addEventListener('submit', async (e) => {
-				e.preventDefault();
-				const email = document.getElementById('email-input').value;
+		<script>
+			// Add console logs to debug
+			const signupButton = document.querySelector('.signup-button');
+			const emailInput = document.getElementById('pre-signup-email');
+			
+			if (!signupButton) {
+				console.error('Signup button not found');
+			}
+			
+			signupButton?.addEventListener('click', () => {
+				console.log('Button clicked');
+				const dialog = document.getElementById('newsletter-dialog');
+				const dialogEmailInput = dialog?.querySelector('input[type="email"]') as HTMLInputElement;
 				
-				try {
-					const response = await fetch(`${API_URL}/newsletter`, {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json'
-						},
-						body: JSON.stringify({ email })
-					});
+				if (!dialog) {
+					console.error('Newsletter dialog not found');
+					return;
+				}
 
-					if (!response.ok) {
-						throw new Error('Failed to subscribe');
-					}
-
-					alert('Thank you for subscribing!');
-					e.target.reset();
-				} catch (error) {
-					console.error('Error subscribing:', error);
-					alert('Failed to subscribe. Please try again.');
+				if (!dialogEmailInput) {
+					console.error('Dialog email input not found');
+					return;
+				}
+				
+				// Copy email value to dialog
+				if (emailInput instanceof HTMLInputElement) {
+					dialogEmailInput.value = emailInput.value;
+				}
+				
+				console.log('Dialog found:', dialog);
+				// Try direct showModal call first
+				if (dialog instanceof HTMLDialogElement) {
+					dialog.showModal();
+				} else {
+					console.error('Dialog is not a proper dialog element');
 				}
 			});
 		</script>
@@ -268,29 +281,20 @@ const featuredPosts = sortedPosts.slice(0, 4);
 
 			.signup-form {
 				display: flex;
-				gap: 1em;
+				gap: 1rem;
 				max-width: 500px;
-				margin: 1.5em auto 0;
+				margin: 0 auto;
 			}
 
-			.signup-form input {
+			.email-input {
 				flex: 1;
-				padding: 0.8em 1.2em;
-				border: 2px solid rgba(255, 255, 255, 0.3);
+				padding: 0.8em 1.5em;
 				border-radius: 25px;
+				border: 1px solid var(--primary-dark);
 				font-size: 1em;
-				transition: border-color 0.3s;
-				background: rgba(255, 255, 255, 0.9);
-				color: black;
 			}
 
-			.signup-form input:focus {
-				outline: none;
-				border-color: white;
-				background: white;
-			}
-
-			.signup-form button {
+			.signup-button {
 				background: var(--primary-main);
 				color: white;
 				border: none;
@@ -299,9 +303,10 @@ const featuredPosts = sortedPosts.slice(0, 4);
 				font-size: 1em;
 				cursor: pointer;
 				transition: transform 0.2s, background-color 0.2s;
+				white-space: nowrap;
 			}
 
-			.signup-form button:hover {
+			.signup-button:hover {
 				transform: translateY(-2px);
 				background: var(--primary-dark);
 			}
@@ -316,8 +321,8 @@ const featuredPosts = sortedPosts.slice(0, 4);
 				.signup-form {
 					flex-direction: column;
 				}
-
-				.signup-form button {
+				
+				.signup-button {
 					width: 100%;
 				}
 			}

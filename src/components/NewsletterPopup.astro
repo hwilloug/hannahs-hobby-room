@@ -15,7 +15,7 @@ import { API_URL } from '../consts';
         aria-label="Email address"
         id="popup-email-input"
       />
-      <button type="submit">Subscribe</button>
+      <button type="submit">Select Interests</button>
     </form>
   </div>
 </div>
@@ -47,27 +47,24 @@ import { API_URL } from '../consts';
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = document.getElementById('popup-email-input').value;
-    
-    try {
-      const response = await fetch(`${API_URL}/newsletter`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email })
-      });
+    const email = document.getElementById('popup-email-input')?.value;
+    const dialog = document.getElementById('newsletter-dialog');
+    const dialogEmailInput = dialog?.querySelector('input[type="email"]');
 
-      if (!response.ok) {
-        throw new Error('Failed to subscribe');
-      }
+    if (!dialog || !dialogEmailInput) {
+      console.error('Newsletter dialog or email input not found');
+      return;
+    }
 
-      alert('Thank you for subscribing!');
-      e.target.reset();
+    // Copy email to dialog
+    dialogEmailInput.value = email || '';
+
+    // Show dialog
+    if (dialog instanceof HTMLDialogElement) {
+      dialog.showModal();
       hidePopup();
-    } catch (error) {
-      console.error('Error subscribing:', error);
-      alert('Failed to subscribe. Please try again.');
+    } else {
+      console.error('Dialog is not a proper dialog element');
     }
   });
 

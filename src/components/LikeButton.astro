@@ -41,6 +41,7 @@ function updateLikeUI(count, isLiked) {
       countElement.textContent = count;
     }
     
+    // Always update the liked class state, whether adding or removing
     if (isLiked) {
       button.classList.add('liked');
     } else {
@@ -124,19 +125,23 @@ if (buttons.length > 0) {
   const isLiked = isArticleLiked(postSlug);
   console.log('Initial cookie state:', { postSlug, isLiked, likeCount }); // Debug log
   
+  // Initialize all buttons with the liked state
+  buttons.forEach(button => {
+    if (isLiked) {
+      button.classList.add('liked');
+    }
+  });
+  
   // Use updateLikeUI for initial state
   updateLikeUI(likeCount, isLiked);
 
-  // Add click handlers
-  buttons.forEach(button => {
-    button.addEventListener('click', async () => {
-      try {
-        const newLikeCount = await toggleLike(postSlug);
-        likeCount = newLikeCount; // Update the local count
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    });
+  // Add click handler to only the first button
+  buttons[0].addEventListener('click', async () => {
+    try {
+      await toggleLike(postSlug);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   });
 } else {
   console.error('Could not find like buttons');
