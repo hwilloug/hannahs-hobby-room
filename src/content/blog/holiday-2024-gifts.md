@@ -1,7 +1,7 @@
 ---
 title: "Holiday 2024 Gifts"
-subtitle: "A list of gifts for the holidays"
-pubDate: 2024-12-25
+subtitle: "A list of gifts I gave for the holidays"
+pubDate: 2025-02-09
 heroImage: https://blog-images.poppyland.dev/holiday_2024_1.jpeg
 category: "Crafts"
 subcategories:
