@@ -3,6 +3,7 @@ title: I Updated My Portfolio Site!
 pubDate: 2025-02-27
 category: Coding
 heroImage: https://blog-images.poppyland.dev/hannah-dot-dev-v2.png
+subtitle: A look into the development of a new version of my portfolio site
 subcategories:
   - Astro
   - Vercel
