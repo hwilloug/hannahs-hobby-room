@@ -1,0 +1,63 @@
+---
+import BrowserCard from '../../components/BrowserCard.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const tag = Astro.url.searchParams.get('tag');
+
+const tags = await getCollection('blog', (post) => post.data.subcategories);
+
+const uniqueTags = [...new Set(tags.flatMap(post => post.data.subcategories))].sort();
+
+const filteredPosts = tag ? tags.filter(post => post.data.subcategories.includes(tag)) : tags;
+
+const sortedPosts = filteredPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<Layout>
+  {tag && (
+    <div class="content-wrapper">
+      <h1>Posts tagged with {tag}</h1>
+      <div class="posts-grid">
+        {sortedPosts.map(post => (
+          <BrowserCard title={post.data.title} image={post.data.heroImage} url={`/blog/${post.slug}/`} />
+        ))}
+      </div>
+    </div>
+  )}
+  <div class="content-wrapper">
+    <h1>Tags</h1>
+    <ul>
+    {
+      uniqueTags.map((tag: string) => (
+        <li><a href={`/tags?tag=${tag}`}>{tag}</a></li>
+      ))
+    }
+    </ul>
+  </div>
+</Layout>
+
+<style>
+    .content-wrapper {
+        max-width: 800px;
+        margin: 2em auto;
+        background-color: rgba(var(--primary-main-rgb), 0.6);
+        border: 1px solid var(--primary-dark);
+        padding: 1em;
+        border-radius: 12px;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1em;
+    }
+
+    .posts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1em;
+    }
+</style>

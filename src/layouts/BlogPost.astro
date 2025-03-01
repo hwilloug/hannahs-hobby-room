@@ -39,9 +39,9 @@ const { title, subtitle, description, pubDate, updatedDate, heroImage, category,
                     }
                     <p>Written by Hannah Willoughby</p>
                     <div class="category-pills">
-                        <span class="pill category">{category}</span>
+                        <a href={`/categories/${category.toLowerCase().replace(/\s+/g, '-')}/`} class="pill category">{category}</a>
                         {subcategories.map(sub => (
-                            <span class="pill subcategory">{sub}</span>
+                            <a href={`/tags?tag=${sub}`} class="pill subcategory">{sub}</a>
                         ))}
                     </div>
                     <LikeButton postSlug={slug} server:defer />
@@ -156,12 +156,24 @@ const { title, subtitle, description, pubDate, updatedDate, heroImage, category,
     .pill.category {
         background: var(--primary-dark);
         color: white;
+        text-decoration: none;
+    }
+
+    .pill.category:hover {
+        background: var(--primary-darker);
+        cursor: pointer;
     }
 
     .pill.subcategory {
         background: var(--secondary-main);
         color: white;
         border: 1px solid var(--secondary-dark);
+        text-decoration: none;
+    }
+
+    .pill.subcategory:hover {
+        background: var(--secondary-dark);
+        cursor: pointer;
     }
 
     .content {
