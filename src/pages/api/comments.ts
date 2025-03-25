@@ -1,35 +1,20 @@
 import type { APIRoute } from 'astro';
 import { addComment } from '../../lib/api';
 
-export const POST: APIRoute = async ({ request, locals }) => {
-  // Check authentication
-  if (!locals.userId) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
+export const POST: APIRoute = async ({ request }) => {
   try {
-    const { postSlug, body, parentId } = await request.json();
-
-    // Get user info from Clerk
-    const userResponse = await fetch(`https://api.clerk.com/v1/users/${locals.userId}`, {
-      headers: {
-        'Authorization': `Bearer ${import.meta.env.CLERK_SECRET_KEY}`,
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!userResponse.ok) {
-      throw new Error('Failed to fetch user info');
+    const { article_slug, comment_body, parent_comment_id, username } = await request.json();
+    
+    // Basic validation
+    if (!article_slug || !comment_body || !username) {
+      return new Response(JSON.stringify({ error: 'Missing required fields' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
-
-    const userData = await userResponse.json();
-    const username = userData.username || `${userData.firstName} ${userData.lastName}`.trim();
-
+    
     // Add comment
-    const comment = await addComment(postSlug, username, body, parentId);
+    const comment = await addComment(article_slug, username, comment_body, parent_comment_id);
 
     return new Response(JSON.stringify(comment), {
       status: 200,

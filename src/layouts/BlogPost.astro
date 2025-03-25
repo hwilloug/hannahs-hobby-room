@@ -17,8 +17,7 @@ const { title, subtitle, description, pubDate, updatedDate, heroImage, category,
     <BaseHead title={title} description={description} />
   </head>
 	<body>
-	<div id="clerk-root"></div>
-	<Header server:defer />
+	<Header />
 	<main>
     <article>
         <div class="hero-image">
@@ -44,7 +43,7 @@ const { title, subtitle, description, pubDate, updatedDate, heroImage, category,
                             <a href={`/tags?tag=${sub}`} class="pill subcategory">{sub}</a>
                         ))}
                     </div>
-                    <LikeButton postSlug={slug} server:defer />
+                    <LikeButton postSlug={slug} />
                 </div>
                 <hr />
             </div>
@@ -60,10 +59,10 @@ const { title, subtitle, description, pubDate, updatedDate, heroImage, category,
                     )
                 }
             </div>
-            <LikeButton postSlug={slug} server:defer />
+            <LikeButton postSlug={slug} />
         </div>
     </article>
-    <Comments postSlug={slug} server:defer />
+    <Comments postSlug={slug} />
     <div class="newsletter-and-related">
         <hr />
         <RelatedArticles currentSlug={slug} category={category} subcategories={subcategories} />
@@ -72,8 +71,7 @@ const { title, subtitle, description, pubDate, updatedDate, heroImage, category,
       <AboutMeFooter />
     </div>
 	</main>
-		<Footer server:defer />
-		<script is:inline src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+	<Footer />
 	</body>
 </html>
 

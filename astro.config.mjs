@@ -1,10 +1,7 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import node from '@astrojs/node';
-import clerk from '@clerk/astro';
 import react from '@astrojs/react';
-
 import vercel from '@astrojs/vercel/serverless';
 
 export default defineConfig({
@@ -13,11 +10,6 @@ export default defineConfig({
   adapter: vercel(),
   integrations: [
     react(),
-    clerk({
-      publishableKey: process.env.PUBLIC_CLERK_PUBLISHABLE_KEY,
-      secretKey: process.env.CLERK_SECRET_KEY,
-      debug: true // Add this to get more detailed logs
-    }),
     mdx(), 
     sitemap({
       changefreq: 'weekly',
@@ -31,12 +23,6 @@ export default defineConfig({
       },
     })
   ],
-  vite: {
-    define: {
-      'process.env.CLERK_PUBLISHABLE_KEY': 
-        JSON.stringify(process.env.PUBLIC_CLERK_PUBLISHABLE_KEY),
-    },
-  },
   markdown: {
     shikiConfig: {
       theme: 'github-dark',

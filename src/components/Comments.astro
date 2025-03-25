@@ -1,5 +1,4 @@
 ---
-import { SignedIn, SignedOut, SignInButton } from '@clerk/astro/components';
 import { type Comment } from '../lib/api';
 import { getArticle } from '../lib/api';
 import { API_URL } from '../consts';
@@ -9,7 +8,6 @@ interface Props {
 }
 
 const { postSlug } = Astro.props;
-const { username } = Astro.locals;
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -63,15 +61,12 @@ const commentTree = buildCommentTree(article?.comments || []);
           <div class="comment-header">
             <div>
               <span class="comment-author">{comment.username}</span>
-              {comment.username === username && <span class="comment-author-you">You</span>}
               {comment.username === "hannahwilloughby" && <span class="comment-author-author">Author</span>}
             </div>
             <span class="comment-date">{formatDate(comment.timestamp)}</span>
           </div>
           <div class="comment-content">{comment.body}</div>
-          <SignedIn>
-            <button class="reply-button" data-comment-id={comment.id}>Reply</button>
-          </SignedIn>
+          <button class="reply-button" data-comment-id={comment.id}>Reply</button>
           {comment.children && comment.children.length > 0 && (
             <div class="nested-comments">
               {comment.children.map(reply => (
@@ -79,7 +74,6 @@ const commentTree = buildCommentTree(article?.comments || []);
                   <div class="comment-header">
                     <div>
                       <span class="comment-author">{reply.username}</span>
-                      {reply.username === username && <span class="comment-author-you">You</span>}
                       {reply.username === "hannahwilloughby" && <span class="comment-author-author">Author</span>}
                     </div>
                     <span class="comment-date">{formatDate(reply.timestamp)}</span>
@@ -96,35 +90,53 @@ const commentTree = buildCommentTree(article?.comments || []);
       <p>No comments yet.</p>
     )}
   </div>
-  <SignedIn>
-    <form class="comment-form" id="comment-form">
-      <div class="form-group">
-        <label for="comment">Comment</label>
-        <textarea 
-          id="comment" 
-          name="comment" 
-          required 
-          rows="4" 
-          placeholder="Share your thoughts..."
-        ></textarea>
-      </div>
-      
-      <button type="submit">Post Comment</button>
-    </form>
-  </SignedIn>
-  <SignedOut>
-    <div class="login-prompt">
-      <p>Please <SignInButton /> to comment.</p>
+  
+  <form class="comment-form" id="comment-form">
+    <div class="form-group">
+      <label for="username">Name</label>
+      <input 
+        type="text" 
+        id="username" 
+        name="username" 
+        required 
+        placeholder="Your name"
+      />
     </div>
-  </SignedOut>
+    <div class="form-group">
+      <label for="comment">Comment</label>
+      <textarea 
+        id="comment" 
+        name="comment" 
+        required 
+        rows="4" 
+        placeholder="Share your thoughts..."
+      ></textarea>
+    </div>
+    
+    <!-- Honeypot field to catch bots -->
+    <div class="honeypot-field">
+      <label for="website">Website</label>
+      <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+    </div>
+    
+    <button type="submit">Post Comment</button>
+  </form>
 </section>
 
-<script define:vars={{ postSlug, username, API_URL }}>
+<script define:vars={{ postSlug, API_URL }}>
 async function handleSubmit(e, parentId = null) {
   e.preventDefault();
   
   const form = e.target;
+  const username = form.username.value;
   const body = form.comment.value;
+  const honeypot = form.website?.value;
+  
+  // Check if honeypot field is filled (bot detection)
+  if (honeypot) {
+    console.log('Bot detected');
+    return;
+  }
   
   try {
     const response = await fetch(`${API_URL}/comments`, {
@@ -156,6 +168,16 @@ function createReplyForm(commentId) {
   form.className = 'reply-form';
   form.innerHTML = `
     <div class="form-group">
+      <label for="username-${commentId}">Name</label>
+      <input 
+        type="text" 
+        id="username-${commentId}" 
+        name="username" 
+        required 
+        placeholder="Your name"
+      />
+    </div>
+    <div class="form-group">
       <label for="comment-${commentId}">Reply</label>
       <textarea 
         id="comment-${commentId}" 
@@ -164,6 +186,12 @@ function createReplyForm(commentId) {
         rows="3" 
         placeholder="Write your reply..."
       ></textarea>
+    </div>
+    
+    <!-- Honeypot field for reply form -->
+    <div class="honeypot-field">
+      <label for="website-${commentId}">Website</label>
+      <input type="text" id="website-${commentId}" name="website" tabindex="-1" autocomplete="off" />
     </div>
     
     <div class="form-actions">
@@ -199,11 +227,6 @@ function initializeEventListeners() {
       });
     });
   });
-
-  // Sign in button
-  document.querySelector('.sign-in-button')?.addEventListener('click', () => {
-    window.Clerk?.openSignIn();
-  });
 }
 
 document.addEventListener('DOMContentLoaded', initializeEventListeners);
@@ -223,30 +246,6 @@ initializeEventListeners();
 .comments-section h2 {
   color: var(--primary-dark);
   text-shadow: none;
-}
-
-.login-prompt {
-  background: rgba(var(--primary-main-rgb), 0.6);
-  padding: 2em;
-  border-radius: 12px;
-  margin: 2em 0;
-  text-align: center;
-}
-
-.sign-in-button {
-  background: var(--primary-dark);
-  color: white;
-  border: none;
-  padding: 0.5em 1em;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1em;
-  transition: all 0.2s;
-}
-
-.sign-in-button:hover {
-  background: var(--primary-main);
-  transform: translateY(-2px);
 }
 
 .comment-form,
@@ -273,6 +272,7 @@ initializeEventListeners();
   font-weight: 500;
 }
 
+.form-group input[type="text"],
 .form-group textarea {
   width: 100%;
   padding: 0.8em;
@@ -283,9 +283,17 @@ initializeEventListeners();
   transition: border-color 0.3s;
 }
 
+.form-group input[type="text"]:focus,
 .form-group textarea:focus {
   outline: none;
   border-color: var(--primary-main);
+}
+
+/* Hide honeypot field */
+.honeypot-field {
+  display: none;
+  position: absolute;
+  left: -9999px;
 }
 
 .form-actions {
@@ -366,14 +374,6 @@ button[type="submit"]:hover,
   color: var(--primary-dark);
 }
 
-.comment-author-you {
-  color: var(--secondary-dark);
-  border: 1px solid var(--secondary-dark);
-  padding: 0.2em 0.5em;
-  border-radius: 8px;
-  margin: 0 0.5em;
-}
-
 .comment-author-author {
   color: var(--warning-main);
   border: 1px solid var(--warning-main);
@@ -411,12 +411,12 @@ button[type="submit"]:hover,
 
 :global(.dark) .comment,
 :global(.dark) .comment-form,
-:global(.dark) .reply-form,
-:global(.dark) .login-prompt {
+:global(.dark) .reply-form {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
+:global(.dark) .form-group input[type="text"],
 :global(.dark) .form-group textarea {
   background: rgba(255, 255, 255, 0.9);
   color: var(--primary-dark);
