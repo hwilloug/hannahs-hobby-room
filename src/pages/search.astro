@@ -1,0 +1,123 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { searchPosts, type SearchResult } from '../utils/search';
+import BrowserCard from '../components/BrowserCard.astro';
+
+const query = Astro.url.searchParams.get('q')?.toLowerCase() || '';
+let searchResults: SearchResult[] = [];
+
+if (query) {
+	const posts = await getCollection('blog');
+	searchResults = searchPosts(posts, query);
+}
+---
+
+<Layout title={query ? `Search results for "${query}"` : "Search"}>
+	<main>
+		<h1>Search</h1>
+		<form action="/search" method="get" class="search-container">
+			<input 
+				type="search" 
+				id="search-input"
+				name="q"
+				placeholder="Search posts..."
+				value={query}
+				aria-label="Search posts"
+				autocomplete="off"
+			/>
+		</form>
+
+		{query && (
+			<div class="results-info">
+				<p>Found {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} for "{query}"</p>
+			</div>
+		)}
+
+		<div class="search-results">
+			{searchResults.map(post => (
+				<BrowserCard
+					title={post.title}
+					image={post.heroImage || ''}
+					url={post.url}
+					subtitle={post.subtitle}
+					showSubtitle={true}
+				/>
+			))}
+		</div>
+	</main>
+</Layout>
+
+<style>
+	main {
+		width: 100%;
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 1em;
+	}
+
+	.search-container {
+		margin: 2em 0;
+		max-width: 600px;
+	}
+
+	#search-input {
+		width: 100%;
+		padding: 0.75em 1em;
+		font-size: 1.2em;
+		border: 2px solid var(--primary-main);
+		border-radius: 20px;
+		background: var(--bg);
+		color: var(--text);
+	}
+
+	#search-input:focus {
+		outline: none;
+		border-color: var(--primary-dark);
+	}
+
+	.results-info {
+		margin-bottom: 2em;
+		color: var(--text-muted);
+	}
+
+	.search-results {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+		gap: 2em;
+		padding: 1em 0;
+	}
+
+	@media (max-width: 720px) {
+		.search-results {
+			grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+		}
+	}
+</style>
+
+<script>
+	const searchInput = document.getElementById('search-input');
+	const form = document.querySelector('form');
+	const isSearchPage = window.location.pathname === '/search';
+	
+	let debounceTimeout: ReturnType<typeof setTimeout>;
+	searchInput?.addEventListener('input', (e) => {
+		const input = e.target as HTMLInputElement;
+		
+		// Only submit form if we're not on the search page
+		if (!isSearchPage) {
+			clearTimeout(debounceTimeout);
+			debounceTimeout = setTimeout(() => {
+				form?.submit();
+			}, 500);
+		}
+	});
+
+	// Handle enter key
+	searchInput?.addEventListener('keypress', (e) => {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			form?.submit();
+		}
+	});
+</script>

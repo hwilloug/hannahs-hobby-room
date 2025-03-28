@@ -17,6 +17,18 @@ import AntiquingIcon from './icons/AntiquingIcon.astro';
 				</div>
 				<h2 id="app-title"><a href="/">{SITE_TITLE}</a></h2>
 			</div>
+			<div class="search-section">
+				<div class="search-container">
+					<input 
+						type="search" 
+						id="search-input" 
+						placeholder="Search posts..."
+						aria-label="Search posts"
+						autocomplete="off"
+					/>
+					<div id="search-results" class="search-results"></div>
+				</div>
+			</div>
 			<div class="right-section">
 				<DarkModeToggle />
 				<HeaderLink href="/about" class="hide-mobile">
@@ -104,18 +116,22 @@ import AntiquingIcon from './icons/AntiquingIcon.astro';
 		align-items: center;
 		justify-content: space-between;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		flex-wrap: nowrap;
+		gap: 0.5em;
 	}
 
 	.left-section {
 		display: flex;
 		align-items: center;
 		gap: 1em;
+		flex: 0 0 auto;
 	}
 
 	.right-section {
 		display: flex;
 		align-items: center;
 		gap: 1em;
+		flex: 0 0 auto;
 	}
 
 	.app-icon {
@@ -176,6 +192,97 @@ import AntiquingIcon from './icons/AntiquingIcon.astro';
 		justify-content: center;
 	}
 
+	.search-section {
+		flex: 1 1 auto;
+		display: flex;
+		justify-content: center;
+		padding: 0 1em;
+		min-width: 200px;
+	}
+
+	.search-container {
+		position: relative;
+		width: 100%;
+		max-width: 400px;
+	}
+
+	#search-input {
+		width: 100%;
+		padding: 0.5em 1em;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 20px;
+		background: rgba(255, 255, 255, 0.1);
+		color: white;
+		font-size: 1em;
+	}
+
+	#search-input::placeholder {
+		color: rgba(255, 255, 255, 0.7);
+	}
+
+	#search-input:focus {
+		outline: none;
+		background: rgba(255, 255, 255, 0.15);
+		border-color: rgba(255, 255, 255, 0.3);
+	}
+
+	.search-results {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		background: var(--primary-main);
+		border: 1px solid var(--primary-dark);
+		border-radius: 8px;
+		margin-top: 0.5em;
+		max-height: 400px;
+		overflow-y: auto;
+		z-index: 1000;
+		padding: 0.5em;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.search-results .search-result-item {
+		padding: 0.75em 1em;
+		border-radius: 4px;
+		color: white;
+		margin-bottom: 0.25em;
+		transition: all 0.2s ease;
+		cursor: pointer;
+	}
+
+	.search-results .search-result-item:hover {
+		background: var(--primary-dark);
+		transform: translateY(-1px);
+	}
+
+	.search-results .search-result-item:last-child {
+		margin-bottom: 0;
+	}
+
+	.search-results .search-result-title {
+		font-weight: bold;
+	}
+
+	.search-results .view-all {
+		text-align: center;
+		background: white;
+		color: var(--primary-main);
+		font-weight: bold;
+		padding: 1em;
+		margin-top: 0.75em;
+		border-radius: 4px;
+		transition: all 0.2s ease;
+		cursor: pointer;
+	}
+
+	.search-results .view-all:hover {
+		background: var(--bg);
+		transform: translateY(-1px);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+
 	@media (max-width: 768px) {
 		.hide-mobile {
 			display: none;
@@ -183,10 +290,34 @@ import AntiquingIcon from './icons/AntiquingIcon.astro';
 
 		#app-title {
 			font-size: 1.25em;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			min-width: 0;
 		}
 
 		.nav-top {
-			border-bottom: none;
+			flex-direction: row;
+			flex-wrap: wrap;
+			gap: 0.5em;
+			padding-bottom: 0.5em;
+		}
+
+		.left-section {
+			flex: 0 1 auto;
+			min-width: 0;
+		}
+
+		.search-section {
+			order: 2;
+			width: 100%;
+			flex: 1 0 100%;
+			padding: 0;
+			margin-top: 0.5em;
+		}
+
+		.right-section {
+			flex: 0 0 auto;
 		}
 
 		.nav-bottom {
@@ -213,14 +344,31 @@ import AntiquingIcon from './icons/AntiquingIcon.astro';
 			display: flex;
 		}
 
-		.right-section {
-			gap: 0.5em;
-		}
-
 		.nav-content {
 			flex-direction: row;
 			gap: 1em;
 			align-items: center;
+		}
+
+		.nav-top {
+			flex-wrap: wrap;
+		}
+
+		.left-section {
+			flex: 0 1 auto;
+			min-width: 0;
+		}
+
+		.right-section {
+			flex: 0 0 auto;
+		}
+
+		.nav-bottom.active + .nav-top .search-section,
+		.menu-toggle[aria-expanded="true"] ~ .search-section {
+			order: 2;
+			width: 100%;
+			padding: 0;
+			margin-top: 0.5em;
 		}
 	}
 </style>
@@ -228,8 +376,78 @@ import AntiquingIcon from './icons/AntiquingIcon.astro';
 <script>
 	const menuToggle = document.getElementById('menu-toggle');
 	const navContainer = document.getElementById('nav-container');
+	const searchInput = document.getElementById('search-input');
+	const searchResults = document.getElementById('search-results');
 
 	menuToggle?.addEventListener('click', () => {
-			navContainer?.classList.toggle('active');
+		navContainer?.classList.toggle('active');
+		menuToggle.setAttribute('aria-expanded', 
+			navContainer?.classList.contains('active') ? 'true' : 'false'
+		);
+	});
+
+	let debounceTimeout: ReturnType<typeof setTimeout>;
+
+	searchInput?.addEventListener('input', (e) => {
+		const input = e.target as HTMLInputElement;
+		clearTimeout(debounceTimeout);
+
+		debounceTimeout = setTimeout(async () => {
+			if (input.value.length < 2) {
+				if (searchResults) searchResults.style.display = 'none';
+				return;
+			}
+
+			try {
+				const response = await fetch(`/api/search?q=${encodeURIComponent(input.value)}`);
+				const results = await response.json();
+
+				if (searchResults) {
+					let resultsHtml = '';
+					
+					if (results.length) {
+						// Show only first 5 results
+						const displayResults = results.slice(0, 5);
+						resultsHtml = displayResults.map((post: any) => `
+							<div class="search-result-item" onclick="window.location.href='${post.url}'">
+								<div class="search-result-title">${post.title}</div>
+							</div>
+						`).join('');
+
+						// Always show "View results" button
+						resultsHtml += `
+							<div class="search-result-item view-all" onclick="window.location.href='/search?q=${encodeURIComponent(input.value)}'">
+								View ${results.length > 5 ? 'all ' : ''}${results.length} result${results.length !== 1 ? 's' : ''}
+							</div>
+						`;
+					} else {
+						resultsHtml = '<div class="search-result-item">No results found</div>';
+					}
+
+					searchResults.innerHTML = resultsHtml;
+					searchResults.style.display = 'block';
+				}
+			} catch (error) {
+				console.error('Search error:', error);
+			}
+		}, 300);
+	});
+
+	// Close search results when clicking outside
+	document.addEventListener('click', (e) => {
+		if (!searchResults?.contains(e.target as Node) && e.target !== searchInput) {
+			if (searchResults) searchResults.style.display = 'none';
+		}
+	});
+
+	// Handle enter key to go to search page
+	searchInput?.addEventListener('keypress', (e) => {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			const input = e.target as HTMLInputElement;
+			if (input.value) {
+				window.location.href = `/search?q=${encodeURIComponent(input.value)}`;
+			}
+		}
 	});
 </script>
