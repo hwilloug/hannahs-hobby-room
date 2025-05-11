@@ -2,14 +2,14 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../utils/consts';
 import Carousel from '../components/Carousel.astro';
 import BrowserCard from '../components/BrowserCard.astro';
 import CategorySection from '../components/CategorySection.astro';
 import NewsletterPopup from '../components/NewsletterPopup.astro';
 import NewsletterDialog from '../components/NewsletterDialog.astro';
 import { getCollection } from 'astro:content';
-import { API_URL } from '../consts';
+import { API_URL } from '../utils/consts';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
 
 const posts = await getCollection('blog');

@@ -2,6 +2,7 @@
 title: Lily Fest Craft Fair 2025
 pubDate: 2025-05-11
 category: Crafts
+subtitle: Come see me at a craft fair!
 heroImage: https://blog-images.poppyland.dev/craft-fair-prep-14.jpeg
 subcategories:
   - Embroidery
