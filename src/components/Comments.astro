@@ -123,7 +123,12 @@ const commentTree = buildCommentTree(article?.comments || []);
   </form>
 </section>
 
-<script define:vars={{ postSlug, API_URL }}>
+<script>
+// Make the API_URL available globally
+window.API_URL = '{API_URL}';
+</script>
+
+<script define:vars={{ postSlug }}>
 async function handleSubmit(e, parentId = null) {
   e.preventDefault();
   
@@ -139,7 +144,7 @@ async function handleSubmit(e, parentId = null) {
   }
   
   try {
-    const response = await fetch(`${API_URL}/comments`, {
+    const response = await fetch(`${window.API_URL}/comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
