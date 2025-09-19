@@ -38,3 +38,5 @@ Here's a taste of what will be for sale / on display at the event.
 ### Come see me!
 
 I will have most of the above works on display, and many more! So once again, on Thursday, September 18, 2025 from 5-8 PM, I will be at Sweet Treats in downtown Fort Mill as the featured artist. Hope to see you there 🌸
+
+Photocredit: Curtis!
