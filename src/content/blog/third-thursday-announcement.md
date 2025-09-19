@@ -20,19 +20,41 @@ Here's a taste of what will be for sale / on display at the event.
 <p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Three Sisters</p>
 
 ![Ribbon embroidery](https://blog-images.poppyland.dev/DSC_2064-3.jpeg)
-<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Cedar with Ornaments2</p>
+<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Cedar with Ornaments</p>
 
 ![Ribbon embroidery](https://blog-images.poppyland.dev/DSC_2066.jpeg)
+<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Carnation</p>
+
 ![Ribbon embroidery](https://blog-images.poppyland.dev/DSC_2072-3.jpeg)
+<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Fuschia</p>
+
 ![Ribbon embroidery](https://blog-images.poppyland.dev/IMG_0306.jpeg)
+<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Wisteria</p>
+
 ![Ribbon embroidery](https://blog-images.poppyland.dev/IMG_0421.jpeg)
+<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Strawberries</p>
+
 ![Ribbon embroidery](https://blog-images.poppyland.dev/IMG_0422.jpeg)
+<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Tulip</p>
+
 ![Ribbon embroidery](https://blog-images.poppyland.dev/IMG_0423.jpeg)
+<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Pansies</p>
+
 ![Ribbon embroidery](https://blog-images.poppyland.dev/IMG_0427.jpeg)
+<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Blueberry</p>
+
 ![Ribbon embroidery](https://blog-images.poppyland.dev/IMG_0429.jpeg)
+<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Honeysuckle</p>
+
 ![Ribbon embroidery](https://blog-images.poppyland.dev/IMG_0630.jpeg)
+<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Strawberry Hanging Basket</p>
+
 ![Ribbon embroidery](https://blog-images.poppyland.dev/IMG_0643.jpeg)
+<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Four Sunflowers</p>
+
 ![Ribbon embroidery](https://blog-images.poppyland.dev/IMG_0644.jpeg)
+<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Sunflower Basket</p>
+
 
 
 ### Come see me!
