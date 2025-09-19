@@ -2,7 +2,7 @@
 title: Fort Mill Third Thursdays Art Crawl
 pubDate: 2025-09-07
 subtitle: I'm the Sweet Treats featured artist!
-category: Gardening
+category: Crafts
 heroImage: https://blog-images.poppyland.dev/DSC_2061-2.jpeg
 subcategories:
   - Ribbon Embroidery
