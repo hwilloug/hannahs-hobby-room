@@ -6,14 +6,22 @@ category: Gardening
 heroImage: https://blog-images.poppyland.dev/DSC_2061-2.jpeg
 subcategories:
   - Ribbon Embroidery
+  - Events
 ---
 Hello, my friends! Long time no see. I have stocked up on ribbon embroideries for the **Fort Mill Third Thursday Art Crawl**! The event is Thursday, September 18, 2025 in downtown Fort Mill from 5-8 PM. I am the featured artist for Sweet Treats, so come and check me out 🌸
 
 Here's a taste of what will be for sale / on display at the event.
 
 ![Tulips embroidery large](https://blog-images.poppyland.dev/DSC_2039.jpeg)
+<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Tulips and friends</p>
+
+
 ![Corn embroidery](https://blog-images.poppyland.dev/DSC_2058-3.jpeg)
+<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Three Sisters</p>
+
 ![Ribbon embroidery](https://blog-images.poppyland.dev/DSC_2064-3.jpeg)
+<p style="text-align: center; padding-top: 0px; margin-top: -30px; font-style: italic;">Cedar with Ornaments2</p>
+
 ![Ribbon embroidery](https://blog-images.poppyland.dev/DSC_2066.jpeg)
 ![Ribbon embroidery](https://blog-images.poppyland.dev/DSC_2072-3.jpeg)
 ![Ribbon embroidery](https://blog-images.poppyland.dev/IMG_0306.jpeg)
