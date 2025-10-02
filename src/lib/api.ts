@@ -30,7 +30,7 @@ export interface Comment {
 
 export async function getArticles(): Promise<Article[]> {
   try {
-    const response = await fetch(`${API_URL}/articles?limit=1000`);
+    const response = await fetch(`https://blog-api.poppyland.dev/articles?limit=1000`);
     if (!response.ok) {
       throw new Error('Failed to fetch articles');
     }
@@ -44,7 +44,7 @@ export async function getArticles(): Promise<Article[]> {
 
 export async function getArticle(slug: string): Promise<Article | null> {
   try {
-    const response = await fetch(`${API_URL}/articles/${slug}`);
+    const response = await fetch(`https://blog-api.poppyland.dev/articles/${slug}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch article: ${response.statusText}`);
     }
@@ -57,7 +57,7 @@ export async function getArticle(slug: string): Promise<Article | null> {
 
 export async function likeArticle(slug: string, decrement: boolean = false): Promise<number> {
   try {
-    const response = await fetch(`${API_URL}/articles/${slug}/like`, {
+    const response = await fetch(`https://blog-api.poppyland.dev/articles/${slug}/like`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -82,7 +82,7 @@ export async function addComment(
   parentId?: string
 ): Promise<Comment> {
   try {
-    const response = await fetch(`${API_URL}/comments`, {
+    const response = await fetch(`https://blog-api.poppyland.dev/comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
