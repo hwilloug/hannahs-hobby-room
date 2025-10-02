@@ -4,7 +4,7 @@ export default function setupLikeButton(postSlug) {
   const button = buttonById || buttonByClass;
 
   async function likeArticle(slug) {
-    const response = await fetch('/api/likes', {
+    const response = await fetch('https://blog-api.poppyland.dev/api/likes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

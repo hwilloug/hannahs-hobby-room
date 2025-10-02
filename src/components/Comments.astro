@@ -1,93 +1,19 @@
 ---
 import { type Comment } from '../lib/api';
-import { getArticle } from '../lib/api';
 
 interface Props {
   postSlug: string;
 }
 
 const { postSlug } = Astro.props;
-
-function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
-function buildCommentTree(comments: Comment[]): Comment[] {
-  const commentMap = new Map<string, Comment>();
-  const roots: Comment[] = [];
-
-  // First pass: Create a map of all comments
-  comments.forEach(comment => {
-    commentMap.set(comment.id, { ...comment, children: [] });
-  });
-
-  // Second pass: Build the tree structure
-  comments.forEach(comment => {
-    const node = commentMap.get(comment.id)!;
-    if (comment.parent_id) {
-      const parent = commentMap.get(comment.parent_id);
-      if (parent) {
-        parent.children = parent.children || [];
-        parent.children.push(node);
-      }
-    } else {
-      roots.push(node);
-    }
-  });
-
-  return roots;
-}
-
-const article = await getArticle(postSlug);
-const commentTree = buildCommentTree(article?.comments || []);
-
+// Remove server-side API call - we'll fetch on client side
 ---
 
 <section class="comments-section">
   <h2>Comments</h2>
 
   <div class="comments-list" id="comments-list">
-    {commentTree.length > 0 ? (
-      commentTree.map(comment => (
-        <div class="comment-thread">
-        <div class="comment">
-          <div class="comment-header">
-            <div>
-              <span class="comment-author">{comment.username}</span>
-              {comment.username === "hannahwilloughby" && <span class="comment-author-author">Author</span>}
-            </div>
-            <span class="comment-date">{formatDate(comment.timestamp)}</span>
-          </div>
-          <div class="comment-content">{comment.body}</div>
-          <button class="reply-button" data-comment-id={comment.id}>Reply</button>
-          {comment.children && comment.children.length > 0 && (
-            <div class="nested-comments">
-              {comment.children.map(reply => (
-                <div class="comment">
-                  <div class="comment-header">
-                    <div>
-                      <span class="comment-author">{reply.username}</span>
-                      {reply.username === "hannahwilloughby" && <span class="comment-author-author">Author</span>}
-                    </div>
-                    <span class="comment-date">{formatDate(reply.timestamp)}</span>
-                  </div>
-                  <div class="comment-content">{reply.body}</div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-        </div>
-      ))
-    ) : (
-      <p>No comments yet.</p>
-    )}
+    <div class="loading">Loading comments...</div>
   </div>
   
   <form class="comment-form" id="comment-form">
@@ -123,6 +49,183 @@ const commentTree = buildCommentTree(article?.comments || []);
 </section>
 
 <script define:vars={{ postSlug }}>
+// Fetch comments from API
+async function fetchComments(slug) {
+  try {
+    const response = await fetch(`https://blog-api.poppyland.dev/articles/${slug}`);
+    if (response.ok) {
+      const data = await response.json();
+      const comments = data.comments || [];
+      renderComments(comments);
+    } else {
+      document.getElementById('comments-list').innerHTML = '<p>Failed to load comments.</p>';
+    }
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    document.getElementById('comments-list').innerHTML = '<p>Failed to load comments.</p>';
+  }
+}
+
+function formatDate(dateString) {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+function buildCommentTree(comments) {
+  const commentMap = new Map();
+  const roots = [];
+
+  // First pass: Create a map of all comments
+  comments.forEach(comment => {
+    commentMap.set(comment.id, { ...comment, children: [] });
+  });
+
+  // Second pass: Build the tree structure
+  comments.forEach(comment => {
+    const node = commentMap.get(comment.id);
+    if (comment.parent_id) {
+      const parent = commentMap.get(comment.parent_id);
+      if (parent) {
+        parent.children = parent.children || [];
+        parent.children.push(node);
+      }
+    } else {
+      roots.push(node);
+    }
+  });
+
+  return roots;
+}
+
+function createCommentElement(comment) {
+  const threadDiv = document.createElement('div');
+  threadDiv.className = 'comment-thread';
+  
+  const commentDiv = document.createElement('div');
+  commentDiv.className = 'comment';
+  
+  // Comment header
+  const headerDiv = document.createElement('div');
+  headerDiv.className = 'comment-header';
+  
+  const authorDiv = document.createElement('div');
+  const authorSpan = document.createElement('span');
+  authorSpan.className = 'comment-author';
+  authorSpan.textContent = comment.username;
+  authorDiv.appendChild(authorSpan);
+  
+  if (comment.username === "hannahwilloughby") {
+    const authorBadge = document.createElement('span');
+    authorBadge.className = 'comment-author-author';
+    authorBadge.textContent = 'Author';
+    authorDiv.appendChild(authorBadge);
+  }
+  
+  const dateSpan = document.createElement('span');
+  dateSpan.className = 'comment-date';
+  dateSpan.textContent = formatDate(comment.timestamp);
+  
+  headerDiv.appendChild(authorDiv);
+  headerDiv.appendChild(dateSpan);
+  
+  // Comment content
+  const contentDiv = document.createElement('div');
+  contentDiv.className = 'comment-content';
+  contentDiv.textContent = comment.body; // Use textContent to properly escape HTML
+  
+  // Reply button
+  const replyButton = document.createElement('button');
+  replyButton.className = 'reply-button';
+  replyButton.setAttribute('data-comment-id', comment.id);
+  replyButton.textContent = 'Reply';
+  
+  commentDiv.appendChild(headerDiv);
+  commentDiv.appendChild(contentDiv);
+  commentDiv.appendChild(replyButton);
+  
+  // Nested comments
+  if (comment.children && comment.children.length > 0) {
+    const nestedDiv = document.createElement('div');
+    nestedDiv.className = 'nested-comments';
+    
+    comment.children.forEach(reply => {
+      const replyElement = createReplyElement(reply);
+      nestedDiv.appendChild(replyElement);
+    });
+    
+    commentDiv.appendChild(nestedDiv);
+  }
+  
+  threadDiv.appendChild(commentDiv);
+  return threadDiv;
+}
+
+function createReplyElement(reply) {
+  const commentDiv = document.createElement('div');
+  commentDiv.className = 'comment';
+  
+  // Reply header
+  const headerDiv = document.createElement('div');
+  headerDiv.className = 'comment-header';
+  
+  const authorDiv = document.createElement('div');
+  const authorSpan = document.createElement('span');
+  authorSpan.className = 'comment-author';
+  authorSpan.textContent = reply.username;
+  authorDiv.appendChild(authorSpan);
+  
+  if (reply.username === "hannahwilloughby") {
+    const authorBadge = document.createElement('span');
+    authorBadge.className = 'comment-author-author';
+    authorBadge.textContent = 'Author';
+    authorDiv.appendChild(authorBadge);
+  }
+  
+  const dateSpan = document.createElement('span');
+  dateSpan.className = 'comment-date';
+  dateSpan.textContent = formatDate(reply.timestamp);
+  
+  headerDiv.appendChild(authorDiv);
+  headerDiv.appendChild(dateSpan);
+  
+  // Reply content
+  const contentDiv = document.createElement('div');
+  contentDiv.className = 'comment-content';
+  contentDiv.textContent = reply.body; // Use textContent to properly escape HTML
+  
+  commentDiv.appendChild(headerDiv);
+  commentDiv.appendChild(contentDiv);
+  
+  return commentDiv;
+}
+
+function renderComments(comments) {
+  const commentsList = document.getElementById('comments-list');
+  const commentTree = buildCommentTree(comments);
+  
+  // Clear the loading message
+  commentsList.innerHTML = '';
+  
+  if (commentTree.length > 0) {
+    commentTree.forEach(comment => {
+      const commentElement = createCommentElement(comment);
+      commentsList.appendChild(commentElement);
+    });
+  } else {
+    const noCommentsP = document.createElement('p');
+    noCommentsP.textContent = 'No comments yet.';
+    commentsList.appendChild(noCommentsP);
+  }
+  
+  // Re-initialize event listeners after rendering
+  initializeEventListeners();
+}
+
 async function handleSubmit(e, parentId = null) {
   e.preventDefault();
   
@@ -155,7 +258,9 @@ async function handleSubmit(e, parentId = null) {
       throw new Error('Failed to post comment');
     }
 
-    window.location.reload();
+    // Refresh comments after posting
+    fetchComments(postSlug);
+    form.reset();
   } catch (error) {
     console.error('Error posting comment:', error);
     alert('Failed to post comment. Please try again.');
@@ -165,41 +270,91 @@ async function handleSubmit(e, parentId = null) {
 function createReplyForm(commentId) {
   const form = document.createElement('form');
   form.className = 'reply-form';
-  form.innerHTML = `
-    <div class="form-group">
-      <label for="username-${commentId}">Name</label>
-      <input 
-        type="text" 
-        id="username-${commentId}" 
-        name="username" 
-        required 
-        placeholder="Your name"
-      />
-    </div>
-    <div class="form-group">
-      <label for="comment-${commentId}">Reply</label>
-      <textarea 
-        id="comment-${commentId}" 
-        name="comment" 
-        required 
-        rows="3" 
-        placeholder="Write your reply..."
-      ></textarea>
-    </div>
-    
-    <!-- Honeypot field for reply form -->
-    <div class="honeypot-field" style="display: none;">
-      <label for="website-${commentId}">Website</label>
-      <input type="text" id="website-${commentId}" name="website" tabindex="-1" autocomplete="off" />
-    </div>
-    
-    <div class="form-actions">
-      <button type="submit">Post Reply</button>
-      <button type="button" class="cancel-reply">Cancel</button>
-    </div>
-  `;
+  
+  // Name field
+  const nameGroup = document.createElement('div');
+  nameGroup.className = 'form-group';
+  
+  const nameLabel = document.createElement('label');
+  nameLabel.setAttribute('for', `username-${commentId}`);
+  nameLabel.textContent = 'Name';
+  
+  const nameInput = document.createElement('input');
+  nameInput.type = 'text';
+  nameInput.id = `username-${commentId}`;
+  nameInput.name = 'username';
+  nameInput.required = true;
+  nameInput.placeholder = 'Your name';
+  
+  nameGroup.appendChild(nameLabel);
+  nameGroup.appendChild(nameInput);
+  
+  // Comment field
+  const commentGroup = document.createElement('div');
+  commentGroup.className = 'form-group';
+  
+  const commentLabel = document.createElement('label');
+  commentLabel.setAttribute('for', `comment-${commentId}`);
+  commentLabel.textContent = 'Reply';
+  
+  const commentTextarea = document.createElement('textarea');
+  commentTextarea.id = `comment-${commentId}`;
+  commentTextarea.name = 'comment';
+  commentTextarea.required = true;
+  commentTextarea.rows = 3;
+  commentTextarea.placeholder = 'Write your reply...';
+  
+  commentGroup.appendChild(commentLabel);
+  commentGroup.appendChild(commentTextarea);
+  
+  // Honeypot field
+  const honeypotGroup = document.createElement('div');
+  honeypotGroup.className = 'honeypot-field';
+  honeypotGroup.style.display = 'none';
+  
+  const honeypotLabel = document.createElement('label');
+  honeypotLabel.setAttribute('for', `website-${commentId}`);
+  honeypotLabel.textContent = 'Website';
+  
+  const honeypotInput = document.createElement('input');
+  honeypotInput.type = 'text';
+  honeypotInput.id = `website-${commentId}`;
+  honeypotInput.name = 'website';
+  honeypotInput.tabIndex = -1;
+  honeypotInput.autocomplete = 'off';
+  
+  honeypotGroup.appendChild(honeypotLabel);
+  honeypotGroup.appendChild(honeypotInput);
+  
+  // Form actions
+  const actionsDiv = document.createElement('div');
+  actionsDiv.className = 'form-actions';
+  
+  const submitButton = document.createElement('button');
+  submitButton.type = 'submit';
+  submitButton.textContent = 'Post Reply';
+  
+  const cancelButton = document.createElement('button');
+  cancelButton.type = 'button';
+  cancelButton.className = 'cancel-reply';
+  cancelButton.textContent = 'Cancel';
+  
+  actionsDiv.appendChild(submitButton);
+  actionsDiv.appendChild(cancelButton);
+  
+  // Assemble form
+  form.appendChild(nameGroup);
+  form.appendChild(commentGroup);
+  form.appendChild(honeypotGroup);
+  form.appendChild(actionsDiv);
   
   form.addEventListener('submit', (e) => handleSubmit(e, commentId));
+  
+  // Handle cancel button
+  cancelButton.addEventListener('click', () => {
+    form.remove();
+  });
+  
   return form;
 }
 
@@ -219,21 +374,18 @@ function initializeEventListeners() {
       // Add new reply form
       const replyForm = createReplyForm(commentId);
       comment.appendChild(replyForm);
-      
-      // Handle cancel button
-      replyForm.querySelector('.cancel-reply')?.addEventListener('click', () => {
-        replyForm.remove();
-      });
     });
   });
 }
 
-document.addEventListener('DOMContentLoaded', initializeEventListeners);
-initializeEventListeners();
-
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  fetchComments(postSlug);
+});
 </script>
 
-<style>
+<!-- Make styles global so they apply to dynamically created elements -->
+<style is:global>
 .comments-section {
   margin-top: 4em;
   padding-top: 2em;
@@ -397,36 +549,42 @@ button[type="submit"]:hover,
   padding: 0.5em 1em;
 }
 
+.loading {
+  text-align: center;
+  color: var(--primary-main);
+  font-style: italic;
+}
+
 /* Dark mode styles */
-:global(.dark) .comments-section h2,
-:global(.dark) .form-group label,
-:global(.dark) .comment-author {
+.dark .comments-section h2,
+.dark .form-group label,
+.dark .comment-author {
   color: white;
 }
 
-:global(.dark) .comment-content {
+.dark .comment-content {
   color: rgba(255, 255, 255, 0.9);
 }
 
-:global(.dark) .comment,
-:global(.dark) .comment-form,
-:global(.dark) .reply-form {
+.dark .comment,
+.dark .comment-form,
+.dark .reply-form {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-:global(.dark) .form-group input[type="text"],
-:global(.dark) .form-group textarea {
+.dark .form-group input[type="text"],
+.dark .form-group textarea {
   background: rgba(255, 255, 255, 0.9);
   color: var(--primary-dark);
 }
 
-:global(.dark) .cancel-reply {
+.dark .cancel-reply {
   border-color: var(--secondary-light);
   color: var(--secondary-light);
 }
 
-:global(.dark) .cancel-reply:hover {
+.dark .cancel-reply:hover {
   background: var(--secondary-light);
   color: var(--primary-dark);
 }
