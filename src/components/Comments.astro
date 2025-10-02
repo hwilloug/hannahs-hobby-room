@@ -1,7 +1,6 @@
 ---
 import { type Comment } from '../lib/api';
 import { getArticle } from '../lib/api';
-import { API_URL } from '../utils/consts';
 
 interface Props {
   postSlug: string;
@@ -123,11 +122,6 @@ const commentTree = buildCommentTree(article?.comments || []);
   </form>
 </section>
 
-<script>
-// Make the API_URL available globally
-window.API_URL = '{API_URL}';
-</script>
-
 <script define:vars={{ postSlug }}>
 async function handleSubmit(e, parentId = null) {
   e.preventDefault();
@@ -144,7 +138,7 @@ async function handleSubmit(e, parentId = null) {
   }
   
   try {
-    const response = await fetch(`${window.API_URL}/comments`, {
+    const response = await fetch(`https://blog-api.poppyland.dev/comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

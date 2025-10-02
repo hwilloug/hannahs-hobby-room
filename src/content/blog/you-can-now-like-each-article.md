@@ -267,7 +267,7 @@ const Likes: React.FC<LikesProps> = ({ slug, likes }) => {
     const newValue = !liked
     try {
       axios.post(
-        `${process.env.REACT_APP_API_URL}/articles/${slug}/like`,
+        `http://blog-api.poppyland.dev/articles/${slug}/like`,
         {
           "decrease": !newValue
         }

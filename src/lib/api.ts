@@ -1,5 +1,3 @@
-import { API_URL } from "../utils/consts";
-
 // Blog API client for fetching articles
 export interface Article {
   article: {

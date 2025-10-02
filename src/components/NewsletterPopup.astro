@@ -1,5 +1,4 @@
 ---
-import { API_URL } from '../utils/consts';
 ---
 
 <div class="newsletter-popup" id="newsletter-popup">
@@ -20,7 +19,7 @@ import { API_URL } from '../utils/consts';
   </div>
 </div>
 
-<script define:vars={{ API_URL }}>
+<script>
   let popupShown = false;
   const popup = document.getElementById('newsletter-popup');
   const closeButton = popup?.querySelector('.close-button');
