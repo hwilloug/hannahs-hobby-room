@@ -16,6 +16,7 @@ let likes = article?.article.likes;
     id={`like-button-${postSlug}`} 
     class="like-button" 
     data-slug={postSlug} 
+    data-api-url="https://blog-api.poppyland.dev"
     aria-label="Like this article"
   >
     <div class="like-icon">
@@ -27,12 +28,11 @@ let likes = article?.article.likes;
   </button>
 </div>
 
-<script>
-// Make the API_URL available globally
-window.API_URL = '{API_URL}';
-</script>
-
 <script define:vars={{ postSlug, likes }}>
+// Get API URL from the button's data attribute
+const button = document.querySelector(`[data-slug="${postSlug}"]`);
+const apiUrl = button?.getAttribute('data-api-url') || 'https://blog-api.poppyland.dev';
+
 // Make sure we have a valid initial likes count
 let likeCount = likes || 0;
 
@@ -98,7 +98,7 @@ function removeFromLikedArticles(slug) {
 async function toggleLike(slug) {
   const isLiked = isArticleLiked(slug);
   
-  const response = await fetch(`${window.API_URL}/articles/${slug}/like`, {
+  const response = await fetch(`${apiUrl}/articles/${slug}/like`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -128,7 +128,6 @@ async function toggleLike(slug) {
 if (buttons.length > 0) {
   // Check initial state from cookies
   const isLiked = isArticleLiked(postSlug);
-  console.log('Initial cookie state:', { postSlug, isLiked, likeCount }); // Debug log
   
   // Initialize all buttons with the liked state
   buttons.forEach(button => {

@@ -1,5 +1,5 @@
 ---
-title: The Second Fort Mill Third Thursdays Art Crawl
+title: The Second Third Thursdays Art Crawl
 pubDate: 2025-10-2
 subtitle: I'm the Sweet Treats featured artist, again!
 category: Crafts
