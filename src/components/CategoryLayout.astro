@@ -32,9 +32,12 @@ const icons = {
 		<style>
 			main {
 				width: 100%;
-				max-width: 1200px;
 				margin: 0 auto;
 				padding: 3em 1em;
+			}
+			.category-layout {
+				max-width: 1200px;
+				margin: 0 auto;
 			}
 			.category-header {
 				text-align: center;
@@ -201,6 +204,7 @@ const icons = {
 	<body>
 		<Header />
 		<main>
+			<div class="category-layout">
 			<div class="category-header">
 				<h1>
 					<span class="icon">
@@ -248,7 +252,8 @@ const icons = {
 					<h2 class="centered">My {category} Background</h2>
 					<p class="left">{background}</p>
 				</section>
-			)}
+				)}
+			</div>
 		</main>
 		<Footer />
 	</body>
