@@ -1,0 +1,29 @@
+.contentWrapper {
+  max-width: 800px;
+  margin: 2em auto;
+  background-color: rgba(var(--primary-main-rgb), 0.6);
+  border: 1px solid var(--primary-dark);
+  padding: 1em;
+  border-radius: 12px;
+}
+
+.contentWrapper h1 {
+  color: var(--primary-dark);
+  text-shadow: none;
+  font-size: 2.441em;
+}
+
+.contentWrapper ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1em;
+}
+
+.postsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1em;
+  margin-bottom: 2em;
+}

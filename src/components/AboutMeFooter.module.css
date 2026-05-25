@@ -1,0 +1,58 @@
+.aboutMeFooter {
+  background: var(--primary-light);
+  border: 1px solid var(--primary-dark);
+  border-radius: 12px;
+  padding: 1.5em;
+  text-align: center;
+  box-shadow: 4px 4px var(--primary-dark);
+  margin-top: 2em;
+}
+
+.aboutMeFooter h2 {
+  font-family: 'Gluten', sans-serif;
+  color: var(--primary-dark);
+  margin: 0;
+  text-align: center;
+}
+
+.aboutMeFooterImage {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin: 0 auto 1em auto;
+  display: block;
+  border: 3px solid var(--primary-dark);
+}
+
+.aboutMeFooter p {
+  color: rgb(var(--gray-dark));
+  margin-bottom: 1.5em;
+  line-height: 1.5;
+}
+
+.aboutMeFooterButton {
+  display: inline-block;
+  padding: 0.8em 1.5em;
+  background-color: var(--secondary-main);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  border: 1px solid var(--secondary-dark);
+  transition: background-color 0.2s;
+}
+
+.aboutMeFooterButton:hover {
+  background-color: var(--secondary-dark);
+}
+
+:global(.dark) .aboutMeFooter {
+  background: rgba(var(--primary-main-rgb), 0.2);
+}
+
+:global(.dark) .aboutMeFooter h2 {
+  color: white;
+}
+
+:global(.dark) .aboutMeFooter p {
+  color: rgba(255, 255, 255, 0.9);
+}

@@ -1,0 +1,147 @@
+.newsletterDialog {
+  padding: 2em;
+  border-radius: 12px;
+  border: 1px solid var(--primary-dark);
+  background: var(--primary-light);
+  box-shadow: 8px 8px var(--primary-dark);
+  max-width: 500px;
+  width: 90%;
+}
+
+.newsletterDialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.formGroup {
+  margin-bottom: 1.5em;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 0.6em;
+  border: 1px solid var(--primary-dark);
+  border-radius: 6px;
+  font-size: 1em;
+  background: var(--primary-main);
+  color: white;
+}
+
+.interestsSection {
+  margin-bottom: 1.5em;
+}
+
+.interestsSection h3 {
+  margin-bottom: 0.5em;
+  color: var(--primary-dark);
+}
+
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin-top: 1em;
+}
+
+.selectAll {
+  margin-bottom: 0.5em;
+  font-weight: bold;
+  color: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.checkboxGroup label {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  color: var(--primary-dark);
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 1em;
+  justify-content: flex-end;
+}
+
+.buttonGroup button {
+  padding: 0.6em 1.2em;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: all 0.3s ease;
+}
+
+.buttonGroup button[type="submit"] {
+  background: var(--primary-main);
+  color: white;
+  border: 1px solid var(--primary-dark);
+}
+
+.buttonGroup button[type="submit"]:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.cancelBtn {
+  background: transparent;
+  border: 1px solid var(--primary-dark);
+  color: var(--primary-dark);
+}
+
+.cancelBtn:hover {
+  background: var(--primary-dark);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.newsletterDialog h2 {
+  color: var(--primary-dark);
+}
+
+.errorText {
+  color: #ff4444;
+  font-size: 0.9em;
+  margin-top: 0.5em;
+}
+
+.successPopup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.successContent {
+  background: var(--primary-light);
+  padding: 2em;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.successContent h3 {
+  color: var(--primary-dark);
+  margin-bottom: 1em;
+}
+
+.okBtn {
+  background: var(--primary-main);
+  color: white;
+  border: 1px solid var(--primary-dark);
+  margin-top: 1em;
+  padding: 0.6em 1.2em;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.okBtn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}

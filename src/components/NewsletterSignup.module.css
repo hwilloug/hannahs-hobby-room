@@ -1,0 +1,64 @@
+.emailSignup {
+  margin: 4em 0;
+  padding: 2em;
+  background: var(--warning-main);
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid var(--primary-dark);
+  box-shadow: 4px 4px 1px var(--primary-dark);
+}
+
+.emailSignup h3 {
+  color: white;
+  margin-bottom: 0.5em;
+  text-align: center;
+  margin-left: 0;
+  text-shadow: var(--text-shadow);
+}
+
+.signupText {
+  color: black;
+  margin-bottom: 1.5em;
+}
+
+.signupForm {
+  display: flex;
+  gap: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.emailInput {
+  flex: 1;
+  padding: 0.8em 1.5em;
+  border-radius: 25px;
+  border: 1px solid var(--primary-dark);
+  font-size: 1em;
+}
+
+.signupButton {
+  background: var(--primary-main);
+  color: white;
+  border: none;
+  padding: 0.8em 1.5em;
+  border-radius: 25px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  white-space: nowrap;
+}
+
+.signupButton:hover {
+  transform: translateY(-2px);
+  background: var(--primary-dark);
+}
+
+@media (max-width: 600px) {
+  .signupForm {
+    flex-direction: column;
+  }
+
+  .signupButton {
+    width: 100%;
+  }
+}
