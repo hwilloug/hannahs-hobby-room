@@ -1,7 +1,31 @@
-import { getPostBySlug } from '@/lib/posts';
+import { hasPostContent } from '@/content/posts/registry';
 import { getSupabaseAdmin } from '@/lib/supabase/server';
 import type { ApiComment, DbArticle, DbComment } from './types';
 import { toApiComment } from './types';
+
+export async function getAllArticlesFromDb(): Promise<DbArticle[]> {
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from('articles')
+    .select('*')
+    .not('title', 'is', null)
+    .order('pub_date', { ascending: false });
+
+  if (error) throw error;
+  return (data ?? []) as DbArticle[];
+}
+
+export async function getArticleFromDb(slug: string): Promise<DbArticle | null> {
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from('articles')
+    .select('*')
+    .eq('slug', slug)
+    .maybeSingle();
+
+  if (error) throw error;
+  return (data as DbArticle | null) ?? null;
+}
 
 export async function ensureArticle(slug: string): Promise<DbArticle> {
   const supabase = getSupabaseAdmin();
@@ -28,8 +52,7 @@ export async function getArticleWithComments(slug: string): Promise<{
   article: DbArticle;
   comments: ApiComment[];
 }> {
-  const post = getPostBySlug(slug);
-  if (!post) {
+  if (!hasPostContent(slug)) {
     throw new Error('NOT_FOUND');
   }
 
@@ -51,6 +74,10 @@ export async function getArticleWithComments(slug: string): Promise<{
 }
 
 export async function updateLikes(slug: string, decrease: boolean): Promise<number> {
+  if (!hasPostContent(slug)) {
+    throw new Error('NOT_FOUND');
+  }
+
   await ensureArticle(slug);
 
   const supabase = getSupabaseAdmin();

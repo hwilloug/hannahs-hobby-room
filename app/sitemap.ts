@@ -1,11 +1,12 @@
 import type { MetadataRoute } from 'next';
-import { getAllPosts } from '@/lib/posts';
-import { categorySlugs } from '@/lib/categoryMeta';
+import { getAllPosts, getAllTags } from '@/lib/posts';
+import { tagToSlug } from '@/lib/tagSlug';
 
 const SITE_URL = 'https://hannahshobbyroom.com';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const posts = getAllPosts();
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const posts = await getAllPosts();
+  const tags = await getAllTags();
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: SITE_URL, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
@@ -15,8 +16,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/tags/`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.6 },
   ];
 
-  const categoryRoutes: MetadataRoute.Sitemap = categorySlugs.map((category) => ({
-    url: `${SITE_URL}/categories/${category}/`,
+  const tagRoutes: MetadataRoute.Sitemap = tags.map((tag) => ({
+    url: `${SITE_URL}/categories/${tagToSlug(tag)}/`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.7,
@@ -29,5 +30,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...categoryRoutes, ...postRoutes];
+  return [...staticRoutes, ...tagRoutes, ...postRoutes];
 }

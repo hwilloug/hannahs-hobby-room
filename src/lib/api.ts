@@ -1,23 +1,6 @@
 // Blog API client — calls same-origin Next.js routes backed by Supabase
 import { getApiBase } from '@/utils/apiBase';
 
-export interface Article {
-  article: {
-    slug: string;
-    title: string;
-    subtitle: string;
-    img: string;
-    imgAlt: string;
-    category: string;
-    subcategory: string[];
-    featured: boolean;
-    likes: number;
-    createdAt: string;
-    updatedAt: string;
-  };
-  comments: Comment[];
-}
-
 export interface Comment {
   id: string;
   timestamp: string;

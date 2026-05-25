@@ -1,9 +1,9 @@
 interface CategoryIconProps {
-  category: string;
+  tagSlug: string;
   className?: string;
 }
 
-export default function CategoryIcon({ category, className = 'icon-svg' }: CategoryIconProps) {
+export default function CategoryIcon({ tagSlug, className = 'icon-svg' }: CategoryIconProps) {
   const props = {
     xmlns: 'http://www.w3.org/2000/svg',
     fill: 'none',
@@ -13,7 +13,7 @@ export default function CategoryIcon({ category, className = 'icon-svg' }: Categ
     className,
   };
 
-  switch (category.toLowerCase()) {
+  switch (tagSlug.toLowerCase()) {
     case 'crafts':
       return (
         <svg {...props}>

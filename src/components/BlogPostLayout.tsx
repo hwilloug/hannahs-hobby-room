@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { BlogPostData } from '@/lib/posts';
-import { categoryMeta } from '@/lib/categoryMeta';
+import { tagToSlug } from '@/lib/tagSlug';
 import FormattedDate from './FormattedDate';
 import LikeButton from './LikeButton';
 import Comments from './Comments';
@@ -22,12 +22,8 @@ export default function BlogPostLayout({ data, slug, children }: BlogPostLayoutP
     pubDate,
     updatedDate,
     heroImage,
-    category,
     subcategories = [],
   } = data;
-
-  const categorySlug = category.toLowerCase().replace(/\s+/g, '-');
-  const hasCategoryPage = categorySlug in categoryMeta;
 
   return (
     <article className={styles.articleWrapper}>
@@ -47,16 +43,13 @@ export default function BlogPostLayout({ data, slug, children }: BlogPostLayoutP
             )}
             <p>Written by Hannah Willoughby</p>
             <div className={styles.categoryPills}>
-              {hasCategoryPage ? (
-                <Link href={`/categories/${categorySlug}/`} className={`${styles.pill} ${styles.category}`}>
-                  {category}
-                </Link>
-              ) : (
-                <span className={`${styles.pill} ${styles.category}`}>{category}</span>
-              )}
-              {subcategories.map((sub) => (
-                <Link key={sub} href={`/tags?tag=${encodeURIComponent(sub)}`} className={`${styles.pill} ${styles.subcategory}`}>
-                  {sub}
+              {subcategories.map((tag) => (
+                <Link
+                  key={tag}
+                  href={`/categories/${tagToSlug(tag)}/`}
+                  className={`${styles.pill} ${styles.subcategory}`}
+                >
+                  {tag}
                 </Link>
               ))}
             </div>
@@ -81,7 +74,7 @@ export default function BlogPostLayout({ data, slug, children }: BlogPostLayoutP
       <Comments postSlug={slug} />
       <div className={styles.newsletterAndRelated}>
         <hr />
-        <RelatedArticles currentSlug={slug} category={category} subcategories={subcategories} />
+        <RelatedArticles currentSlug={slug} subcategories={subcategories} />
         <hr />
         <NewsletterSignup />
         <AboutMeFooter />

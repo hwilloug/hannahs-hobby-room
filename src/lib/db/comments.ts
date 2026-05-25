@@ -1,4 +1,4 @@
-import { getPostBySlug } from '@/lib/posts';
+import { hasPostContent } from '@/content/posts/registry';
 import { ensureArticle } from '@/lib/db/articles';
 import { getSupabaseAdmin } from '@/lib/supabase/server';
 import type { ApiComment, DbComment } from './types';
@@ -10,8 +10,7 @@ export async function createComment(input: {
   body: string;
   parentId?: string;
 }): Promise<ApiComment> {
-  const post = getPostBySlug(input.articleSlug);
-  if (!post) {
+  if (!hasPostContent(input.articleSlug)) {
     throw new Error('NOT_FOUND');
   }
 

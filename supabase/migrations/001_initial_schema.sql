@@ -1,4 +1,4 @@
--- Articles: stores per-post like counts (content lives in markdown)
+-- Articles: metadata, likes (body content lives in src/content/posts)
 create table if not exists public.articles (
   slug text primary key,
   likes integer not null default 0 check (likes >= 0),

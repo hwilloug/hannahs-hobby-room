@@ -11,7 +11,7 @@ interface SearchPageProps {
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const { q } = await searchParams;
   const query = q?.toLowerCase() || '';
-  const posts = getAllPosts();
+  const posts = await getAllPosts();
   const searchResults = query ? searchPosts(posts, query) : [];
 
   return (

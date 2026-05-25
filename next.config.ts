@@ -4,9 +4,9 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   async redirects() {
     return [
-      { source: '/categories/gardening', destination: '/', permanent: true },
-      { source: '/categories/coding', destination: '/', permanent: true },
-      { source: '/categories/books', destination: '/', permanent: true },
+      { source: '/categories/gardening', destination: '/categories/gardening/', permanent: true },
+      { source: '/categories/coding', destination: '/categories/coding/', permanent: true },
+      { source: '/categories/books', destination: '/categories/books/', permanent: true },
     ];
   },
   images: {

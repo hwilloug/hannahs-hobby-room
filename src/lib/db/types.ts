@@ -1,6 +1,12 @@
 export interface DbArticle {
   slug: string;
   likes: number;
+  title: string | null;
+  subtitle: string | null;
+  pub_date: string | null;
+  updated_date: string | null;
+  hero_image: string | null;
+  subcategories: string[];
   created_at: string;
   updated_at: string;
 }

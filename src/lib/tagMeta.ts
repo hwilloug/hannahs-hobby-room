@@ -1,7 +1,7 @@
-export type CategorySlug = 'crafts' | 'antiquing';
+export type TagSlug = 'crafts' | 'antiquing';
 
-export const categoryMeta: Record<
-  CategorySlug,
+export const tagMeta: Record<
+  TagSlug,
   { name: string; description: string; background?: string }
 > = {
   crafts: {
@@ -18,4 +18,4 @@ export const categoryMeta: Record<
   },
 };
 
-export const categorySlugs = Object.keys(categoryMeta) as CategorySlug[];
+export const featuredTagSlugs = Object.keys(tagMeta) as TagSlug[];

@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getPostsByCategory } from '@/lib/posts';
-import { categoryMeta, categorySlugs, type CategorySlug } from '@/lib/categoryMeta';
+import { getAllTags, getPostsByTag } from '@/lib/posts';
+import { tagMeta, type TagSlug } from '@/lib/tagMeta';
+import { findTagBySlug, tagToSlug } from '@/lib/tagSlug';
 import { SITE_TITLE } from '@/utils/consts';
 import CategoryIcon from '@/components/CategoryIcon';
 import FormattedDate from '@/components/FormattedDate';
@@ -11,37 +12,44 @@ interface CategoryPageProps {
   params: Promise<{ category: string }>;
 }
 
-export function generateStaticParams() {
-  return categorySlugs.map((category) => ({ category }));
+export async function generateStaticParams() {
+  const tags = await getAllTags();
+  return tags.map((tag) => ({ category: tagToSlug(tag) }));
 }
 
 export async function generateMetadata({ params }: CategoryPageProps) {
-  const { category } = await params;
-  const meta = categoryMeta[category as CategorySlug];
-  if (!meta) return {};
-  return { title: `${meta.name} - ${SITE_TITLE}` };
+  const { category: tagSlug } = await params;
+  const meta = tagMeta[tagSlug as TagSlug];
+  const allTags = await getAllTags();
+  const tagName = findTagBySlug(tagSlug, allTags);
+  if (!tagName) return {};
+  const title = meta?.name ?? tagName;
+  return { title: `${title} - ${SITE_TITLE}` };
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
-  const { category } = await params;
-  const meta = categoryMeta[category as CategorySlug];
+  const { category: tagSlug } = await params;
+  const allTags = await getAllTags();
+  const tagName = findTagBySlug(tagSlug, allTags);
 
-  if (!meta) {
+  if (!tagName) {
     notFound();
   }
 
-  const posts = getPostsByCategory(meta.name);
+  const meta = tagMeta[tagSlug as TagSlug];
+  const posts = await getPostsByTag(tagName);
+  const displayName = meta?.name ?? tagName;
 
   return (
     <div className={styles.categoryLayout}>
       <div className={styles.categoryHeader}>
         <h1>
           <span className={styles.icon}>
-            <CategoryIcon category={category} className="icon-svg" />
+            <CategoryIcon tagSlug={tagSlug} className="icon-svg" />
           </span>
-          {meta.name}
+          {displayName}
         </h1>
-        <p>{meta.description}</p>
+        {meta?.description && <p>{meta.description}</p>}
       </div>
       <section>
         <ul className={styles.postsGrid}>
@@ -69,9 +77,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           ))}
         </ul>
       </section>
-      {meta.background && (
+      {meta?.background && (
         <section className={styles.categoryHeader}>
-          <h2 className="centered">My {meta.name} Background</h2>
+          <h2 className="centered">My {displayName} Background</h2>
           <p className="left">{meta.background}</p>
         </section>
       )}

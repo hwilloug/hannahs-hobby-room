@@ -7,14 +7,14 @@ interface CategorySectionProps {
   title: string;
   description: string;
   posts: BlogPost[];
-  category: string;
+  tagSlug: string;
 }
 
 export default function CategorySection({
   title,
   description,
   posts,
-  category,
+  tagSlug,
 }: CategorySectionProps) {
   const categoryPosts = posts.slice(0, 4);
   const titleWord = title.split(' ')[1] ?? title;
@@ -25,13 +25,13 @@ export default function CategorySection({
         <div>
           <h2>
             <span className={styles.icon}>
-              <CategoryIcon category={category} className="icon-svg size-16" />
+              <CategoryIcon tagSlug={tagSlug} className="icon-svg size-16" />
             </span>
             {titleWord}
           </h2>
           <p>{description}</p>
         </div>
-        <Link href={`/categories/${category}/`} className={styles.viewAll}>
+        <Link href={`/categories/${tagSlug}/`} className={styles.viewAll}>
           View All
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
             <line x1="5" y1="12" x2="19" y2="12" />

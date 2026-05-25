@@ -4,7 +4,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '@/utils/consts';
 const SITE_URL = 'https://hannahshobbyroom.com';
 
 export async function GET() {
-  const posts = getAllPosts();
+  const posts = await getAllPosts();
 
   const items = posts
     .map(

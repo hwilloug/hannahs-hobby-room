@@ -3,8 +3,8 @@ import { getAllPosts } from '@/lib/posts';
 import FormattedDate from '@/components/FormattedDate';
 import styles from './blog.module.css';
 
-export default function BlogIndexPage() {
-  const posts = getAllPosts();
+export default async function BlogIndexPage() {
+  const posts = await getAllPosts();
 
   return (
     <section className={styles.blogIndex}>

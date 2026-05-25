@@ -5,26 +5,20 @@ import styles from './RelatedArticles.module.css';
 
 interface RelatedArticlesProps {
   currentSlug: string;
-  category: string;
   subcategories: string[];
 }
 
-export default function RelatedArticles({
+export default async function RelatedArticles({
   currentSlug,
-  category,
   subcategories,
 }: RelatedArticlesProps) {
-  const allPosts = getAllPosts();
+  const allPosts = await getAllPosts();
 
   const relatedPosts = allPosts
     .filter((post) => {
       if (post.slug === currentSlug) return false;
       const postSubcategories = post.data.subcategories || [];
-      const postCategory = post.data.category || '';
-      return (
-        postCategory === category ||
-        postSubcategories.some((sub) => subcategories.includes(sub))
-      );
+      return postSubcategories.some((sub) => subcategories.includes(sub));
     })
     .slice(0, 3);
 

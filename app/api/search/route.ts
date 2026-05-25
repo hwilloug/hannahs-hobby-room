@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const posts = getAllPosts();
+    const posts = await getAllPosts();
     const searchResults = searchPosts(posts, query);
     return NextResponse.json(searchResults);
   } catch {
