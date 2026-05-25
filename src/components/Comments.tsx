@@ -3,7 +3,7 @@
 import { useEffect, useState, FormEvent } from 'react';
 import styles from './Comments.module.css';
 
-const API_URL = 'https://blog-api.poppyland.dev';
+const API_BASE = '/api';
 
 interface Comment {
   id: string;
@@ -73,7 +73,7 @@ function CommentItem({
     if (honeypot) return;
 
     try {
-      const response = await fetch(`${API_URL}/comments`, {
+      const response = await fetch(`${API_BASE}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -167,7 +167,7 @@ export default function Comments({ postSlug }: CommentsProps) {
 
   async function fetchComments() {
     try {
-      const response = await fetch(`${API_URL}/articles/${postSlug}`);
+      const response = await fetch(`${API_BASE}/articles/${postSlug}`);
       if (response.ok) {
         const data = await response.json();
         setComments(data.comments || []);
@@ -193,7 +193,7 @@ export default function Comments({ postSlug }: CommentsProps) {
     if (honeypot) return;
 
     try {
-      const response = await fetch(`${API_URL}/comments`, {
+      const response = await fetch(`${API_BASE}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

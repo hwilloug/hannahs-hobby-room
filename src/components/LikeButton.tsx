@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import styles from './LikeButton.module.css';
 
-const API_URL = 'https://blog-api.poppyland.dev';
+const API_BASE = '/api';
 
 interface LikeButtonProps {
   postSlug: string;
@@ -47,7 +47,7 @@ export default function LikeButton({ postSlug }: LikeButtonProps) {
   useEffect(() => {
     async function fetchInitialLikes() {
       try {
-        const response = await fetch(`${API_URL}/articles/${postSlug}`);
+        const response = await fetch(`${API_BASE}/articles/${postSlug}`);
         if (response.ok) {
           const data = await response.json();
           setLikeCount(data.article?.likes || 0);
@@ -63,7 +63,7 @@ export default function LikeButton({ postSlug }: LikeButtonProps) {
   async function toggleLike() {
     const isLiked = isArticleLiked(postSlug);
     try {
-      const response = await fetch(`${API_URL}/articles/${postSlug}/like`, {
+      const response = await fetch(`${API_BASE}/articles/${postSlug}/like`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ decrease: isLiked }),

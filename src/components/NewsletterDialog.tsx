@@ -3,7 +3,7 @@
 import { useRef, useState, FormEvent } from 'react';
 import styles from './NewsletterDialog.module.css';
 
-const API_URL = 'https://blog-api.poppyland.dev';
+const API_BASE = '/api';
 
 export default function NewsletterDialog() {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -46,7 +46,7 @@ export default function NewsletterDialog() {
     }
 
     try {
-      const response = await fetch(`${API_URL}/newsletter`, {
+      const response = await fetch(`${API_BASE}/newsletter`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

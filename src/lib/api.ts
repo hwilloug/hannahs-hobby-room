@@ -1,4 +1,6 @@
-// Blog API client for fetching articles
+// Blog API client — calls same-origin Next.js routes backed by Supabase
+import { getApiBase } from '@/utils/apiBase';
+
 export interface Article {
   article: {
     slug: string;
@@ -12,12 +14,12 @@ export interface Article {
     likes: number;
     createdAt: string;
     updatedAt: string;
-  },
+  };
   comments: Comment[];
 }
 
 export interface Comment {
-  id: string; // UUID
+  id: string;
   timestamp: string;
   body: string;
   username: string;
@@ -26,23 +28,16 @@ export interface Comment {
   children?: Comment[];
 }
 
-export async function getArticles(): Promise<Article[]> {
-  try {
-    const response = await fetch(`https://blog-api.poppyland.dev/articles?limit=1000`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch articles');
-    }
-    const resp = await response.json();
-    return resp.articles;
-  } catch (error) {
-    console.error('Error fetching articles:', error);
-    return [];
-  }
+function apiUrl(path: string): string {
+  return `${getApiBase()}${path}`;
 }
 
-export async function getArticle(slug: string): Promise<Article | null> {
+export async function getArticle(slug: string): Promise<{
+  article: { slug: string; likes: number; createdAt: string; updatedAt: string };
+  comments: Comment[];
+} | null> {
   try {
-    const response = await fetch(`https://blog-api.poppyland.dev/articles/${slug}`);
+    const response = await fetch(apiUrl(`/api/articles/${slug}`));
     if (!response.ok) {
       throw new Error(`Failed to fetch article: ${response.statusText}`);
     }
@@ -55,11 +50,9 @@ export async function getArticle(slug: string): Promise<Article | null> {
 
 export async function likeArticle(slug: string, decrement: boolean = false): Promise<number> {
   try {
-    const response = await fetch(`https://blog-api.poppyland.dev/articles/${slug}/like`, {
+    const response = await fetch(apiUrl(`/api/articles/${slug}/like`), {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ decrease: decrement }),
     });
     if (!response.ok) {
@@ -79,27 +72,20 @@ export async function addComment(
   body: string,
   parentId?: string
 ): Promise<Comment> {
-  try {
-    const response = await fetch(`https://blog-api.poppyland.dev/comments`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username,
-        body,
-        parent_id: parentId,
-        article_slug: articleSlug,
-      }),
-    });
+  const response = await fetch(apiUrl('/api/comments'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      username,
+      comment_body: body,
+      parent_comment_id: parentId,
+      article_slug: articleSlug,
+    }),
+  });
 
-    if (!response.ok) {
-      throw new Error('Failed to add comment');
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Error adding comment:', error);
-    throw error;
+  if (!response.ok) {
+    throw new Error('Failed to add comment');
   }
+
+  return await response.json();
 }
