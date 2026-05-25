@@ -163,7 +163,7 @@ export default function Header() {
         </div>
         <div className={`${styles.navBottom} ${navActive ? styles.active : ''}`}>
           <div className={styles.internalLinks}>
-            {(['crafts', 'gardening', 'coding', 'books', 'antiquing'] as const).map((cat) => (
+            {(['crafts', 'antiquing'] as const).map((cat) => (
               <HeaderLink key={cat} href={`/categories/${cat}/`}>
                 <div className="nav-content">
                   <span className="icon">

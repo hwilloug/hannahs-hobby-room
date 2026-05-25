@@ -8,10 +8,7 @@ export default function Footer() {
       title: 'Home',
       links: [
         { text: 'About', href: '/about/' },
-        { text: 'Gardening', href: '/categories/gardening/' },
         { text: 'Crafts', href: '/categories/crafts/' },
-        { text: 'Coding', href: '/categories/coding/' },
-        { text: 'Books', href: '/categories/books/' },
         { text: 'Antiquing', href: '/categories/antiquing/' },
       ],
     },

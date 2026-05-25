@@ -24,36 +24,6 @@ export default function CategoryIcon({ category, className = 'icon-svg' }: Categ
           />
         </svg>
       );
-    case 'gardening':
-      return (
-        <svg {...props}>
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6M4.5 10.5V21h15V10.5"
-          />
-        </svg>
-      );
-    case 'coding':
-      return (
-        <svg {...props}>
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5"
-          />
-        </svg>
-      );
-    case 'books':
-      return (
-        <svg {...props}>
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.148 0-2.234.15-3.25.428A8.967 8.967 0 0 0 6 9.75c1.148 0 2.234-.15 3.25-.428M12 6.042A8.967 8.967 0 0 1 18 3.75c1.148 0 2.234.15 3.25.428A8.967 8.967 0 0 1 18 9.75c-1.148 0-2.234-.15-3.25-.428M12 6.042V9.75m0 0v10.5M6 14.25v2.25m12-2.25v2.25"
-          />
-        </svg>
-      );
     case 'antiquing':
       return (
         <svg {...props}>

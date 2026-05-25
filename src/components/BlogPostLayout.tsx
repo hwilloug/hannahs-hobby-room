@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { BlogPostData } from '@/lib/posts';
+import { categoryMeta } from '@/lib/categoryMeta';
 import FormattedDate from './FormattedDate';
 import LikeButton from './LikeButton';
 import Comments from './Comments';
@@ -26,6 +27,7 @@ export default function BlogPostLayout({ data, slug, children }: BlogPostLayoutP
   } = data;
 
   const categorySlug = category.toLowerCase().replace(/\s+/g, '-');
+  const hasCategoryPage = categorySlug in categoryMeta;
 
   return (
     <article className={styles.articleWrapper}>
@@ -45,9 +47,13 @@ export default function BlogPostLayout({ data, slug, children }: BlogPostLayoutP
             )}
             <p>Written by Hannah Willoughby</p>
             <div className={styles.categoryPills}>
-              <Link href={`/categories/${categorySlug}/`} className={`${styles.pill} ${styles.category}`}>
-                {category}
-              </Link>
+              {hasCategoryPage ? (
+                <Link href={`/categories/${categorySlug}/`} className={`${styles.pill} ${styles.category}`}>
+                  {category}
+                </Link>
+              ) : (
+                <span className={`${styles.pill} ${styles.category}`}>{category}</span>
+              )}
               {subcategories.map((sub) => (
                 <Link key={sub} href={`/tags?tag=${encodeURIComponent(sub)}`} className={`${styles.pill} ${styles.subcategory}`}>
                   {sub}

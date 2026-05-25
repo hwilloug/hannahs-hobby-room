@@ -12,10 +12,7 @@ export default function NewsletterDialog() {
   const [showAlreadySubscribed, setShowAlreadySubscribed] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
   const [interests, setInterests] = useState({
-    gardening: false,
     crafts: false,
-    coding: false,
-    books: false,
     antiquing: false,
   });
 
@@ -24,10 +21,7 @@ export default function NewsletterDialog() {
   function handleSelectAll(checked: boolean) {
     setSelectAll(checked);
     setInterests({
-      gardening: checked,
       crafts: checked,
-      coding: checked,
-      books: checked,
       antiquing: checked,
     });
     setShowInterestsError(false);
