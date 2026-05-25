@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { SITE_TITLE } from '@/utils/consts';
 import HeaderLink from './HeaderLink';
 import DarkModeToggle from './DarkModeToggle';
-import CategoryIcon from './CategoryIcon';
 import styles from './Header.module.css';
 
 interface SearchResult {
@@ -14,7 +13,6 @@ interface SearchResult {
 }
 
 export default function Header() {
-  const [navActive, setNavActive] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [showResults, setShowResults] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -147,32 +145,6 @@ export default function Header() {
                 <span className="text">About</span>
               </div>
             </HeaderLink>
-            <button
-              className={styles.menuToggle}
-              aria-label="Toggle menu"
-              aria-expanded={navActive}
-              onClick={() => setNavActive(!navActive)}
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        <div className={`${styles.navBottom} ${navActive ? styles.active : ''}`}>
-          <div className={styles.internalLinks}>
-            {(['crafts', 'antiquing'] as const).map((cat) => (
-              <HeaderLink key={cat} href={`/categories/${cat}/`}>
-                <div className="nav-content">
-                  <span className="icon">
-                    <CategoryIcon category={cat} className="icon-svg size-6" />
-                  </span>
-                  <span className="text">{cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
-                </div>
-              </HeaderLink>
-            ))}
           </div>
         </div>
       </nav>
