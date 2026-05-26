@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, FormEvent } from 'react';
-import styles from './Comments.module.css';
 
 const API_BASE = '/api';
 
@@ -94,20 +93,22 @@ function CommentItem({
   }
 
   return (
-    <div className={styles.commentThread}>
-      <div className={styles.comment}>
-        <div className={styles.commentHeader}>
+    <div className="flex flex-col gap-4">
+      <div className="rounded-xl border border-[rgba(var(--primary-main-rgb),0.1)] bg-[rgba(var(--primary-main-rgb),0.4)] p-6 dark:border-white/20 dark:bg-white/10">
+        <div className="mb-2 flex items-center justify-between">
           <div>
-            <span className={styles.commentAuthor}>{comment.username}</span>
+            <span className="font-semibold text-primary-dark dark:text-white">{comment.username}</span>
             {comment.username === 'hannahwilloughby' && (
-              <span className={styles.commentAuthorBadge}>Author</span>
+              <span className="mx-2 rounded-lg border border-warning-main px-2 py-0.5 text-warning-main">
+                Author
+              </span>
             )}
           </div>
-          <span className={styles.commentDate}>{formatDate(comment.timestamp)}</span>
+          <span className="text-[0.9em] text-gray-custom">{formatDate(comment.timestamp)}</span>
         </div>
-        <div className={styles.commentContent}>{comment.body}</div>
+        <div className="mb-4 leading-normal text-gray-dark-custom dark:text-white/90">{comment.body}</div>
         <button
-          className={styles.replyButton}
+          className="cursor-pointer rounded-lg border-none bg-primary-main px-4 py-2 text-[0.9em] text-white transition-[background-color,transform] duration-200 hover:-translate-y-0.5 hover:bg-primary-dark"
           onClick={() => {
             setShowReplyForm(!showReplyForm);
           }}
@@ -116,42 +117,71 @@ function CommentItem({
         </button>
         {showReplyForm && (
           <form
-            className={styles.replyForm}
+            className="mt-4 rounded-xl bg-[rgba(var(--primary-main-rgb),0.4)] p-6 dark:bg-white/10"
             onSubmit={(e) => handleReplySubmit(e, comment.id)}
           >
-            <div className={styles.formGroup}>
-              <label htmlFor={`username-${comment.id}`}>Name</label>
-              <input type="text" id={`username-${comment.id}`} name="username" required placeholder="Your name" />
+            <div className="mb-4">
+              <label htmlFor={`username-${comment.id}`} className="mb-2 block font-medium text-primary-dark dark:text-white">
+                Name
+              </label>
+              <input
+                type="text"
+                id={`username-${comment.id}`}
+                name="username"
+                required
+                placeholder="Your name"
+                className="w-full rounded-lg border-2 border-[rgba(var(--primary-main-rgb),0.2)] bg-white px-3 py-3 text-base transition-[border-color] duration-300 focus:border-primary-main focus:outline-none"
+              />
             </div>
-            <div className={styles.formGroup}>
-              <label htmlFor={`comment-${comment.id}`}>Reply</label>
-              <textarea id={`comment-${comment.id}`} name="comment" required rows={3} placeholder="Write your reply..." />
+            <div className="mb-4">
+              <label htmlFor={`comment-${comment.id}`} className="mb-2 block font-medium text-primary-dark dark:text-white">
+                Reply
+              </label>
+              <textarea
+                id={`comment-${comment.id}`}
+                name="comment"
+                required
+                rows={3}
+                placeholder="Write your reply..."
+                className="w-full rounded-lg border-2 border-[rgba(var(--primary-main-rgb),0.2)] bg-white px-3 py-3 text-base transition-[border-color] duration-300 focus:border-primary-main focus:outline-none"
+              />
             </div>
-            <div className={styles.honeypotField}>
+            <div className="absolute -left-[9999px] hidden">
               <input type="text" name="website" tabIndex={-1} autoComplete="off" />
             </div>
-            <div className={styles.formActions}>
-              <button type="submit" className={styles.submitButton}>Post Reply</button>
-              <button type="button" className={styles.cancelReply} onClick={() => setShowReplyForm(false)}>
+            <div className="flex gap-4 max-[640px]:flex-col max-[640px]:[&_button]:w-full">
+              <button
+                type="submit"
+                className="cursor-pointer rounded-lg border-none bg-primary-main px-6 py-3 text-base text-white transition-[background-color,transform] duration-200 hover:-translate-y-0.5 hover:bg-primary-dark"
+              >
+                Post Reply
+              </button>
+              <button
+                type="button"
+                className="cursor-pointer rounded-lg border-2 border-primary-main bg-transparent px-6 py-3 text-base text-primary-main transition-all duration-200 hover:bg-primary-main hover:text-white"
+                onClick={() => setShowReplyForm(false)}
+              >
                 Cancel
               </button>
             </div>
           </form>
         )}
         {comment.children && comment.children.length > 0 && (
-          <div className={styles.nestedComments}>
+          <div className="mt-4 ml-8 flex flex-col gap-4 max-[640px]:ml-4">
             {comment.children.map((reply) => (
-              <div key={reply.id} className={styles.comment}>
-                <div className={styles.commentHeader}>
+              <div key={reply.id} className="rounded-xl border border-[rgba(var(--primary-main-rgb),0.1)] bg-[rgba(var(--primary-main-rgb),0.4)] p-6 dark:border-white/20 dark:bg-white/10">
+                <div className="mb-2 flex items-center justify-between">
                   <div>
-                    <span className={styles.commentAuthor}>{reply.username}</span>
+                    <span className="font-semibold text-primary-dark dark:text-white">{reply.username}</span>
                     {reply.username === 'hannahwilloughby' && (
-                      <span className={styles.commentAuthorBadge}>Author</span>
+                      <span className="mx-2 rounded-lg border border-warning-main px-2 py-0.5 text-warning-main">
+                        Author
+                      </span>
                     )}
                   </div>
-                  <span className={styles.commentDate}>{formatDate(reply.timestamp)}</span>
+                  <span className="text-[0.9em] text-gray-custom">{formatDate(reply.timestamp)}</span>
                 </div>
-                <div className={styles.commentContent}>{reply.body}</div>
+                <div className="leading-normal text-gray-dark-custom dark:text-white/90">{reply.body}</div>
               </div>
             ))}
           </div>
@@ -214,11 +244,11 @@ export default function Comments({ postSlug }: CommentsProps) {
   const commentTree = buildCommentTree(comments);
 
   return (
-    <section className={styles.commentsSection}>
-      <h2>Comments</h2>
-      <div className={styles.commentsList}>
+    <section className="mx-auto mt-16 max-w-[800px] border-t border-primary-dark pt-8">
+      <h2 className="text-primary-dark dark:text-white">Comments</h2>
+      <div className="flex flex-col gap-8">
         {loading ? (
-          <div className={styles.loading}>Loading comments...</div>
+          <div className="text-center text-primary-main italic">Loading comments...</div>
         ) : commentTree.length > 0 ? (
           commentTree.map((comment) => (
             <CommentItem key={comment.id} comment={comment} postSlug={postSlug} onReply={fetchComments} />
@@ -227,20 +257,46 @@ export default function Comments({ postSlug }: CommentsProps) {
           <p>No comments yet.</p>
         )}
       </div>
-      <form className={styles.commentForm} onSubmit={handleSubmit}>
-        <div className={styles.formGroup}>
-          <label htmlFor="username">Name</label>
-          <input type="text" id="username" name="username" required placeholder="Your name" />
+      <form
+        className="my-8 rounded-xl bg-[rgba(var(--primary-main-rgb),0.4)] p-8 dark:bg-white/10 max-[640px]:p-6"
+        onSubmit={handleSubmit}
+      >
+        <div className="mb-4">
+          <label htmlFor="username" className="mb-2 block font-medium text-primary-dark dark:text-white">
+            Name
+          </label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            required
+            placeholder="Your name"
+            className="w-full rounded-lg border-2 border-[rgba(var(--primary-main-rgb),0.2)] bg-white px-3 py-3 text-base transition-[border-color] duration-300 focus:border-primary-main focus:outline-none"
+          />
         </div>
-        <div className={styles.formGroup}>
-          <label htmlFor="comment">Comment</label>
-          <textarea id="comment" name="comment" required rows={4} placeholder="Share your thoughts..." />
+        <div className="mb-4">
+          <label htmlFor="comment" className="mb-2 block font-medium text-primary-dark dark:text-white">
+            Comment
+          </label>
+          <textarea
+            id="comment"
+            name="comment"
+            required
+            rows={4}
+            placeholder="Share your thoughts..."
+            className="w-full rounded-lg border-2 border-[rgba(var(--primary-main-rgb),0.2)] bg-white px-3 py-3 text-base transition-[border-color] duration-300 focus:border-primary-main focus:outline-none"
+          />
         </div>
-        <div className={styles.honeypotField}>
+        <div className="absolute -left-[9999px] hidden">
           <label htmlFor="website">Website</label>
           <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" />
         </div>
-        <button type="submit" className={styles.submitButton}>Post Comment</button>
+        <button
+          type="submit"
+          className="cursor-pointer rounded-lg border-none bg-primary-main px-6 py-3 text-base text-white transition-[background-color,transform] duration-200 hover:-translate-y-0.5 hover:bg-primary-dark"
+        >
+          Post Comment
+        </button>
       </form>
     </section>
   );

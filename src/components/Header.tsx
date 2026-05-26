@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { SITE_TITLE } from '@/utils/consts';
 import HeaderLink from './HeaderLink';
 import DarkModeToggle from './DarkModeToggle';
-import styles from './Header.module.css';
 
 interface SearchResult {
   title: string;
@@ -16,6 +15,7 @@ export default function Header() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [showResults, setShowResults] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchResultsRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
@@ -24,7 +24,8 @@ export default function Header() {
       if (
         searchInputRef.current &&
         !searchInputRef.current.contains(target) &&
-        !(e.target as Element).closest(`.${styles.searchResults}`)
+        searchResultsRef.current &&
+        !searchResultsRef.current.contains(target)
       ) {
         setShowResults(false);
       }
@@ -50,19 +51,19 @@ export default function Header() {
   }
 
   return (
-    <header className={styles.header}>
-      <nav className={styles.nav}>
-        <div className={styles.navTop}>
-          <div className={styles.leftSection}>
-            <div className={styles.appIcon}>
+    <header className="bg-primary-main shadow-[0_2px_8px_rgba(var(--black),5%)]">
+      <nav className="relative mx-auto border-b border-primary-dark p-2 text-white">
+        <div className="flex flex-nowrap items-center justify-between gap-2 max-md:flex-wrap max-md:pb-2">
+          <div className="flex shrink-0 items-center gap-4">
+            <div className="h-[50px] w-[50px] [&_img]:h-full [&_img]:w-full">
               <img src="/poppy.png" alt="Poppy Logo" />
             </div>
-            <h2 id="app-title">
+            <h2 id="app-title" className="m-0 text-[2em] font-extrabold max-md:min-w-0 max-md:truncate max-md:text-xl max-md:whitespace-nowrap [&_a]:text-white [&_a]:no-underline">
               <Link href="/">{SITE_TITLE}</Link>
             </h2>
           </div>
-          <div className={styles.searchSection}>
-            <div className={styles.searchContainer}>
+          <div className="flex min-w-[200px] flex-1 justify-center px-4 max-md:order-2 max-md:mt-2 max-md:w-full max-md:flex-[1_0_100%] max-md:px-0">
+            <div className="relative w-full max-w-[400px]">
               <input
                 ref={searchInputRef}
                 type="search"
@@ -70,6 +71,7 @@ export default function Header() {
                 placeholder="Search posts..."
                 aria-label="Search posts"
                 autoComplete="off"
+                className="w-full rounded-[20px] border border-white/20 bg-white/10 px-4 py-2 text-base text-white placeholder:text-white/70 focus:border-white/30 focus:bg-white/15 focus:outline-none"
                 onInput={(e) => {
                   const value = (e.target as HTMLInputElement).value;
                   clearTimeout(debounceRef.current);
@@ -86,23 +88,26 @@ export default function Header() {
                 }}
               />
               {showResults && (
-                <div className={styles.searchResults}>
+                <div
+                  ref={searchResultsRef}
+                  className="absolute top-full right-0 left-0 z-[1000] mt-2 max-h-[400px] overflow-y-auto rounded-lg border border-primary-dark bg-primary-main p-2 shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
+                >
                   {searchResults.length > 0 ? (
                     <>
                       {searchResults.slice(0, 5).map((post) => (
                         <div
                           key={post.url}
-                          className={styles.searchResultItem}
+                          className="mb-1 cursor-pointer rounded px-4 py-3 text-white transition-all duration-200 hover:-translate-y-px hover:bg-primary-dark"
                           onClick={() => (window.location.href = post.url)}
                           onKeyDown={() => {}}
                           role="button"
                           tabIndex={0}
                         >
-                          <div className={styles.searchResultTitle}>{post.title}</div>
+                          <div className="font-bold">{post.title}</div>
                         </div>
                       ))}
                       <div
-                        className={`${styles.searchResultItem} ${styles.viewAll}`}
+                        className="mt-3 cursor-pointer bg-white px-4 py-4 text-center font-bold text-primary-main transition-all duration-200 hover:bg-primary-light"
                         onClick={() => {
                           const q = searchInputRef.current?.value ?? '';
                           window.location.href = `/search?q=${encodeURIComponent(q)}`;
@@ -116,15 +121,15 @@ export default function Header() {
                       </div>
                     </>
                   ) : (
-                    <div className={styles.searchResultItem}>No results found</div>
+                    <div className="mb-1 cursor-pointer rounded px-4 py-3 text-white">No results found</div>
                   )}
                 </div>
               )}
             </div>
           </div>
-          <div className={styles.rightSection}>
+          <div className="flex shrink-0 items-center gap-4">
             <DarkModeToggle />
-            <HeaderLink href="/about/" className={styles.hideMobile}>
+            <HeaderLink href="/about/" className="max-md:hidden">
               <div className="nav-content">
                 <span className="icon">
                   <svg

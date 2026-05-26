@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 import { FormEvent } from 'react';
-import styles from './search.module.css';
 
 interface SearchFormProps {
   initialQuery: string;
@@ -21,7 +20,7 @@ export default function SearchForm({ initialQuery }: SearchFormProps) {
   }
 
   return (
-    <form action="/search" method="get" className={styles.searchContainer} onSubmit={handleSubmit}>
+    <form action="/search" method="get" className="my-8 max-w-[600px]" onSubmit={handleSubmit}>
       <input
         type="search"
         id="search-input"
@@ -30,6 +29,7 @@ export default function SearchForm({ initialQuery }: SearchFormProps) {
         defaultValue={initialQuery}
         aria-label="Search posts"
         autoComplete="off"
+        className="w-full rounded-[20px] border-2 border-primary-main bg-white px-4 py-3 text-[1.2em] text-gray-dark-custom focus:border-primary-dark focus:outline-none"
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
             e.preventDefault();

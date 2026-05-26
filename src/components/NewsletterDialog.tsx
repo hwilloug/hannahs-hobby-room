@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef, useState, FormEvent } from 'react';
-import styles from './NewsletterDialog.module.css';
 
 const API_BASE = '/api';
 
@@ -74,15 +73,25 @@ export default function NewsletterDialog() {
 
   return (
     <>
-      <dialog ref={dialogRef} id="newsletter-dialog" className={styles.newsletterDialog}>
+      <dialog
+        ref={dialogRef}
+        id="newsletter-dialog"
+        className="w-[90%] max-w-[500px] rounded-xl border border-primary-dark bg-primary-light p-8 shadow-[8px_8px_var(--primary-dark)] backdrop:bg-black/50"
+      >
         <form id="newsletter-form" onSubmit={handleSubmit}>
-          <h2>Subscribe to Newsletter</h2>
-          <div className={styles.formGroup}>
-            <input type="email" name="email" placeholder="Enter your email" required />
+          <h2 className="text-primary-dark">Subscribe to Newsletter</h2>
+          <div className="mb-6">
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              required
+              className="w-full rounded-md border border-primary-dark bg-primary-main px-3 py-2.5 text-base text-white"
+            />
           </div>
-          <div className={styles.interestsSection}>
-            <h3>Select Your Interests</h3>
-            <label className={styles.selectAll}>
+          <div className="mb-6">
+            <h3 className="mb-2 text-primary-dark">Select Your Interests</h3>
+            <label className="mb-2 flex items-center gap-2 font-bold text-primary-dark">
               <input
                 type="checkbox"
                 checked={selectAll}
@@ -90,9 +99,9 @@ export default function NewsletterDialog() {
               />
               Select All
             </label>
-            <div className={styles.checkboxGroup}>
+            <div className="mt-4 flex flex-col gap-2">
               {interestKeys.map((key) => (
-                <label key={key}>
+                <label key={key} className="flex items-center gap-2 text-primary-dark">
                   <input
                     type="checkbox"
                     checked={interests[key]}
@@ -103,12 +112,21 @@ export default function NewsletterDialog() {
               ))}
             </div>
             {showInterestsError && (
-              <p className={styles.errorText}>Please select at least one interest</p>
+              <p className="mt-2 text-sm text-[#ff4444]">Please select at least one interest</p>
             )}
           </div>
-          <div className={styles.buttonGroup}>
-            <button type="submit">Subscribe</button>
-            <button type="button" className={styles.cancelBtn} onClick={() => dialogRef.current?.close()}>
+          <div className="flex justify-end gap-4">
+            <button
+              type="submit"
+              className="cursor-pointer rounded-md border border-primary-dark bg-primary-main px-5 py-2.5 text-base text-white transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:bg-primary-dark"
+            >
+              Subscribe
+            </button>
+            <button
+              type="button"
+              className="cursor-pointer rounded-md border border-primary-dark bg-transparent px-5 py-2.5 text-base text-primary-dark transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:bg-primary-dark hover:text-white"
+              onClick={() => dialogRef.current?.close()}
+            >
               Cancel
             </button>
           </div>
@@ -116,21 +134,31 @@ export default function NewsletterDialog() {
       </dialog>
 
       {showSuccess && (
-        <div className={styles.successPopup} style={{ display: 'flex' }}>
-          <div className={styles.successContent}>
-            <h3>🎉 Successfully Subscribed!</h3>
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50">
+          <div className="rounded-xl bg-primary-light p-8 text-center shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
+            <h3 className="mb-4 text-primary-dark">🎉 Successfully Subscribed!</h3>
             <p>Thank you for subscribing to our newsletter.</p>
-            <button className={styles.okBtn} onClick={() => setShowSuccess(false)}>OK</button>
+            <button
+              className="mt-4 cursor-pointer rounded-md border border-primary-dark bg-primary-main px-5 py-2.5 text-white transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:bg-primary-dark"
+              onClick={() => setShowSuccess(false)}
+            >
+              OK
+            </button>
           </div>
         </div>
       )}
 
       {showAlreadySubscribed && (
-        <div className={styles.successPopup} style={{ display: 'flex' }}>
-          <div className={styles.successContent}>
-            <h3>Already Subscribed!</h3>
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50">
+          <div className="rounded-xl bg-primary-light p-8 text-center shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
+            <h3 className="mb-4 text-primary-dark">Already Subscribed!</h3>
             <p>This email is already subscribed to our newsletter.</p>
-            <button className={styles.okBtn} onClick={() => setShowAlreadySubscribed(false)}>OK</button>
+            <button
+              className="mt-4 cursor-pointer rounded-md border border-primary-dark bg-primary-main px-5 py-2.5 text-white transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:bg-primary-dark"
+              onClick={() => setShowAlreadySubscribed(false)}
+            >
+              OK
+            </button>
           </div>
         </div>
       )}

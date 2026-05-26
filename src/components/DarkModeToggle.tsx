@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import styles from './DarkModeToggle.module.css';
 
 const STORAGE_KEY = 'theme';
 
@@ -38,18 +37,27 @@ export default function DarkModeToggle() {
 
   if (!mounted) {
     return (
-      <button className={styles.darkModeToggle} aria-label="Toggle dark mode" />
+      <button
+        className="mr-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-none bg-transparent p-2 text-white transition-all duration-300 ease-in-out max-md:mr-4"
+        aria-label="Toggle dark mode"
+      />
     );
   }
 
   return (
     <button
       id="dark-mode-toggle"
-      className={`${styles.darkModeToggle} ${isDark ? styles.dark : ''}`}
+      className="mr-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-none bg-transparent p-2 text-white transition-all duration-300 ease-in-out hover:bg-white/20 max-md:mr-4"
       aria-label="Toggle dark mode"
       onClick={toggle}
     >
-      <svg className={styles.sunIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <svg
+        className={`h-6 w-6 transition-transform duration-300 ease-in-out ${isDark ? 'hidden' : 'block'}`}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
         <circle cx="12" cy="12" r="5" />
         <line x1="12" y1="1" x2="12" y2="3" />
         <line x1="12" y1="21" x2="12" y2="23" />
@@ -60,7 +68,13 @@ export default function DarkModeToggle() {
         <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
       </svg>
-      <svg className={styles.moonIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <svg
+        className={`h-6 w-6 transition-transform duration-300 ease-in-out ${isDark ? 'block' : 'hidden'}`}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
       </svg>
     </button>

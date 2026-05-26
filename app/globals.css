@@ -1,317 +1,366 @@
-/* Add RGB values for primary-light for translucency */
-:root {
-	--accent: #7F9679;
-	--accent-dark: #4B5646;
-	--black: 15, 18, 25;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
-	--text-shadow: -1px -1px 0 #000,
-		1px -1px 0 #000,
-		-1px 1px 0 #000,
-		1px 1px 0 #000;
-	--text-shadow-header: black -1px 0px, black 0px 1px, black 3px 3px, black 0px -1px;
-	
-	/* Light mode colors */
-	--primary-light: #D3DECF;
-	--primary-light-rgb: 211, 222, 207;
-	--primary-main: #7F9679;
-	--primary-main-rgb: 127, 150, 121;
-	--primary-dark: #4B5646;
-	--primary-darker: #333D33;
-	--secondary-light: #DECFD3;
-	--secondary-main: #BD9FA8;
-	--secondary-dark: #706677;
-	--warning-main: #FFBF00;
-	--dot-color: #FFB6C1;
+@import 'tailwindcss';
 
-  /* Dark mode colors */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-gluten: 'Gluten', sans-serif;
+  --font-ubuntu: 'Ubuntu', sans-serif;
+
+  --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
+  --color-primary-light: var(--primary-light);
+  --color-primary-main: var(--primary-main);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-darker: var(--primary-darker);
+  --color-secondary-light: var(--secondary-light);
+  --color-secondary-main: var(--secondary-main);
+  --color-secondary-dark: var(--secondary-dark);
+  --color-warning-main: var(--warning-main);
+  --color-gray-custom: rgb(var(--gray));
+  --color-gray-dark-custom: rgb(var(--gray-dark));
+  --color-gray-light-custom: rgb(var(--gray-light));
+  --color-black-custom: rgb(var(--black));
+
+  --shadow-text-header: black -1px 0px, black 0px 1px, black 3px 3px, black 0px -1px;
+  --shadow-text: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+
+  --animate-color-rotate: color-rotate 6s linear infinite;
+}
+
+:root {
+  --accent: #7f9679;
+  --accent-dark: #4b5646;
+  --black: 15, 18, 25;
+  --gray: 96, 115, 159;
+  --gray-light: 229, 233, 240;
+  --gray-dark: 34, 41, 57;
+  --text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  --text-shadow-header: black -1px 0px, black 0px 1px, black 3px 3px, black 0px -1px;
+
+  --primary-light: #d3decf;
+  --primary-light-rgb: 211, 222, 207;
+  --primary-main: #7f9679;
+  --primary-main-rgb: 127, 150, 121;
+  --primary-dark: #4b5646;
+  --primary-darker: #333d33;
+  --secondary-light: #decfd3;
+  --secondary-main: #bd9fa8;
+  --secondary-dark: #706677;
+  --warning-main: #ffbf00;
+  --dot-color: #ffb6c1;
+
   --dark-primary-light: #6d5749;
-  --dark-primary-main: #492E1C;
-  --dark-primary-dark: #29190E;
+  --dark-primary-main: #492e1c;
+  --dark-primary-dark: #29190e;
   --dark-primary-light-rgb: 109, 87, 73;
   --dark-primary-main-rgb: 73, 46, 28;
 
-	color-scheme: light;
-}
-
-/* Font faces */
-@font-face {
-	font-family: 'Gluten';
-	src: url('/fonts/Gluten/static/Gluten-Regular.ttf') format('truetype');
-	font-weight: normal;
-	font-style: normal;
-	font-display: swap;
+  color-scheme: light;
 }
 
 @font-face {
-	font-family: 'Gluten';
-	src: url('/fonts/Gluten/static/Gluten-Bold.ttf') format('truetype');
-	font-weight: bold;
-	font-style: normal;
-	font-display: swap;
+  font-family: 'Gluten';
+  src: url('/fonts/Gluten/static/Gluten-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-	font-family: 'Gluten';
-	src: url('/fonts/Gluten/static/Gluten-ExtraBold.ttf') format('truetype');
-	font-weight: bolder;
-	font-style: normal;
-	font-display: swap;
+  font-family: 'Gluten';
+  src: url('/fonts/Gluten/static/Gluten-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-	font-family: 'Ubuntu';
-	src: url('/fonts/Ubuntu/Ubuntu-Regular.ttf') format('truetype');
-	font-weight: normal;
-	font-style: normal;
-	font-display: swap;
+  font-family: 'Gluten';
+  src: url('/fonts/Gluten/static/Gluten-ExtraBold.ttf') format('truetype');
+  font-weight: bolder;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-	font-family: 'Ubuntu';
-	src: url('/fonts/Ubuntu/Ubuntu-Bold.ttf') format('truetype');
-	font-weight: bold;
-	font-style: normal;
-	font-display: swap;
+  font-family: 'Ubuntu';
+  src: url('/fonts/Ubuntu/Ubuntu-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
+@font-face {
+  font-family: 'Ubuntu';
+  src: url('/fonts/Ubuntu/Ubuntu-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
 
-/* Dark mode variables */
 html.dark {
-	--primary-light: var(--dark-primary-light);
-	--primary-main: var(--dark-primary-main);
-	--primary-dark: var(--dark-primary-dark);
-	--primary-light-rgb: var(--dark-primary-light-rgb);
-	--primary-main-rgb: var(--dark-primary-main-rgb);
-	--secondary-light: #D3DECF;
-	--secondary-main: #7F9679;
-	--secondary-dark: #BD9FA8;
-	--accent: #DECFD3;
-	--gray: 200, 200, 200;
-	--gray-light: 50, 50, 50;
-	--gray-dark: 230, 230, 230;
-	color-scheme: dark;
+  --primary-light: var(--dark-primary-light);
+  --primary-main: var(--dark-primary-main);
+  --primary-dark: var(--dark-primary-dark);
+  --primary-light-rgb: var(--dark-primary-light-rgb);
+  --primary-main-rgb: var(--dark-primary-main-rgb);
+  --secondary-light: #d3decf;
+  --secondary-main: #7f9679;
+  --secondary-dark: #bd9fa8;
+  --accent: #decfd3;
+  --gray: 200, 200, 200;
+  --gray-light: 50, 50, 50;
+  --gray-dark: 230, 230, 230;
+  color-scheme: dark;
 }
 
 html.dark main {
-	background-image: url('/bg.png');
-	background-repeat: repeat;
-	background-attachment: fixed;
+  background-image: url('/bg.png');
+  background-repeat: repeat;
+  background-attachment: fixed;
 }
 
 @property --pixel-size {
-	syntax: '<length>';
-	initial-value: 2px;
-	inherits: false;
+  syntax: '<length>';
+  initial-value: 2px;
+  inherits: false;
 }
 
-body {
-	font-family: 'Ubuntu', sans-serif;
-	letter-spacing: 0.03em;
-	margin: 0;
-	padding: 0;
-	text-align: left;
-	background-color: var(--primary-light);
-	word-wrap: break-word;
-	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
-	font-size: 16px;
-	line-height: 1.7;
-	width: 100%;
-	min-height: 100vh;
-	overflow-x: hidden;
-	box-sizing: border-box;
-	transition: background-color 0.3s ease, color 0.3s ease;
+@keyframes color-rotate {
+  0% {
+    color: salmon;
+  }
+  16.66% {
+    color: #d0f0c0;
+  }
+  33.33% {
+    color: sandybrown;
+  }
+  50% {
+    color: khaki;
+  }
+  66.66% {
+    color: lightblue;
+  }
+  83.33% {
+    color: thistle;
+  }
+  100% {
+    color: salmon;
+  }
 }
 
-*, *:before, *:after {
-	box-sizing: inherit;
+@layer base {
+  body {
+    @apply m-0 box-border min-h-screen w-full overflow-x-hidden break-words bg-primary-light p-0 text-left font-ubuntu text-base leading-[1.7] tracking-[0.03em] text-gray-dark-custom transition-[background-color,color] duration-300 ease-in-out;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply m-0 p-0 text-left font-gluten text-[0.75em] font-extrabold text-black;
+  }
+
+  html.dark h1,
+  html.dark h2,
+  html.dark h3,
+  html.dark h4,
+  html.dark h5,
+  html.dark h6 {
+    @apply text-white;
+  }
+
+  main {
+    @apply m-0 box-border w-full max-w-full bg-primary-light bg-[url('/bg_light.png')] bg-repeat bg-fixed px-0 py-12;
+  }
+
+  h1 {
+    @apply text-[3.052em] font-extrabold text-white;
+    text-shadow: var(--text-shadow-header);
+  }
+
+  h2 {
+    @apply text-[2.441em] font-bold;
+  }
+
+  h3 {
+    @apply text-[1.953em] font-bold;
+  }
+
+  h4 {
+    @apply text-[1.563em] font-bold;
+  }
+
+  h5 {
+    @apply text-xl;
+  }
+
+  strong,
+  b {
+    @apply font-bold;
+  }
+
+  a {
+    @apply text-accent-dark transition-colors duration-300 ease-in-out;
+  }
+
+  a:hover {
+    @apply text-accent;
+  }
+
+  html.dark a {
+    @apply text-secondary-light;
+  }
+
+  html.dark a:hover {
+    @apply text-secondary-main;
+  }
+
+  p {
+    @apply mb-4;
+  }
+
+  .prose p {
+    @apply mb-8;
+  }
+
+  textarea {
+    @apply w-full text-base;
+  }
+
+  input {
+    @apply text-base;
+  }
+
+  table {
+    @apply w-full;
+  }
+
+  img {
+    @apply h-auto max-w-full rounded-lg;
+  }
+
+  code {
+    @apply rounded-sm bg-gray-light-custom px-[5px] py-0.5;
+  }
+
+  pre {
+    @apply rounded-lg p-6;
+  }
+
+  pre > code {
+    all: unset;
+  }
+
+  blockquote {
+    @apply m-0 border-l-4 border-accent py-0 pl-5 text-[1.333em];
+  }
+
+  hr {
+    @apply border-0 border-t border-primary-dark;
+  }
+
+  #app-title {
+    @apply font-bold;
+    text-shadow: var(--text-shadow-header);
+  }
+
+  @media (max-width: 720px) {
+    body {
+      @apply text-lg;
+    }
+
+    main {
+      @apply py-4;
+    }
+  }
 }
 
-h1, h2, h3, h4, h5, h6 {
-	font-family: 'Gluten', sans-serif;
-	margin: 0;
-	padding: 0;
-	font-size: 0.75em;
-	font-weight: bolder;
-	text-align: left;
-	color: black;
-}
+@layer utilities {
+  .sr-only {
+    @apply absolute m-0 h-px w-px overflow-hidden border-0 p-0 whitespace-nowrap;
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+  }
 
-html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6 {
-	color: white;
-}
+  .icon-svg {
+    @apply h-5 w-5 stroke-current transition-all duration-200 ease-in-out;
+  }
 
-main {
-	width: 100%;
-	max-width: 100%;
-	margin: 0;
-	padding: 3em 0;
-	background-color: var(--primary-light);
-	background-image: url('/bg_light.png');
-	background-repeat: repeat;
-	box-sizing: border-box;
-	background-attachment: fixed;
-}
+  .centered {
+    @apply mx-auto text-center;
+  }
 
-h1 {
-	font-size: 3.052em;
-	text-shadow: var(--text-shadow-header);
-	font-weight: bolder;
-	color: white;
-}
-h2 {
-	font-size: 2.441em;
-	font-weight: bold;
-}
-h3 {
-	font-size: 1.953em;
-	font-weight: bold;
-}
-h4 {
-	font-size: 1.563em;
-	font-weight: bold;
-}
-h5 {
-	font-size: 1.25em;
-}
+  .right {
+    @apply text-right;
+  }
 
-strong,
-b {
-	font-weight: 700;
-}
-a {
-	color: var(--accent-dark);
-	transition: color 0.3s ease;
-}
-a:hover {
-	color: var(--accent);
-}
+  .left {
+    @apply text-left;
+  }
 
-html.dark a {
-	color: var(--secondary-light);
-}
+  .markdown-content h1,
+  .markdown-content h2,
+  .markdown-content h3,
+  .markdown-content h4 {
+    @apply text-primary-dark text-[length:inherit];
+    text-shadow: none;
+  }
 
-html.dark a:hover {
-	color: var(--secondary-main);
-}
+  html.dark .markdown-content h1,
+  html.dark .markdown-content h2,
+  html.dark .markdown-content h3,
+  html.dark .markdown-content h4 {
+    @apply text-white;
+  }
 
-p {
-	margin-bottom: 1em;
-}
-.prose p {
-	margin-bottom: 2em;
-}
-textarea {
-	width: 100%;
-	font-size: 16px;
-}
-input {
-	font-size: 16px;
-}
-table {
-	width: 100%;
-}
-img {
-	max-width: 100%;
-	height: auto;
-	border-radius: 8px;
-}
-code {
-	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
-	border-radius: 2px;
-}
-pre {
-	padding: 1.5em;
-	border-radius: 8px;
-}
-pre > code {
-	all: unset;
-}
-blockquote {
-	border-left: 4px solid var(--accent);
-	padding: 0 0 0 20px;
-	margin: 0px;
-	font-size: 1.333em;
-}
-hr {
-	border: none;
-	border-top: 1px solid var(--primary-dark);
-}
+  .markdown-content h2 {
+    @apply text-[1.953em];
+  }
 
-#app-title {
-	text-shadow: var(--text-shadow-header);
-	font-weight: bold;
-}
+  .markdown-content h3 {
+    @apply text-[1.563em];
+  }
 
-@media (max-width: 720px) {
-	body {
-		font-size: 18px;
-	}
-	main {
-		padding: 1em 0;
-	}
-}
+  .markdown-content h4 {
+    @apply text-xl;
+  }
 
-.sr-only {
-	border: 0;
-	padding: 0;
-	margin: 0;
-	position: absolute !important;
-	height: 1px;
-	width: 1px;
-	overflow: hidden;
-	clip: rect(1px, 1px, 1px, 1px);
-	clip-path: inset(50%);
-	white-space: nowrap;
-}
+  .welcome-word {
+    @apply inline-block animate-color-rotate;
+  }
 
-.icon-svg {
-	width: 20px;
-	height: 20px;
-	stroke: currentColor;
-	transition: all 0.2s ease-in-out;
-}
+  .welcome-word-2 {
+    animation-delay: 0s;
+    color: #d0f0c0;
+  }
 
-.centered {
-	margin: auto;
-	text-align: center;
-}
+  .welcome-word-3 {
+    animation-delay: 1s;
+    color: sandybrown;
+  }
 
-.right {
-	text-align: right;
-}
+  .welcome-word-4 {
+    animation-delay: 2s;
+    color: khaki;
+  }
 
-.left {
-	text-align: left;
-}
+  .welcome-word-5 {
+    animation-delay: 3s;
+    color: lightblue;
+  }
 
-.markdown-content h1,
-.markdown-content h2,
-.markdown-content h3,
-.markdown-content h4 {
-	color: var(--primary-dark);
-	text-shadow: none;
-	font-size: inherit;
-}
-
-html.dark .markdown-content h1,
-html.dark .markdown-content h2,
-html.dark .markdown-content h3,
-html.dark .markdown-content h4 {
-	color: white;
-}
-
-.markdown-content h2 {
-	font-size: 1.953em;
-}
-
-.markdown-content h3 {
-	font-size: 1.563em;
-}
-
-.markdown-content h4 {
-	font-size: 1.25em;
+  .welcome-word-6 {
+    animation-delay: 4s;
+    color: thistle;
+  }
 }

@@ -1,4 +1,4 @@
-import styles from './Footer.module.css';
+import Link from 'next/link';
 
 export default function Footer() {
   const today = new Date();
@@ -15,26 +15,36 @@ export default function Footer() {
   ];
 
   return (
-    <footer className={styles.footer}>
-      <div className={styles.footerContent}>
-        <div className={styles.footerGrid}>
+    <footer className="border-t border-primary-dark bg-primary-main px-4 py-16 text-white max-md:py-8">
+      <div className="mx-auto max-w-[1200px]">
+        <div className="mb-12 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-8 max-md:grid-cols-1 max-md:text-center">
           {sitemap.map((section) => (
-            <div key={section.title} className={styles.footerSection}>
-              <h3>{section.title}</h3>
-              <ul>
+            <div key={section.title}>
+              <h3 className="m-0 mb-4 text-xl text-white">{section.title}</h3>
+              <ul className="m-0 list-none p-0">
                 {section.links.map((link) => (
-                  <li key={link.href}>
-                    <a href={link.href}>{link.text}</a>
+                  <li key={link.href} className="mb-2">
+                    <Link
+                      href={link.href}
+                      className="text-white/80 no-underline transition-all duration-200 hover:inline-block hover:translate-x-1 hover:text-white max-md:hover:translate-x-0"
+                    >
+                      {link.text}
+                    </Link>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
 
-          <div className={styles.footerSection}>
-            <h3>Connect</h3>
-            <div className={styles.socialLinks}>
-              <a href="mailto:support@hannahshobbyroom.com" target="_blank" rel="noreferrer">
+          <div>
+            <h3 className="m-0 mb-4 text-xl text-white">Connect</h3>
+            <div className="flex gap-4 max-md:justify-center">
+              <a
+                href="mailto:support@hannahshobbyroom.com"
+                target="_blank"
+                rel="noreferrer"
+                className="text-white/80 no-underline transition-colors duration-200 hover:text-white"
+              >
                 <span className="sr-only">Email us</span>
                 <svg
                   viewBox="0 0 24 24"
@@ -51,7 +61,12 @@ export default function Footer() {
                   <polyline points="22,6 12,13 2,6" />
                 </svg>
               </a>
-              <a href="https://github.com/withastro/astro" target="_blank" rel="noreferrer">
+              <a
+                href="https://github.com/withastro/astro"
+                target="_blank"
+                rel="noreferrer"
+                className="text-white/80 no-underline transition-colors duration-200 hover:text-white"
+              >
                 <span className="sr-only">Go to Astro&apos;s GitHub repo</span>
                 <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32">
                   <path
@@ -63,8 +78,10 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className={styles.footerBottom}>
-          <p>&copy; {today.getFullYear()} Hannah&apos;s Hobby Room. All rights reserved.</p>
+        <div className="border-t border-white/20 pt-8 text-center">
+          <p className="m-0 text-sm text-white/80">
+            &copy; {today.getFullYear()} Hannah&apos;s Hobby Room. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

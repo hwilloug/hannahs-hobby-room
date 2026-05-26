@@ -2,7 +2,6 @@ import BrowserCard from '@/components/BrowserCard';
 import { getAllPosts } from '@/lib/posts';
 import { searchPosts } from '@/utils/search';
 import SearchForm from './SearchForm';
-import styles from './search.module.css';
 
 interface SearchPageProps {
   searchParams: Promise<{ q?: string }>;
@@ -15,17 +14,17 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const searchResults = query ? searchPosts(posts, query) : [];
 
   return (
-    <div className={styles.searchPage}>
-      <h1>{query ? `Search results for "${q}"` : 'Search'}</h1>
+    <div className="mx-auto w-full max-w-[1200px] p-4">
+      <h1 className="text-primary-dark">{query ? `Search results for "${q}"` : 'Search'}</h1>
       <SearchForm initialQuery={q ?? ''} />
       {query && (
-        <div className={styles.resultsInfo}>
+        <div className="mb-8 text-gray-custom">
           <p>
             Found {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} for &quot;{q}&quot;
           </p>
         </div>
       )}
-      <div className={styles.searchResults}>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-8 py-4 max-[720px]:grid-cols-[repeat(auto-fill,minmax(250px,1fr))]">
         {searchResults.map((post) => (
           <BrowserCard
             key={post.url}
