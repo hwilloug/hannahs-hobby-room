@@ -4,9 +4,10 @@ import CategoryIcon from './CategoryIcon';
 
 interface CategorySectionProps {
   title: string;
-  description: string;
+  description?: string;
   posts: BlogPost[];
   tagSlug: string;
+  showDescription?: boolean;
 }
 
 export default function CategorySection({
@@ -14,9 +15,10 @@ export default function CategorySection({
   description,
   posts,
   tagSlug,
+  showDescription = true,
 }: CategorySectionProps) {
   const categoryPosts = posts.slice(0, 4);
-  const titleWord = title.split(' ')[1] ?? title;
+  const titleWord = title.split(' ').slice(1).join(' ') || title;
 
   return (
     <section className="mb-8 rounded-xl border border-primary-dark bg-[rgba(var(--primary-main-rgb),0.5)] p-8 backdrop-blur-md">
@@ -28,7 +30,9 @@ export default function CategorySection({
             </span>
             {titleWord}
           </h2>
-          <p className="m-0 text-[1.1em] text-primary-dark dark:text-white">{description}</p>
+          {showDescription && description && (
+            <p className="m-0 text-[1.1em] text-primary-dark dark:text-white">{description}</p>
+          )}
         </div>
         <Link
           href={`/categories/${tagSlug}/`}
