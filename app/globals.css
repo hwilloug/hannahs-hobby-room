@@ -23,6 +23,9 @@
 
   --shadow-text-header: black -1px 0px, black 0px 1px, black 3px 3px, black 0px -1px;
   --shadow-text: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  --shadow-text-secondary: -1px -1px 0 var(--secondary-main), 1px -1px 0 var(--secondary-main),
+    -1px 1px 0 var(--secondary-main), 1px 1px 0 var(--secondary-main), 0 -1px 0 var(--secondary-main),
+    0 1px 0 var(--secondary-main), -1px 0 0 var(--secondary-main), 1px 0 0 var(--secondary-main);
 
   --animate-color-rotate: color-rotate 6s linear infinite;
 }
@@ -36,6 +39,9 @@
   --gray-dark: 34, 41, 57;
   --text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
   --text-shadow-header: black -1px 0px, black 0px 1px, black 3px 3px, black 0px -1px;
+  --text-shadow-secondary: -1px -1px 0 var(--secondary-main), 1px -1px 0 var(--secondary-main),
+    -1px 1px 0 var(--secondary-main), 1px 1px 0 var(--secondary-main), 0 -1px 0 var(--secondary-main),
+    0 1px 0 var(--secondary-main), -1px 0 0 var(--secondary-main), 1px 0 0 var(--secondary-main);
 
   --primary-light: #d3decf;
   --primary-light-rgb: 211, 222, 207;
@@ -107,6 +113,9 @@ html.dark {
   --secondary-light: #d3decf;
   --secondary-main: #7f9679;
   --secondary-dark: #bd9fa8;
+  --text-shadow-secondary: -1px -1px 0 var(--secondary-dark), 1px -1px 0 var(--secondary-dark),
+    -1px 1px 0 var(--secondary-dark), 1px 1px 0 var(--secondary-dark), 0 -1px 0 var(--secondary-dark),
+    0 1px 0 var(--secondary-dark), -1px 0 0 var(--secondary-dark), 1px 0 0 var(--secondary-dark);
   --accent: #decfd3;
   --gray: 200, 200, 200;
   --gray-light: 50, 50, 50;

@@ -5,7 +5,7 @@ import NewsletterDialog, { openNewsletterDialog } from './NewsletterDialog';
 export default function NewsletterSignup() {
   return (
     <div className="my-16 rounded-xl border border-primary-dark bg-warning-main p-8 text-center shadow-[4px_4px_1px_var(--primary-dark)]">
-      <h3 className="homePageHeader mb-2 ml-0 text-center text-white [text-shadow:var(--text-shadow)]">
+      <h3 className="homePageHeader mb-2 ml-0 text-center text-white [text-shadow:var(--text-shadow-secondary)]">
         Stay Updated! 🌟
       </h3>
       <p className="mb-6 text-black">Subscribe to receive notifications about new hobby projects and tutorials!</p>

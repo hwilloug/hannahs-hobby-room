@@ -62,7 +62,7 @@ export default function Header() {
               <Link href="/">{SITE_TITLE}</Link>
             </h2>
           </div>
-          <div className="flex min-w-[200px] flex-1 justify-center px-4 max-md:order-2 max-md:mt-2 max-md:w-full max-md:flex-[1_0_100%] max-md:px-0">
+          <div className="flex min-w-[200px] flex-1 justify-end px-4 max-md:order-2 max-md:mt-2 max-md:w-full max-md:flex-[1_0_100%] max-md:justify-stretch max-md:px-0">
             <div className="relative w-full max-w-[400px]">
               <input
                 ref={searchInputRef}

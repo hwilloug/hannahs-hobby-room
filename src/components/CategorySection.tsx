@@ -24,7 +24,7 @@ export default function CategorySection({
     <section className="mb-8 rounded-xl border border-primary-dark bg-[rgba(var(--primary-main-rgb),0.5)] p-8 backdrop-blur-md">
       <div className="mb-8 flex items-start justify-between max-md:flex-col max-md:gap-4">
         <div>
-          <h2 className="mb-2 flex items-center gap-2 font-gluten text-[1.8em] text-primary-dark dark:text-white">
+          <h2 className="mb-2 flex items-center gap-2 font-gluten text-[1.8em] text-primary-dark [text-shadow:var(--text-shadow-secondary)] dark:text-white">
             <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-main p-2 [&_svg]:h-full [&_svg]:w-full [&_svg]:stroke-white">
               <CategoryIcon tagSlug={tagSlug} className="icon-svg size-16" />
             </span>
