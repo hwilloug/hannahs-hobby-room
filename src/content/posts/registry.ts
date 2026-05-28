@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+import April2026AntiquingHaul from './april-2026-antiquing-haul';
 import AHandmadeFrameForASpringCrossStitch from './a-handmade-frame-for-a-spring-cross-stitch';
 import ASpringSampler from './a-spring-sampler';
 import ElizabethtonAntiqueHaulMay2024 from './elizabethton-antique-haul-may-2024';
@@ -14,6 +15,7 @@ import TurtleCoasters from './turtle-coasters';
 export type PostComponent = ComponentType;
 
 export const postComponents: Record<string, PostComponent> = {
+  'april-2026-antiquing-haul': April2026AntiquingHaul,
   'a-handmade-frame-for-a-spring-cross-stitch': AHandmadeFrameForASpringCrossStitch,
   'a-spring-sampler': ASpringSampler,
   'elizabethton-antique-haul-may-2024': ElizabethtonAntiqueHaulMay2024,

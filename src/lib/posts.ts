@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { hasPostContent, postComponents, postSlugs } from '@/content/posts/registry';
 import { getAllArticlesFromDb, getArticleFromDb } from '@/lib/db/articles';
 import { isSupabaseConfigured } from '@/lib/supabase/server';
+import { resolveArticleImageUrl } from '@/lib/supabase/storage';
 
 const blogSchema = z.object({
   title: z.string(),
@@ -45,7 +46,7 @@ function dbRowToPostData(row: {
     subtitle: row.subtitle ?? undefined,
     pubDate: row.pub_date,
     updatedDate: row.updated_date ?? undefined,
-    heroImage: row.hero_image,
+    heroImage: resolveArticleImageUrl(row.hero_image),
     subcategories: row.subcategories ?? [],
   });
 }
