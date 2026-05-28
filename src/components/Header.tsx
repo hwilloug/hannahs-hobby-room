@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { SITE_TITLE } from '@/utils/consts';
 import HeaderLink from './HeaderLink';
 import DarkModeToggle from './DarkModeToggle';
@@ -55,8 +56,16 @@ export default function Header() {
       <nav className="relative mx-auto border-b border-primary-dark p-2 text-white">
         <div className="flex flex-nowrap items-center justify-between gap-2 max-md:flex-wrap max-md:pb-2">
           <div className="flex shrink-0 items-center gap-4">
-            <div className="h-[50px] w-[50px] [&_img]:h-full [&_img]:w-full">
-              <img src="/poppy.png" alt="Poppy Logo" />
+            <div className="h-[50px] w-[50px]">
+              <Image
+                src="/poppy.png"
+                alt="Poppy Logo"
+                width={50}
+                height={50}
+                sizes="50px"
+                priority
+                className="h-full w-full"
+              />
             </div>
             <h2 id="app-title" className="m-0 text-[2em] font-extrabold max-md:min-w-0 max-md:truncate max-md:text-xl max-md:whitespace-nowrap [&_a]:text-white [&_a]:no-underline">
               <Link href="/">{SITE_TITLE}</Link>

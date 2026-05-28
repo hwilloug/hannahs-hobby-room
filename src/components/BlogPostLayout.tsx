@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import type { BlogPostData } from '@/lib/posts';
 import { tagToSlug } from '@/lib/tagSlug';
 import FormattedDate from './FormattedDate';
@@ -28,9 +29,13 @@ export default function BlogPostLayout({ data, slug, children }: BlogPostLayoutP
     <article className="mx-auto my-8 max-w-[800px] rounded-xl border border-primary-dark bg-[rgba(var(--primary-main-rgb),0.6)] p-4">
       <div className="w-full">
         {heroImage && (
-          <img
+          <Image
             src={heroImage}
             alt={title}
+            width={1600}
+            height={900}
+            priority
+            sizes="(max-width: 800px) 100vw, 800px"
             className="mx-auto block h-[500px] w-full rounded-t-xl object-cover"
           />
         )}

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function WelcomeHero() {
   return (
@@ -34,7 +35,14 @@ export default function WelcomeHero() {
         </p>
         <div className="mt-4 flex items-end gap-4">
           <p className="m-0">Warm regards,</p>
-          <img src="/signature.png" alt="Hannah's signature" className="w-[80px]" />
+          <Image
+            src="/signature.png"
+            alt="Hannah's signature"
+            width={80}
+            height={32}
+            sizes="80px"
+            className="w-[80px]"
+          />
         </div>
       </div>
     </section>
